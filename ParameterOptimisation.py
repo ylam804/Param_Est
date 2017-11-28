@@ -173,11 +173,9 @@ def plotParameterEstimationError(x, y, dx, dy):
             ps = ParameterEstimation()
             ps.set_initial_parameters(np.array([xvalues[i],yvalues[j]]))
             ps.set_objective_function(fun_rosenbrock)
-            errorMatrix[i,j] = ps.objective_function(x)
-
-
-
+            errorMatrix[i,j] = ps.objective_function(ps.initial_parameters)
             #errorMatrix[i,j] = ps.detH
+
     ps.optimise()
     ps.set_objective_function(fun_rosenbrock_mse)
     ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
