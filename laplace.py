@@ -33,7 +33,7 @@ length = 1.0
     problemUserNumber) = range(1,12)
 
 numberGlobalXElements = 1
-numberGlobalYElements = 3
+numberGlobalYElements = 5
 numberGlobalZElements = 1
 
 #-----------------------------------------------------------------------------------------------------------
@@ -244,3 +244,6 @@ fields.Finalise()
 # Finalise OpenCMISS-Iron
 iron.Finalise()
 
+print('\n')
+nodeNumber = iron.Nodes_NumberOfNodesGetNum(regionuserNumber)
+print('The number of nodes is: ', nodeNumber)
