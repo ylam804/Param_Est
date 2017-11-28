@@ -339,3 +339,8 @@ fields.CreateRegion(region)
 fields.NodesExport("Cantilever","FORTRAN")
 fields.ElementsExport("Cantilever","FORTRAN")
 fields.Finalise()
+
+
+print('\n')
+nodeNumber = iron.Nodes_NumberOfNodesGetNum(regionUserNumber)
+print 'The number of nodes is :', nodeNumber

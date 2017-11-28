@@ -146,6 +146,18 @@ def fun_rosenbrock_mse(x):
     return mse
 
 
+def cantilever_projection_error(data, model):
+    """
+    An objective function which will find the error as the RMS of the distance between each data point and the closest
+    point on the surface of the FE model using projections.
+
+    :param data: The actual dataset obtained by scanning a deformed cantilever.
+    :param model: The nodes of the FE model created using the specified design variables and some initial parameters.
+    :return:
+    """
+    print("Currently I do nothing! But that will soon change.")
+
+
 def plotParameterEstimationError(x, y, dx, dy):
     """
     Using a grid of points as some initial inputs to the parameter estimation function, plots the error at each of
@@ -174,23 +186,23 @@ def plotParameterEstimationError(x, y, dx, dy):
             ps.set_initial_parameters(np.array([xvalues[i],yvalues[j]]))
             ps.set_objective_function(fun_rosenbrock)
             errorMatrix[i,j] = ps.objective_function(ps.initial_parameters)
-            #errorMatrix[i,j] = ps.detH
 
-    ps.optimise()
-    ps.set_objective_function(fun_rosenbrock_mse)
-    ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
+
+
     # Now that the error has been calculated at each point in the grid, plot this as a surface.
-    xgrid, ygrid = np.meshgrid(yvalues, xvalues)
-
     import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D
     from matplotlib import cm
     fig = plt.figure()
     ax = fig.gca(projection='3d')
+    xgrid, ygrid = np.meshgrid(yvalues, xvalues)
     surf = ax.plot_surface(xgrid, ygrid, errorMatrix, cmap=cm.coolwarm,
                            linewidth=0, antialiased=False)
-
     plt.show()
+
+    # Now calculate the optimal values of
+    ps.optimise()
+    ps.set_objective_function(fun_rosenbrock_mse)
+    ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
 
 ###########
 # Testing #
