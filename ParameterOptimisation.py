@@ -155,7 +155,10 @@ def cantilever_projection_error(data, model):
     :param model: The nodes of the FE model created using the specified design variables and some initial parameters.
     :return:
     """
-    print("Currently I do nothing! But that will soon change.")
+    n = len(data)
+    error = 0
+    # for i in range(n):
+
 
 
 def plotParameterEstimationError(x, y, dx, dy):
@@ -184,20 +187,20 @@ def plotParameterEstimationError(x, y, dx, dy):
         for j in range(dy):
             ps = ParameterEstimation()
             ps.set_initial_parameters(np.array([xvalues[i],yvalues[j]]))
-            ps.set_objective_function(fun_rosenbrock)
+            ps.set_objective_function(fun_rosenbrock_mse)
             errorMatrix[i,j] = ps.objective_function(ps.initial_parameters)
 
 
 
     # Now that the error has been calculated at each point in the grid, plot this as a surface.
-    import matplotlib.pyplot as plt
-    from matplotlib import cm
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    xgrid, ygrid = np.meshgrid(yvalues, xvalues)
-    surf = ax.plot_surface(xgrid, ygrid, errorMatrix, cmap=cm.coolwarm,
-                           linewidth=0, antialiased=False)
-    plt.show()
+    #import matplotlib.pyplot as plt
+    #from matplotlib import cm
+    #fig = plt.figure()
+    #ax = fig.gca(projection='3d')
+    #xgrid, ygrid = np.meshgrid(yvalues, xvalues)
+    #surf = ax.plot_surface(xgrid, ygrid, errorMatrix, cmap=cm.coolwarm,
+    #                       linewidth=0, antialiased=False)
+    #plt.show()
 
     # Now calculate the optimal values of
     ps.optimise()
