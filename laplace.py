@@ -33,7 +33,7 @@ length = 1.0
     problemUserNumber) = range(1,12)
 
 numberGlobalXElements = 1
-numberGlobalYElements = 3
+numberGlobalYElements = 2
 numberGlobalZElements = 1
 
 #-----------------------------------------------------------------------------------------------------------
