@@ -120,14 +120,24 @@ def testParameterEstimation():
     """
     Test the parameter estimation routines
     """
+    s = Simulat([inputls])
+    #s.set_cantilever_dimen
+
     ps = ParameterEstimation()
     ps.set_initial_parameters(np.array([0.5,0.5]))
-    ps.set_objective_function(fun_rosenbrock)
+    ps.set_objective_function(cantilever_objective_function())
     ps.optimise()
     ps.set_objective_function(fun_rosenbrock_mse)
     ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
 
     return ps
+
+
+def cantilever_objective_funtion(x, s, data):
+    s.solve(x)
+    s.export
+    s.error = s.project_data(data)
+    return s.error
 
 
 def fun_rosenbrock(x):
@@ -211,10 +221,3 @@ def plotParameterEstimationError(x, y, dx, dy):
 # Testing #
 ###########
 
-
-x = np.array([-5, 5])
-y = np.array([-5, 5])
-dx = 20
-dy = 20
-
-plotParameterEstimationError(x, y, dx, dy)

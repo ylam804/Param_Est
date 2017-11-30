@@ -77,16 +77,10 @@ def projectSurfaceData(self, data, elementArray):
     for i in range(numDatapoints):
         RMSError += projectionErr[i] ** 2
 
-    RMSError = np.sqrt(np.sum(RMSError))
+    RMSError = np.sqrt(np.average(RMSError))
 
     return RMSError
 
-
-def fetchData():
-
-
-
-    data = np.zeros()
 
 #def
 #
