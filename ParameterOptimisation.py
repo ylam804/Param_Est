@@ -120,24 +120,15 @@ def testParameterEstimation():
     """
     Test the parameter estimation routines
     """
-    s = Simulat([inputls])
-    #s.set_cantilever_dimen
 
     ps = ParameterEstimation()
     ps.set_initial_parameters(np.array([0.5,0.5]))
-    ps.set_objective_function(cantilever_objective_function())
+    ps.set_objective_function(fun_rosenbrock_mse())
     ps.optimise()
     ps.set_objective_function(fun_rosenbrock_mse)
     ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
 
     return ps
-
-
-def cantilever_objective_funtion(x, s, data):
-    s.solve(x)
-    s.export
-    s.error = s.project_data(data)
-    return s.error
 
 
 def fun_rosenbrock(x):
@@ -154,21 +145,6 @@ def fun_rosenbrock_mse(x):
     vector = np.array([100 * (x[1] - x[0] ** 2), (1 - x[0])])
     mse = np.mean(vector * vector)
     return mse
-
-
-def cantilever_projection_error(data, model):
-    """
-    An objective function which will find the error as the RMS of the distance between each data point and the closest
-    point on the surface of the FE model using projections.
-
-    :param data: The actual dataset obtained by scanning a deformed cantilever.
-    :param model: The nodes of the FE model created using the specified design variables and some initial parameters.
-    :return:
-    """
-    n = len(data)
-    error = 0
-    # for i in range(n):
-
 
 
 def plotParameterEstimationError(x, y, dx, dy):
