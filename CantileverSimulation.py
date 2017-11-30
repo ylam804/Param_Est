@@ -407,16 +407,14 @@ def export_results(simulation):
     fields.Finalise()
 
 
-def projection_calculation(simulation, data):
+def prepare_projection(simulation, data):
     """
-    Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
-    the surface of a real experiment.
+    Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
+    dataProjection structures only need to be made once.
 
-    :param parameters: An array of values for each of the material parameters required in the FE model.
     :param simulation: A set up FE model.
     :param data: An array of length n where each row is 3D the coordinates of a single data point measured from the
                     surface of the real experiment.
-    :return: error: a measure of the error between the data points and the surface of the FE model.
     """
 
     numDatapoints = len(data)
@@ -491,8 +489,38 @@ def projection_calculation(simulation, data):
 
     elements = elements.astype('int32')
     faces = faces.astype('int32')
-
     simulation.dataProjection.ProjectionCandidatesSet(elements, faces)
+
+def projection_calculation(simulation, data):
+    """
+    Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
+    the surface of a real experiment.
+
+    :param simulation: A set up FE model.
+    :param data: An array of length n where each row is 3D the coordinates of a single data point measured from the
+                    surface of the real experiment.
+    :return: error: a measure of the error between the data points and the surface of the FE model.
+    """
+
+    numDatapoints = len(data)
+
+    #simulation.dataPoints = iron.DataPoints()
+    #simulation.dataPoints.CreateStart(simulation.region, numDatapoints)
+    #for pointNum, point in enumerate(data,1):
+    #    simulation.dataPoints.ValuesSet(pointNum, point)
+    #simulation.dataPoints.CreateFinish()
+
+    #dataProjectionUserNumber = 1
+    #simulation.dataProjection = iron.DataProjection()
+    #simulation.dataProjection.CreateStart(dataProjectionUserNumber, simulation.dataPoints,
+    #                           simulation.mesh)
+    # Set tolerances and other settings for the data projection.
+    #simulation.dataProjection.AbsoluteToleranceSet(1.0e-15)
+    #simulation.dataProjection.RelativeToleranceSet(1.0e-15)
+    #simulation.dataProjection.MaximumNumberOfIterationsSet(int(1e9))
+    #simulation.dataProjection.ProjectionTypeSet(
+    #    iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
+    #simulation.dataProjection.CreateFinish()
 
     # Now perform the projections.
     simulation.dataProjection.DataPointsProjectionEvaluate(simulation.dependentField) # Note: changed to dependentField from deformedField, as no such class existed for cantilever_sim
@@ -549,17 +577,18 @@ cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
 cantilever_sim.set_cantilever_elements(cantilever_elements)
 cantilever_sim.setup_cantilever_simulation()
 solve_simulation(cantilever_sim)
+prepare_projection(cantilever_sim, data)
 error = projection_calculation(cantilever_sim, data)
 print '\n\n'
 print error
 print '\n\n'
 
 
-#new_parameter_values = np.array([1, 1])
-#cantilever_sim.set_Mooney_Rivlin_parameter_values(new_parameter_values)
-#solve_simulation(cantilever_sim)
-#error = projection_calculation(cantilever_sim, data)
-#print '\n\n'
-#print error
-#print '\n\n'
-#export_results(cantilever_sim)
+new_parameter_values = np.array([1, 1])
+cantilever_sim.set_Mooney_Rivlin_parameter_values(new_parameter_values)
+solve_simulation(cantilever_sim)
+error = projection_calculation(cantilever_sim, data)
+print '\n\n'
+print error
+print '\n\n'
+export_results(cantilever_sim)
