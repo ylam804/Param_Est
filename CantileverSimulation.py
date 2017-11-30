@@ -13,10 +13,10 @@ class CantileverSimulation:
         """
 
         self.initial_parameters = None
-        self.cantilever_dimensions = None # in mm
+        self.cantilever_dimensions = None  # in mm
         self.cantilever_elements = None
-        self.density = 9.0E-4 # in g mm^-3
-        self.gravity_vector = [0.0, 0.0, -9.81] # in m s^-2
+        self.density = 9.0E-4  # in g mm^-3
+        self.gravity_vector = [0.0, 0.0, -9.81]  # in m s^-2
         self.nodes = None
         self.coordinate_system = None
         self.region = None
@@ -73,14 +73,14 @@ class CantileverSimulation:
 
         self.cantilever_elements = elements
 
-    def set_gravity_vector(self, gvector):
+    def set_gravity_vector(self, gravity_vector):
         """
         Define the direction of gravity for the FE simulation.
 
         :param gvector: A 2D/3D vector with the magnitude gravity acting in each coordinate direction.
         """
 
-        self.gravity_vector = gvector
+        self.gravity_vector = gravity_vector
 
     def set_cantilever_density(self, density):
         """
@@ -121,7 +121,7 @@ class CantileverSimulation:
         problemUserNumber = 1
 
         # Set all diganostic levels on for testing
-        #iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["DOMAIN_MAPPINGS_LOCAL_FROM_GLOBAL_CALCULATE"])
+        # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["DOMAIN_MAPPINGS_LOCAL_FROM_GLOBAL_CALCULATE"])
 
         numberOfLoadIncrements = 4
         numberGlobalXElements = self.cantilever_elements[0]
@@ -381,7 +381,15 @@ class CantileverSimulation:
         self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,3,iron.BoundaryConditionsTypes.FIXED,0.0)
         self.solverEquations.BoundaryConditionsCreateFinish()
 
-    def set
+    def set_Mooney_Rivlin_parameter_values(self, parameter_values):
+        """
+        Call to change the material parameter values without executing all of the other calls in the setup function.
+
+        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        """
+
+        self.materialField.ComponentValuesInitialiseDP(
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, parameter_values[0], parameter_values[1])
 
 def solve_simulation(simulation):
     simulation.problem.Solve()
@@ -415,9 +423,9 @@ def projection_objective_function(parameters, simulation, data):
 
 gravity_vector = np.array([0.0, 0.0, -9.81])
 density = 9E-04
-initial_parameter_values = np.array([0.5, 0.5])
-cantilever_dimensions = np.array([15, 15, 30])
-cantilever_elements = np.array([1, 3, 1])
+initial_parameter_values = np.array([2, 2])
+cantilever_dimensions = np.array([60, 40, 40])
+cantilever_elements = np.array([1, 1, 1])
 
 cantilever_sim = CantileverSimulation()
 cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
@@ -425,3 +433,11 @@ cantilever_sim.set_cantilever_elements(cantilever_elements)
 cantilever_sim.set_gravity_vector(gravity_vector)
 cantilever_sim.set_cantilever_density(density)
 cantilever_sim.setup_cantilever_simulation()
+solve_simulation(cantilever_sim)
+export_results(cantilever_sim)
+
+print 'Break here!'
+
+cantilever_sim.set_Mooney_Rivlin_parameter_values(np.array([1, 1]))
+solve_simulation(cantilever_sim)
+export_results(cantilever_sim)
