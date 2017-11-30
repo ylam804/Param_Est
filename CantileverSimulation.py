@@ -42,6 +42,9 @@ class CantileverSimulation:
         self.solver = None
         self.solverEquations = None
         self.boundaryConditions = None
+        self.dataPoints = None
+        self.dataProjection = None
+        self.error = None
 
     def set_initial_parameters(self, initial_parameters):
         """
@@ -199,6 +202,7 @@ class CantileverSimulation:
         self.decomposition = iron.Decomposition()
         self.decomposition.CreateStart(decompositionUserNumber,self.mesh)
         self.decomposition.type = iron.DecompositionTypes.CALCULATED
+        self.decomposition.CalculateFacesSet(True)
         self.decomposition.numberOfDomains = numberOfComputationalNodes
         self.decomposition.CreateFinish()
 
@@ -417,26 +421,26 @@ def projection_calculation(simulation, data):
 
     numDatapoints = len(data)
 
-    datapoints = iron.DataPoints()
-    datapoints.CreateStart(simulation.region, numDatapoints)
+    simulation.dataPoints = iron.DataPoints()
+    simulation.dataPoints.CreateStart(simulation.region, numDatapoints)
     for pointNum, point in enumerate(data,1):
-        datapoints.ValuesSet(pointNum, point)
-    datapoints.CreateFinish()
+        simulation.dataPoints.ValuesSet(pointNum, point)
+    simulation.dataPoints.CreateFinish()
 
-    dataprojectionUserNumber = 1
-    dataprojection = iron.DataProjection()
-    dataprojection.CreateStart(dataprojectionUserNumber, datapoints,
+    dataProjectionUserNumber = 1
+    simulation.dataProjection = iron.DataProjection()
+    simulation.dataProjection.CreateStart(dataProjectionUserNumber, simulation.dataPoints,
                                simulation.mesh)
     # Set tolerances and other settings for the data projection.
-    dataprojection.AbsoluteToleranceSet(1.0e-15)
-    dataprojection.RelativeToleranceSet(1.0e-15)
-    dataprojection.MaximumNumberOfIterationsSet(int(1e9))
-    dataprojection.ProjectionTypeSet(
+    simulation.dataProjection.AbsoluteToleranceSet(1.0e-15)
+    simulation.dataProjection.RelativeToleranceSet(1.0e-15)
+    simulation.dataProjection.MaximumNumberOfIterationsSet(int(1e9))
+    simulation.dataProjection.ProjectionTypeSet(
         iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
-    dataprojection.CreateFinish()
+    simulation.dataProjection.CreateFinish()
 
     # Set the elements for projection and the relevant faces.
-    pos = 0
+    pos = 1
     elements = np.array([])
     faces = np.array([])
     for z in range(simulation.cantilever_elements[2]):
@@ -445,8 +449,31 @@ def projection_calculation(simulation, data):
                 # Check if the element should be a candidate for projection.
                 if x == 0 or x == (simulation.cantilever_elements[0]-1) or y == 0 or y == (simulation.cantilever_elements[1]-1) or z == 0 or z == (simulation.cantilever_elements[2]-1):
                     elements = np.append(elements, np.array([pos]))
-                    faces = np.append(faces, np.array([1]))
+                    faces = np.append(faces, np.array([6]))
                     # Now find which of its faces should be projected onto.
+
+                    ## Info on face locations:
+                    #
+                    # Coordinates at (0,0,0), no error on face 1
+                    # Coordinates at (0,20,20), no error => face 1 is base x-direction
+                    #
+                    # Coordinates at (0,0,0), no error on face 2
+                    # Coordinates at (30,0,20), error = 0.02 => face 2 is base y-direction
+                    #
+                    # Coordinates at (30,20,-3), error = 0.10 on face 3
+                    # Coordinates at (30,20,37), error = 39.9 => face 3 is base z-direction
+                    #
+                    # Coordinates at (60,0,0), error = 2.04 on face 4
+                    # Coordinates at (58.5,0,0), error = 0.5 on face 4
+                    # Coordinates at (58.5,20,20), error = 2.12 => face 4 is end of x-direction
+                    #
+                    # Coordinates at (30,40,20), error = 0.02 on face 5
+                    # Coordinates at (40,40,10), error = 0.08 => face 5 is end of y-direction
+                    #
+                    # Coordinates at (30,20,37), error = 0.03 on face 6
+                    # Coordinates at (40,10,37), error = 0.95 => face 6 is end of z-direction
+
+
                     #if x == 0:
                     #    faces = np.append(faces, np.array([1]))
                     #elif x == (elementArray[0]-1):
@@ -462,16 +489,17 @@ def projection_calculation(simulation, data):
                 # Increase the position for the next iteration.
                 pos += 1
 
-    elements.astype(int)
+    elements = elements.astype('int32')
+    faces = faces.astype('int32')
 
-    dataprojection.ProjectionCandidatesSet(elements, faces)
+    simulation.dataProjection.ProjectionCandidatesSet(elements, faces)
 
     # Now perform the projections.
-    dataprojection.DataPointsProjectionEvaluate(simulation.dependentField) # Note: changed to dependentField from deformedField, as no such class existed for cantilever_sim
-    # dataprojection.ProjectionEvaluate(equation_set.geometricField)
+    simulation.dataProjection.DataPointsProjectionEvaluate(simulation.dependentField) # Note: changed to dependentField from deformedField, as no such class existed for cantilever_sim
+    # simulation.dataProjection.ProjectionEvaluate(equation_set.geometricField)
     projectionErr = np.zeros(numDatapoints)
     for pointNum, pointIdx in enumerate(range(numDatapoints), 1): # Will this just overwrite the first index of projectionErr over and over?
-        projectionErr[pointIdx] = dataprojection.ResultDistanceGet(pointNum)
+        projectionErr[pointIdx] = simulation.dataProjection.ResultDistanceGet(pointNum)
 
     # Having found the projection errors, calculate the RMS error.
     simulation.error = 0
@@ -511,7 +539,7 @@ def projection_calculation(simulation, data):
 
 
 # Testing the projection functionality!
-data = np.array([[1, 1, 1], [0.05, 0.05, 0.05]])
+data = np.array([[40, 10, 37]])  # , [0.05, 0.05, 0.05], [1.05, 1.1, 0.0], [1.02, 1.2, 1.0], [0.01, 0.05, 0.06]])
 initial_parameter_values = np.array([2, 2])
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
@@ -527,11 +555,11 @@ print error
 print '\n\n'
 
 
-new_parameter_values = np.array([1, 1])
-cantilever_sim.set_Mooney_Rivlin_parameter_values(new_parameter_values)
-solve_simulation(cantilever_sim)
-error = projection_calculation(cantilever_sim, data)
-print '\n\n'
-print error
-print '\n\n'
-export_results(cantilever_sim)
+#new_parameter_values = np.array([1, 1])
+#cantilever_sim.set_Mooney_Rivlin_parameter_values(new_parameter_values)
+#solve_simulation(cantilever_sim)
+#error = projection_calculation(cantilever_sim, data)
+#print '\n\n'
+#print error
+#print '\n\n'
+#export_results(cantilever_sim)
