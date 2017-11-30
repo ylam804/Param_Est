@@ -77,7 +77,7 @@ class CantileverSimulation:
         """
         Define the direction of gravity for the FE simulation.
 
-        :param gvector: A 2D/3D vector with the magnitude gravity acting in each coordinate direction.
+        :param gravity_vector: A 2D/3D vector with the magnitude gravity acting in each coordinate direction.
         """
 
         self.gravity_vector = gravity_vector
@@ -292,7 +292,7 @@ class CantileverSimulation:
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.V,iron.FieldParameterSetTypes.VALUES,1,density)
 
-        #Create the source field with the gravity vector
+        # Create the source field with the gravity vector
         self.sourceField = iron.Field()
         self.equationsSet.SourceCreateStart(sourceFieldUserNumber,self.sourceField)
         if InterpolationType == 4:
@@ -301,7 +301,7 @@ class CantileverSimulation:
             self.sourceField.fieldScalingType = iron.FieldScalingTypes.UNIT
         self.equationsSet.SourceCreateFinish()
 
-        #Set the gravity vector component values
+        # Set the gravity vector component values
         self.sourceField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,gravity[0])
         self.sourceField.ComponentValuesInitialiseDP(
@@ -403,10 +403,10 @@ def export_results(simulation):
     fields.Finalise()
 
 
-def projection_objective_function(parameters, simulation, data):
+def projection_calculation(simulation, data):
     """
-    Objective function for measuring the error between a FE model (contained in s) and the data measured from the
-    surface of a real experiment.
+    Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
+    the surface of a real experiment.
 
     :param parameters: An array of values for each of the material parameters required in the FE model.
     :param simulation: A set up FE model.
@@ -415,14 +415,103 @@ def projection_objective_function(parameters, simulation, data):
     :return: error: a measure of the error between the data points and the surface of the FE model.
     """
 
+    numDatapoints = len(data)
 
+    datapoints = iron.DataPoints()
+    datapoints.CreateStart(simulation.region, numDatapoints)
+    for pointNum, point in enumerate(data,1):
+        datapoints.ValuesSet(pointNum, point)
+    datapoints.CreateFinish()
+
+    dataprojectionUserNumber = 1
+    dataprojection = iron.DataProjection()
+    dataprojection.CreateStart(dataprojectionUserNumber, datapoints,
+                               simulation.mesh)
+    # Set tolerances and other settings for the data projection.
+    dataprojection.AbsoluteToleranceSet(1.0e-15)
+    dataprojection.RelativeToleranceSet(1.0e-15)
+    dataprojection.MaximumNumberOfIterationsSet(int(1e9))
+    dataprojection.ProjectionTypeSet(
+        iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
+    dataprojection.CreateFinish()
+
+    # Set the elements for projection and the relevant faces.
+    pos = 0
+    elements = np.array([])
+    faces = np.array([])
+    for z in range(simulation.cantilever_elements[2]):
+        for y in range(simulation.cantilever_elements[1]):
+            for x in range(simulation.cantilever_elements[0]):
+                # Check if the element should be a candidate for projection.
+                if x == 0 or x == (simulation.cantilever_elements[0]-1) or y == 0 or y == (simulation.cantilever_elements[1]-1) or z == 0 or z == (simulation.cantilever_elements[2]-1):
+                    elements = np.append(elements, np.array([pos]))
+                    faces = np.append(faces, np.array([1]))
+                    # Now find which of its faces should be projected onto.
+                    #if x == 0:
+                    #    faces = np.append(faces, np.array([1]))
+                    #elif x == (elementArray[0]-1):
+                    #    faces = np.append(faces, np.array([6]))
+                    #elif y == (elementArray[1]-1):
+                    #    faces = np.append(faces, np.array([2]))
+                    #elif y == (elementArray[1]-1):
+                    #    faces = np.append(faces, np.array([5]))
+                    #elif z == (elementArray[2]-1):
+                    #    faces = np.append(faces, np.array([3]))
+                    #else:
+                    #    faces = np.append(faces, np.array([4]))
+                # Increase the position for the next iteration.
+                pos += 1
+
+    elements.astype(int)
+
+    dataprojection.ProjectionCandidatesSet(elements, faces)
+
+    # Now perform the projections.
+    dataprojection.DataPointsProjectionEvaluate(simulation.dependentField) # Note: changed to dependentField from deformedField, as no such class existed for cantilever_sim
+    # dataprojection.ProjectionEvaluate(equation_set.geometricField)
+    projectionErr = np.zeros(numDatapoints)
+    for pointNum, pointIdx in enumerate(range(numDatapoints), 1): # Will this just overwrite the first index of projectionErr over and over?
+        projectionErr[pointIdx] = dataprojection.ResultDistanceGet(pointNum)
+
+    # Having found the projection errors, calculate the RMS error.
+    simulation.error = 0
+    for i in range(numDatapoints):
+        simulation.error += projectionErr[i] ** 2
+
+    simulation.error = np.sqrt(np.average(simulation.error))
+
+    return simulation.error
 
 ###########
 # Testing #
 ###########
 
-gravity_vector = np.array([0.0, 0.0, -9.81])
-density = 9E-04
+
+## This section show that the simulation class and functions all work, along with the solving and exporting ones.
+#gravity_vector = np.array([0.0, 0.0, -9.81])
+#density = 9E-04
+#initial_parameter_values = np.array([2, 2])
+#cantilever_dimensions = np.array([60, 40, 40])
+#cantilever_elements = np.array([1, 1, 1])
+
+#cantilever_sim = CantileverSimulation()
+#cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
+#cantilever_sim.set_cantilever_elements(cantilever_elements)
+#cantilever_sim.set_gravity_vector(gravity_vector)
+#cantilever_sim.set_cantilever_density(density)
+#cantilever_sim.setup_cantilever_simulation()
+#solve_simulation(cantilever_sim)
+#export_results(cantilever_sim)
+
+#print 'Break here!'
+
+#cantilever_sim.set_Mooney_Rivlin_parameter_values(np.array([1, 1]))
+#solve_simulation(cantilever_sim)
+#export_results(cantilever_sim)
+
+
+# Testing the projection functionality!
+data = np.array([[1, 1, 1], [0.05, 0.05, 0.05]])
 initial_parameter_values = np.array([2, 2])
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
@@ -430,14 +519,19 @@ cantilever_elements = np.array([1, 1, 1])
 cantilever_sim = CantileverSimulation()
 cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
 cantilever_sim.set_cantilever_elements(cantilever_elements)
-cantilever_sim.set_gravity_vector(gravity_vector)
-cantilever_sim.set_cantilever_density(density)
 cantilever_sim.setup_cantilever_simulation()
 solve_simulation(cantilever_sim)
-export_results(cantilever_sim)
+error = projection_calculation(cantilever_sim, data)
+print '\n\n'
+print error
+print '\n\n'
 
-print 'Break here!'
 
-cantilever_sim.set_Mooney_Rivlin_parameter_values(np.array([1, 1]))
+new_parameter_values = np.array([1, 1])
+cantilever_sim.set_Mooney_Rivlin_parameter_values(new_parameter_values)
 solve_simulation(cantilever_sim)
+error = projection_calculation(cantilever_sim, data)
+print '\n\n'
+print error
+print '\n\n'
 export_results(cantilever_sim)
