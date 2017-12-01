@@ -12,6 +12,7 @@ class CantileverSimulation:
         Create a new simulation for the deformation of a cantilever beam.
         """
 
+        self.data = None
         self.diagnostics = None
         self.initial_parameters = None
         self.cantilever_dimensions = None  # in mm
@@ -48,7 +49,16 @@ class CantileverSimulation:
         self.error = None
         self.fields = None
 
-    def set_diagnostics(self, diagnostics_choice):
+    def set_projection_data(self, data):
+        """
+        Initialises the set of data points which were scanned on the surface of the deformed experiment.
+
+        :param data: A 2D array where each row is three point in mm of the x, y, and z coordinates respectively.
+        """
+
+        self.data = data
+
+    def set_diagnostic_level(self, diagnostics_choice):
         """
         Set the level of diagnostic display required.
 
@@ -139,7 +149,7 @@ class CantileverSimulation:
         equationsSetUserNumber = 1
         problemUserNumber = 1
 
-        # Set all diganostic levels on for testing
+        # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["DOMAIN_MAPPINGS_LOCAL_FROM_GLOBAL_CALCULATE"])
 
         numberOfLoadIncrements = 4
@@ -147,7 +157,7 @@ class CantileverSimulation:
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
         InterpolationType = 1
-        if(numberGlobalZElements==0):
+        if numberGlobalZElements==0:
             numberOfXi = 2
         else:
             numberOfXi = 3
@@ -178,11 +188,11 @@ class CantileverSimulation:
             self.basis.type = iron.BasisTypes.SIMPLEX
         self.basis.numberOfXi = numberOfXi
         self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
-        if(NumberOfGaussXi>0):
+        if NumberOfGaussXi>0:
             self.basis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
         self.basis.CreateFinish()
 
-        if(UsePressureBasis):
+        if UsePressureBasis:
             # Define pressure basis
             self.pressureBasis = iron.Basis()
             self.pressureBasis.CreateStart(pressureBasisUserNumber)
@@ -192,7 +202,7 @@ class CantileverSimulation:
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
             self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
-            if(NumberOfGaussXi>0):
+            if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
 
@@ -200,11 +210,11 @@ class CantileverSimulation:
         self.generatedMesh = iron.GeneratedMesh()
         self.generatedMesh.CreateStart(generatedMeshUserNumber,self.region)
         self.generatedMesh.type = iron.GeneratedMeshTypes.REGULAR
-        if(UsePressureBasis):
+        if UsePressureBasis:
             self.generatedMesh.basis = [self.basis,self.pressureBasis]
         else:
             self.generatedMesh.basis = [self.basis]
-        if(numberGlobalZElements==0):
+        if numberGlobalZElements==0:
             self.generatedMesh.extent = [width,height]
             self.generatedMesh.numberOfElements = [numberGlobalXElements,numberGlobalYElements]
         else:
@@ -265,7 +275,7 @@ class CantileverSimulation:
         self.dependentField.VariableLabelSet(iron.FieldVariableTypes.U,"Dependent")
         self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.U,4,iron.FieldInterpolationTypes.ELEMENT_BASED)
         self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.DELUDELN,4,iron.FieldInterpolationTypes.ELEMENT_BASED)
-        if(UsePressureBasis):
+        if UsePressureBasis:
             # Set the pressure to be nodally based and use the second mesh component
             if InterpolationType == 4:
                 self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.U,4,iron.FieldInterpolationTypes.NODE_BASED)
@@ -389,7 +399,7 @@ class CantileverSimulation:
         # Prescribe boundary conditions (absolute nodal parameters)
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
-        # Set x=0 nodes to no x displacment
+        # Set x=0 nodes to no x displacement
         self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,1,iron.BoundaryConditionsTypes.FIXED,0.0)
         self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,1,iron.BoundaryConditionsTypes.FIXED,0.0)
         self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,1,iron.BoundaryConditionsTypes.FIXED,0.0)
@@ -416,11 +426,12 @@ class CantileverSimulation:
         """
 
         self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, parameter_values[0], parameter_values[1])
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
+        self.materialField.ComponentValuesInitialiseDP(
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[1])
 
     def solve_simulation(self):
         self.problem.Solve()
-
 
     def export_results(self):
         self.fields = iron.Fields()
@@ -429,8 +440,7 @@ class CantileverSimulation:
         self.fields.ElementsExport("Cantilever","FORTRAN")
         self.fields.Finalise()
 
-
-    def prepare_projection(self, data):
+    def prepare_projection(self):
         """
         Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
         dataProjection structures only need to be made once.
@@ -440,18 +450,18 @@ class CantileverSimulation:
                         surface of the real experiment.
         """
 
-        numDatapoints = len(data)
+        numDatapoints = len(self.data)
 
         self.dataPoints = iron.DataPoints()
         self.dataPoints.CreateStart(self.region, numDatapoints)
-        for pointNum, point in enumerate(data,1):
+        for pointNum, point in enumerate(self.data,1):
             self.dataPoints.ValuesSet(pointNum, point)
         self.dataPoints.CreateFinish()
 
         dataProjectionUserNumber = 1
         self.dataProjection = iron.DataProjection()
         self.dataProjection.CreateStart(dataProjectionUserNumber, self.dataPoints,
-                                   self.mesh)
+                                        self.mesh)
         # Set tolerances and other settings for the data projection.
         self.dataProjection.AbsoluteToleranceSet(1.0e-15)
         self.dataProjection.RelativeToleranceSet(1.0e-15)
@@ -514,7 +524,7 @@ class CantileverSimulation:
         faces = faces.astype('int32')
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
 
-    def projection_calculation(self, data):
+    def projection_calculation(self):
         """
         Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
         the surface of a real experiment.
@@ -525,7 +535,7 @@ class CantileverSimulation:
         :return: error: a measure of the error between the data points and the surface of the FE model.
         """
 
-        numDatapoints = len(data)
+        numDatapoints = len(self.data)
 
         # Now perform the projections.
         self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
@@ -542,13 +552,17 @@ class CantileverSimulation:
 
         return self.error
 
-def cantilever_objective_function(x, cantilever_sim, data):
-    cantilever_sim.set_Mooney_Rivlin_parameter_values(x)
-    cantilever_sim.solve_simulation()
-    #cantilever_sim.export_results()
-    cantilever_sim.error = cantilever_sim.projection_calculation(data)
+    #def generate_data(self):
+    #    ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
 
-    return cantilever_sim.error
+
+def cantilever_objective_function(x, cantilever_simulation):
+    cantilever_simulation.set_Mooney_Rivlin_parameter_values(x)
+    cantilever_simulation.solve_simulation()
+    #cantilever_simulation.export_results()
+    cantilever_simulation.error = cantilever_sim.projection_calculation()
+
+    return cantilever_simulation.error
 
 ###########
 # Testing #
@@ -559,24 +573,25 @@ def cantilever_objective_function(x, cantilever_sim, data):
 data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
-cantilever_initial_parameters = np.array([2, 2])
+cantilever_initial_parameters = np.array([3.2, 2])
 
 cantilever_sim = CantileverSimulation()
+cantilever_sim.set_projection_data(data)
 cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
 cantilever_sim.set_cantilever_elements(cantilever_elements)
-cantilever_sim.set_diagnostics(0)
+cantilever_sim.set_diagnostic_level(0)
 cantilever_sim.setup_cantilever_simulation()
-cantilever_sim.prepare_projection(data)
+cantilever_sim.prepare_projection()
 
-error = cantilever_objective_function(cantilever_initial_parameters, cantilever_sim, data)
+error = cantilever_objective_function(cantilever_initial_parameters, cantilever_sim)
 print error
 print '\n\n'
 
 cantilever_second_parameters = np.array([2, 1])
-error = cantilever_objective_function(cantilever_second_parameters, cantilever_sim, data)
+error = cantilever_objective_function(cantilever_second_parameters, cantilever_sim)
 print error
 print '\n\n'
 
 cantilever_third_parameters = np.array([1, 2])
-error = cantilever_objective_function(cantilever_third_parameters, cantilever_sim, data)
+error = cantilever_objective_function(cantilever_third_parameters, cantilever_sim)
 print error

@@ -197,3 +197,9 @@ def plotParameterEstimationError(x, y, dx, dy):
 # Testing #
 ###########
 
+
+ps = ParameterEstimation
+s.set_initial_parameters(np.array([0.5,0.5]))
+ps.set_objective_function(cantilever_objective_function)
+ps.optimise()
+
