@@ -559,7 +559,7 @@ class CantileverSimulation:
 def cantilever_objective_function(x, cantilever_simulation):
     cantilever_simulation.set_Mooney_Rivlin_parameter_values(x)
     cantilever_simulation.solve_simulation()
-    #cantilever_simulation.export_results()
+    cantilever_simulation.export_results()
     cantilever_simulation.error = cantilever_sim.projection_calculation()
 
     return cantilever_simulation.error
