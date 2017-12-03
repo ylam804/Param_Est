@@ -399,23 +399,29 @@ class CantileverSimulation:
         # Prescribe boundary conditions (absolute nodal parameters)
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
+
+        for i in range(1, (numberGlobalXElements*numberGlobalYElements*numberGlobalZElements), (numberGlobalXElements+1)):
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
+
         # Set x=0 nodes to no x displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,1,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,1,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,1,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,1,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,1,iron.BoundaryConditionsTypes.FIXED,0.0)
 
         # Set y=0 nodes to no y displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,2,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,2,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,2,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,2,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,2,iron.BoundaryConditionsTypes.FIXED,0.0)
 
         # Set z=0 nodes to no y displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,3,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,3,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,3,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,3,iron.BoundaryConditionsTypes.FIXED,0.0)
+        #self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,3,iron.BoundaryConditionsTypes.FIXED,0.0)
         self.solverEquations.BoundaryConditionsCreateFinish()
 
     def set_Mooney_Rivlin_parameter_values(self, parameter_values):
@@ -573,7 +579,7 @@ def cantilever_objective_function(x, cantilever_simulation):
 data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
-cantilever_initial_parameters = np.array([3.2, 2])
+cantilever_initial_parameters = np.array([1, 1])
 
 cantilever_sim = CantileverSimulation()
 cantilever_sim.set_projection_data(data)
@@ -587,11 +593,11 @@ error = cantilever_objective_function(cantilever_initial_parameters, cantilever_
 print error
 print '\n\n'
 
-cantilever_second_parameters = np.array([2, 1])
-error = cantilever_objective_function(cantilever_second_parameters, cantilever_sim)
-print error
-print '\n\n'
+#cantilever_second_parameters = np.array([2, 1])
+#error = cantilever_objective_function(cantilever_second_parameters, cantilever_sim)
+#print error
+#print '\n\n'
 
-cantilever_third_parameters = np.array([1, 2])
-error = cantilever_objective_function(cantilever_third_parameters, cantilever_sim)
-print error
+#cantilever_third_parameters = np.array([1, 2])
+#error = cantilever_objective_function(cantilever_third_parameters, cantilever_sim)
+#print error

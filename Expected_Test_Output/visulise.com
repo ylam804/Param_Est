@@ -1,6 +1,6 @@
 # read in solution, which may be split into multiple files
-@exnodes=<./laplace_equation.part*.exnode>;
-@exelems=<./laplace_equation.part*.exelem>;
+@exnodes=<./Cantilever.part*.exnode>;
+@exelems=<./Cantilever.part*.exelem>;
 foreach $filename (@exnodes) {
     print "Reading $filename\n";
     gfx read node "$filename";
