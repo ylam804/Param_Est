@@ -400,7 +400,7 @@ class CantileverSimulation:
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
 
-        for i in range(1, (numberGlobalXElements*numberGlobalYElements*numberGlobalZElements), (numberGlobalXElements+1)):
+        for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
             self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
             self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
             self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
@@ -578,7 +578,7 @@ def cantilever_objective_function(x, cantilever_simulation):
 # Testing the use of the objective function.
 data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
 cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([1, 1, 1])
+cantilever_elements = np.array([2, 2, 2])
 cantilever_initial_parameters = np.array([1, 1])
 
 cantilever_sim = CantileverSimulation()
