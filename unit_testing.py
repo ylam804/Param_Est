@@ -21,4 +21,17 @@ class CantileverBoundaryConditions(unittest.TestCase):
         self.assertTrue(function_which_gets_BC_type of node(7) == 'FIXED')
 
 
+class CantileverDataGeneration(unittest.TestCase):
 
+    def test_data_generation(self):
+        """
+        Tests that the four corners of the generated data are located at the corners when there is only one element in
+        the FE model.
+        """
+
+        sim = CantileverSimulation()
+        sim.set_cantilever_dimensions(np.array([60, 40, 40]))
+        sim.set_cantilever_elements(np.array([1, 1, 1]))
+        sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))
+        sim.setup_cantilever_simulation()
+        sim.generate_data(3)
