@@ -557,7 +557,7 @@ class CantileverSimulation:
             dataLocations = np.array([])
 
             for i in range(0, 3):
-                dataLocations[i] = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,1,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,np.array([1, 2, 3]),1)
+                dataLocations[i] = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,1,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,[1.0, 2.0, 3.0],1)
 
         #elif scale == 2:
             #asdf
@@ -568,13 +568,15 @@ class CantileverSimulation:
         #ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
 
 
-def cantilever_objective_function(x, cantilever_simulation):
-    cantilever_simulation.set_Mooney_Rivlin_parameter_values(x)
-    cantilever_simulation.solve_simulation()
-    cantilever_simulation.export_results()
-    cantilever_simulation.error = cantilever_sim.projection_calculation()
+    def cantilever_objective_function(self, x):
+        self.setup_cantilever_simulation()
+        self.set_Mooney_Rivlin_parameter_values(x)
+        self.solve_simulation()
+        self.export_results()
+        self.prepare_projection()
+        self.error = self.projection_calculation()
 
-    return cantilever_simulation.error
+        return self.error
 
 ###########
 # Testing #
@@ -582,20 +584,17 @@ def cantilever_objective_function(x, cantilever_simulation):
 
 
 # Testing the use of the objective function.
-data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
-cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([3, 3, 2])
-cantilever_initial_parameters = np.array([1, 1])
+#data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
+#cantilever_dimensions = np.array([60, 40, 40])
+#cantilever_elements = np.array([1, 1, 1])
+#cantilever_initial_parameters = np.array([1, 1])
 
-cantilever_sim = CantileverSimulation()
-cantilever_sim.set_projection_data(data)
-cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
-cantilever_sim.set_cantilever_elements(cantilever_elements)
-cantilever_sim.set_diagnostic_level(0)
-cantilever_sim.setup_cantilever_simulation()
-cantilever_sim.generate_data(3)
-cantilever_sim.prepare_projection()
+#cantilever_sim = CantileverSimulation()
+#cantilever_sim.set_projection_data(data)
+#cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
+#cantilever_sim.set_cantilever_elements(cantilever_elements)
+#cantilever_sim.set_diagnostic_level(0)
 
-error = cantilever_objective_function(cantilever_initial_parameters, cantilever_sim)
-print error
+#error = cantilever_sim.cantilever_objective_function(cantilever_initial_parameters)
+#print error
 

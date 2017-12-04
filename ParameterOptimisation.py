@@ -1,4 +1,5 @@
 import numpy as np
+from CantileverSimulation import CantileverSimulation
 from scipy.optimize import least_squares
 
 
@@ -17,6 +18,7 @@ class ParameterEstimation:
         self.objective_function = None
         self.objective_function_arguments = ()
         self.solutions = None
+        self.simulation = None
 
     def set_upper_bounds(self,upper_bounds=np.inf):
         """
@@ -123,7 +125,7 @@ def testParameterEstimation():
 
     ps = ParameterEstimation()
     ps.set_initial_parameters(np.array([0.5,0.5]))
-    ps.set_objective_function(fun_rosenbrock_mse())
+    ps.set_objective_function(fun_rosenbrock_mse)
     ps.optimise()
     ps.set_objective_function(fun_rosenbrock_mse)
     ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
@@ -198,8 +200,13 @@ def plotParameterEstimationError(x, y, dx, dy):
 ###########
 
 
-ps = ParameterEstimation
-s.set_initial_parameters(np.array([0.5,0.5]))
-ps.set_objective_function(cantilever_objective_function)
-ps.optimise()
+testParameterEstimation()
 
+ps = ParameterEstimation
+ps.set_objective_function(fun_rosenbrock_mse)
+ps.simulation = CantileverSimulation()
+ps.simulation.set_projection_data(np.array([[53.89, 0.79, -11.71], [53.89, 39.21, -11.71], [64.67, -0.65, 27.13], [64.67, 40.65, 27.13]]))
+ps.simulation.set_cantilever_dimensions(np.array([60,40,40]))
+ps.simulation.set_cantilever_elements(np.array([1, 1, 1]))
+ps.initial_parameters = np.array([1.2, 1.3])
+ps.optimise()

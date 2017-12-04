@@ -35,3 +35,8 @@ class CantileverDataGeneration(unittest.TestCase):
         sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))
         sim.setup_cantilever_simulation()
         sim.generate_data(3)
+
+        self.assertTrue(location[0] == [60,0,0])
+        self.assertTrue(location[1] == [60,40,0])
+        self.assertTrue(location[2] == [60,0,40])
+        self.assertTrue(location[3] == [60,40,40])
