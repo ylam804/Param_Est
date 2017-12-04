@@ -201,15 +201,23 @@ def plotParameterEstimationError(x, y, dx, dy):
 ###########
 
 
+data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
+cantilever_dimensions = np.array([60, 40, 40])
+cantilever_elements = np.array([1, 1, 1])
+cantilever_initial_parameter = np.array([1.0, 0.0])
+
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
-ps.simulation.set_projection_data(np.array([[53.89, 0.79, -11.71], [53.89, 39.21, -11.71], [64.67, -0.65, 27.13], [64.67, 40.65, 27.13]]))
-ps.simulation.set_cantilever_dimensions(np.array([60,40,40]))
-ps.simulation.set_cantilever_elements(np.array([1, 1, 1]))
+ps.initial_parameters = cantilever_initial_parameter
+ps.simulation.set_projection_data(data)
+ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
+ps.simulation.set_cantilever_elements(cantilever_elements)
+ps.simulation.set_diagnostic_level(0)
 ps.simulation.setup_cantilever_simulation()
 ps.simulation.prepare_projection()
-ps.initial_parameters = np.array([1.2, 1.3])
 simulation_tuple = (ps.simulation,)
 ps.set_objective_function(cantilever_objective_function, simulation_tuple)
 ps.optimise()
 print ps.solutions.x
+
+#print  ps.objective_function(cantilever_initial_parameter, ps.simulation)

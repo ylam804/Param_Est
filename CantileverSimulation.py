@@ -405,13 +405,13 @@ class CantileverSimulation:
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
-        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        :param parameter_value: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
         """
 
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, 0.0)
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
 
     def solve_simulation(self):
         self.problem.Solve()
@@ -554,10 +554,16 @@ class CantileverSimulation:
             setOfXi = np.append(setOfXi, [[1, 1, 0]], axis=0)
             setOfXi = np.append(setOfXi, [[1, 0, 1]], axis=0)
             setOfXi = np.append(setOfXi, [[1, 1, 1]], axis=0)
-            dataLocations = np.array([])
 
-            for i in range(0, 3):
-                dataLocations[i] = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,1,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,[0.0, 0.0, 0.0],3)
+            for i in range(0, 4):
+                if i == 0:
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = point[0:3]
+                    dataLocations = np.array([point])
+                else:
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = point[0:3]
+                    dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
         #elif scale == 2:
             #asdf
@@ -566,6 +572,8 @@ class CantileverSimulation:
         #else:
             #asdf
         #ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
+
+        return dataLocations
 
 def cantilever_objective_function(x, simulation):
 
@@ -582,10 +590,10 @@ def cantilever_objective_function(x, simulation):
 
 if __name__ == "__main__":
     # Testing the use of the objective function.
-    data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
+    data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
     cantilever_elements = np.array([1, 1, 1])
-    cantilever_initial_parameters = np.array([1, 1])
+    cantilever_initial_parameter = np.array([2.1, 1.0])
 
     cantilever_sim = CantileverSimulation()
     cantilever_sim.set_projection_data(data)
@@ -593,8 +601,13 @@ if __name__ == "__main__":
     cantilever_sim.set_cantilever_elements(cantilever_elements)
     cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.prepare_projection()
 
-    error = cantilever_objective_function(cantilever_initial_parameters, cantilever_sim)
-    print error
+    cantilever_sim.prepare_projection()
+    error = cantilever_objective_function(cantilever_initial_parameter, cantilever_sim)
+    print('RMS Error = ', error)
+    print '\n'
+
+    dataLocations = cantilever_sim.generate_data(3)
+    print dataLocations
+
 
