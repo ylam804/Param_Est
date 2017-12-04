@@ -1,5 +1,6 @@
 import numpy as np
 from CantileverSimulation import CantileverSimulation
+from CantileverSimulation import cantilever_objective_function
 from scipy.optimize import least_squares
 
 
@@ -200,13 +201,15 @@ def plotParameterEstimationError(x, y, dx, dy):
 ###########
 
 
-testParameterEstimation()
-
-ps = ParameterEstimation
-ps.set_objective_function(fun_rosenbrock_mse)
+ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 ps.simulation.set_projection_data(np.array([[53.89, 0.79, -11.71], [53.89, 39.21, -11.71], [64.67, -0.65, 27.13], [64.67, 40.65, 27.13]]))
 ps.simulation.set_cantilever_dimensions(np.array([60,40,40]))
 ps.simulation.set_cantilever_elements(np.array([1, 1, 1]))
+ps.simulation.setup_cantilever_simulation()
+ps.simulation.prepare_projection()
 ps.initial_parameters = np.array([1.2, 1.3])
+simulation_tuple = (ps.simulation,)
+ps.set_objective_function(cantilever_objective_function, simulation_tuple)
 ps.optimise()
+print ps.solutions.x

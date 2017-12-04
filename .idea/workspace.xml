@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="CantileverSimulation.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CantileverSimulation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CantileverSimulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="595" column="0" lean-forward="true" selection-start-line="595" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
+            <state relative-caret-position="520">
+              <caret line="411" column="41" lean-forward="false" selection-start-line="411" selection-start-column="41" selection-end-line="411" selection-end-column="41" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -33,11 +33,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParameterOptimisation.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ParameterOptimisation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
-              <caret line="206" column="57" lean-forward="true" selection-start-line="206" selection-start-column="57" selection-end-line="206" selection-end-column="57" />
+            <state relative-caret-position="3587">
+              <caret line="211" column="13" lean-forward="false" selection-start-line="211" selection-start-column="13" selection-end-line="211" selection-end-column="13" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -68,7 +68,7 @@
       <file leaf-file-name="unit_testing.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/unit_testing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
+            <state relative-caret-position="460">
               <caret line="41" column="34" lean-forward="false" selection-start-line="41" selection-start-column="34" selection-end-line="41" selection-end-column="34" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
@@ -178,7 +178,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/src/iron/src" />
     <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RunDashboard">
@@ -193,7 +193,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.CantileverSimulation">
+  <component name="RunManager" selected="Python.ParameterOptimisation">
     <configuration name="CantileverSimulation" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -306,10 +306,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.CantileverSimulation" />
-        <item index="1" class="java.lang.String" itemvalue="Python.cantilever" />
-        <item index="2" class="java.lang.String" itemvalue="Python.project_surface_data" />
-        <item index="3" class="java.lang.String" itemvalue="Python.ParameterOptimisation" />
+        <item index="0" class="java.lang.String" itemvalue="Python.ParameterOptimisation" />
+        <item index="1" class="java.lang.String" itemvalue="Python.CantileverSimulation" />
+        <item index="2" class="java.lang.String" itemvalue="Python.cantilever" />
+        <item index="3" class="java.lang.String" itemvalue="Python.project_surface_data" />
         <item index="4" class="java.lang.String" itemvalue="Python.LaplaceExample" />
       </list>
     </recent_temporary>
@@ -354,6 +354,11 @@
           <line>558</line>
           <option name="timeStamp" value="93" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ParameterOptimisation.py</url>
+          <line>125</line>
+          <option name="timeStamp" value="98" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -362,7 +367,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="94" />
+      <option name="time" value="101" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -491,7 +496,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/unit_testing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
+        <state relative-caret-position="460">
           <caret line="41" column="34" lean-forward="false" selection-start-line="41" selection-start-column="34" selection-end-line="41" selection-end-column="34" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
@@ -499,22 +504,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CantileverSimulation.py">
+    <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="595" column="0" lean-forward="true" selection-start-line="595" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
+        <state relative-caret-position="3587">
+          <caret line="211" column="13" lean-forward="false" selection-start-line="211" selection-start-column="13" selection-end-line="211" selection-end-column="13" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
+    <entry file="file://$PROJECT_DIR$/CantileverSimulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="206" column="57" lean-forward="true" selection-start-line="206" selection-start-column="57" selection-end-line="206" selection-end-column="57" />
+        <state relative-caret-position="520">
+          <caret line="411" column="41" lean-forward="false" selection-start-line="411" selection-start-column="41" selection-end-line="411" selection-end-column="41" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
