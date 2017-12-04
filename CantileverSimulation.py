@@ -150,7 +150,7 @@ class CantileverSimulation:
         problemUserNumber = 1
 
         # Set all diagnostic levels on for testing
-        # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["DOMAIN_MAPPINGS_LOCAL_FROM_GLOBAL_CALCULATE"])
+        # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
         numberOfLoadIncrements = 4
         numberGlobalXElements = self.cantilever_elements[0]
@@ -390,45 +390,28 @@ class CantileverSimulation:
         equationsSetIndex = self.solverEquations.EquationsSetAdd(self.equationsSet)
         self.problem.SolverEquationsCreateFinish()
 
-        ##############################################################
-        ##                                                          ##
-        ## Need to automate BC prescribing for any sized cantilever.##
-        ##                                                          ##
-        ##############################################################
-
         # Prescribe boundary conditions (absolute nodal parameters)
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
-        # Set x=0 nodes to no x displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,1,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,1,iron.BoundaryConditionsTypes.FIXED,0.0)
 
-        # Set y=0 nodes to no y displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,2,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,2,iron.BoundaryConditionsTypes.FIXED,0.0)
+        for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
 
-        # Set z=0 nodes to no y displacement
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,1,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,3,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,5,3,iron.BoundaryConditionsTypes.FIXED,0.0)
-        self.boundaryConditions.AddNode(self.dependentField,iron.FieldVariableTypes.U,1,1,7,3,iron.BoundaryConditionsTypes.FIXED,0.0)
         self.solverEquations.BoundaryConditionsCreateFinish()
 
     def set_Mooney_Rivlin_parameter_values(self, parameter_values):
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
-        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        :param parameter_value: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
         """
 
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[1])
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
 
     def solve_simulation(self):
         self.problem.Solve()
@@ -529,9 +512,6 @@ class CantileverSimulation:
         Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
         the surface of a real experiment.
 
-        :param simulation: A set up FE model.
-        :param data: An array of length n where each row is 3D the coordinates of a single data point measured from the
-                        surface of the real experiment.
         :return: error: a measure of the error between the data points and the surface of the FE model.
         """
 
@@ -552,46 +532,82 @@ class CantileverSimulation:
 
         return self.error
 
-    #def generate_data(self):
-    #    ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
+    def generate_data(self, scale):
+        """
+        Create some artificial data which can be used to test if the optimisation routine can be used to find the
+        parameters which generated the data.
 
+        :param scale: Sets the number of points which will be generated.
+                Coarse = 0
+                Moderate = 1
+                Fine = 2
+                Testing = 3     ** Note: model should only contain one element **
+        :return: Sets the simulation's data to a set of points on the surface of the FE model.
+        """
 
-def cantilever_objective_function(x, cantilever_simulation):
-    cantilever_simulation.set_Mooney_Rivlin_parameter_values(x)
-    cantilever_simulation.solve_simulation()
-    cantilever_simulation.export_results()
-    cantilever_simulation.error = cantilever_sim.projection_calculation()
+        # First find the number of elements in the FE model.
+        elementNum = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
 
-    return cantilever_simulation.error
+        # Now apply
+        if scale == 3:
+            setOfXi = np.array([[1, 0, 0]])
+            setOfXi = np.append(setOfXi, [[1, 1, 0]], axis=0)
+            setOfXi = np.append(setOfXi, [[1, 0, 1]], axis=0)
+            setOfXi = np.append(setOfXi, [[1, 1, 1]], axis=0)
+
+            for i in range(0, 4):
+                if i == 0:
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = point[0:3]
+                    dataLocations = np.array([point])
+                else:
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = point[0:3]
+                    dataLocations = np.append(dataLocations, np.array([point]),axis=0)
+
+        #elif scale == 2:
+            #asdf
+        #elif scale == 1:
+            #adf
+        #else:
+            #asdf
+        #ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
+
+        return dataLocations
+
+def cantilever_objective_function(x, simulation):
+
+    simulation.set_Mooney_Rivlin_parameter_values(x)
+    simulation.solve_simulation()
+    simulation.export_results()
+    simulation.error = simulation.projection_calculation()
+
+    return simulation.error
 
 ###########
 # Testing #
 ###########
 
+if __name__ == "__main__":
+    # Testing the use of the objective function.
+    data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
+    cantilever_dimensions = np.array([60, 40, 40])
+    cantilever_elements = np.array([1, 1, 1])
+    cantilever_initial_parameter = np.array([2.1, 1.0])
 
-# Testing the use of the objective function.
-data = np.array([[58, 0, 0], [58, 40, 0], [58, 0, 40], [58, 40, 40], [58, 20, 20]])
-cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([1, 1, 1])
-cantilever_initial_parameters = np.array([3.2, 2])
+    cantilever_sim = CantileverSimulation()
+    cantilever_sim.set_projection_data(data)
+    cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
+    cantilever_sim.set_cantilever_elements(cantilever_elements)
+    cantilever_sim.set_diagnostic_level(0)
+    cantilever_sim.setup_cantilever_simulation()
 
-cantilever_sim = CantileverSimulation()
-cantilever_sim.set_projection_data(data)
-cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
-cantilever_sim.set_cantilever_elements(cantilever_elements)
-cantilever_sim.set_diagnostic_level(0)
-cantilever_sim.setup_cantilever_simulation()
-cantilever_sim.prepare_projection()
+    cantilever_sim.prepare_projection()
+    error = cantilever_objective_function(cantilever_initial_parameter, cantilever_sim)
+    print('RMS Error = ', error)
+    print '\n'
 
-error = cantilever_objective_function(cantilever_initial_parameters, cantilever_sim)
-print error
-print '\n\n'
+    dataLocations = cantilever_sim.generate_data(3)
+    print dataLocations
 
-cantilever_second_parameters = np.array([2, 1])
-error = cantilever_objective_function(cantilever_second_parameters, cantilever_sim)
-print error
-print '\n\n'
 
-cantilever_third_parameters = np.array([1, 2])
-error = cantilever_objective_function(cantilever_third_parameters, cantilever_sim)
-print error
