@@ -40,9 +40,9 @@ def error_calculation(currentDataSet, previousDataSet):
         yError += (currentDataSet[i,1] - previousDataSet[i,1]) ** 2
         zError += (currentDataSet[i,2] - previousDataSet[i,2]) ** 2
 
-    xError = cmath.sqrt(xError/len(currentDataSet))
-    yError = cmath.sqrt(yError/len(currentDataSet))
-    zError = cmath.sqrt(zError/len(currentDataSet))
+    xError = abs(cmath.sqrt(xError/len(currentDataSet)))
+    yError = abs(cmath.sqrt(yError/len(currentDataSet)))
+    zError = abs(cmath.sqrt(zError/len(currentDataSet)))
 
     return xError, yError, zError
 
@@ -98,11 +98,11 @@ while converged == False:
     # Now calculate the new variables which should be used to initialise the next simulation using the error in each
     # direction from the previous iteration.
     if xError > tolerance:
-        cantilever_elements[0] = cantilever_elements[0] * round(cmath.log10(xError/tolerance))
+        cantilever_elements[0] = cantilever_elements[0] * round(abs(cmath.log10(xError/tolerance)))
     if yError > tolerance:
-        cantilever_elements[1] = cantilever_elements[1] * round(cmath.log10(yError/tolerance))
+        cantilever_elements[1] = cantilever_elements[1] * round(abs(cmath.log10(yError/tolerance)))
     if yError > tolerance:
-        cantilever_elements[2] = cantilever_elements[2] * round(cmath.log10(zError/tolerance))
+        cantilever_elements[2] = cantilever_elements[2] * round(abs(cmath.log10(zError/tolerance)))
 
     # Now set up and solve the next simulation with these parameters.
     simulation = CantileverSimulation()
@@ -124,7 +124,7 @@ while converged == False:
         for j in range(len(currentDataPoints[i])):
             Error += (currentDataPoints[i,j] - previousDataPoints[i,j]) ** 2
 
-    Error = cmath.sqrt(zError/len(currentDataPoints))
+    Error = abs(cmath.sqrt(zError/len(currentDataPoints)))
 
     if Error < tolerance:
         converged = True
