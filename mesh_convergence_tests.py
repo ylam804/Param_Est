@@ -19,9 +19,65 @@
 #
 ####################################################################################################################
 
+
+
+#import opencmiss.iron as iron
 import numpy as np
-import CantileverSimulation
-import ParameterOptimisation
+from CantileverSimulation import CantileverSimulation
+
+def destroy_routine(simulation):
+    simulation.coordinate_system.Destroy()
+    simulation.region.Destroy()
+    simulation.basis.Destroy()
+    simulation.problem.Destroy()
 
 
 
+# Set the tolerance required for the mesh convergence study
+tolerance = 0.00001
+
+# Prepare the initial conditions for the first simulation
+cantilever_dimensions = np.array([60, 40, 40])
+cantilever_elements = np.array([1, 1, 1])
+cantilever_initial_parameters = np.array([1.5, 1.0])
+simulation = CantileverSimulation()
+
+# Now run the first simulation and collect the first data set which can then be used inside the while loop to
+# determine if mesh convergence has been reached or not.
+simulation.set_cantilever_dimensions(cantilever_dimensions)
+simulation.set_cantilever_elements(cantilever_elements)
+simulation.set_diagnostic_level(0)
+simulation.setup_cantilever_simulation()
+simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
+
+# Solve the simulation and derive the data from the results.
+simulation.solve_simulation()
+previousDataPoints = simulation.generate_data(3)
+print previousDataPoints
+
+# A second data set is required to start the loop, so repeat another simulation after changing the number of elements
+# only slightly. This requires clearing the previous simulation.
+cantilever_elements = np.array([2, 2, 2])
+destroy_routine(simulation)
+
+simulation = CantileverSimulation()
+simulation.set_cantilever_dimensions(cantilever_dimensions)
+simulation.set_cantilever_elements(cantilever_elements)
+simulation.set_diagnostic_level(0)
+simulation.setup_cantilever_simulation()
+simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
+simulation.solve_simulation()
+currentDataPoints = simulation.generate_data(3)
+print currentDataPoints
+
+# Now prepare the loop variables.
+iteration = 1
+converged = False
+
+while converged == False:
+    # First, clear the previous simulation out of the simulation variable so it can be used again.
+    simulation = None
+    simulation = CantileverSimulation()
+
+    # Now calculate the new variables which should be used to initialise the next simulation using the error in each
+    # direction from the previous iteration.

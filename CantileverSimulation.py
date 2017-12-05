@@ -546,7 +546,10 @@ class CantileverSimulation:
         """
 
         # First find the number of elements in the FE model.
-        elementNum = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+        elementNum = np.array(self.cantilever_elements[0])
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1])
+        elementNum = np.append(elementNum, ((self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]) - (self.cantilever_elements[0] * (self.cantilever_elements[1]-1))))
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2])
 
         # Now apply
         if scale == 3:
@@ -557,11 +560,11 @@ class CantileverSimulation:
 
             for i in range(0, 4):
                 if i == 0:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.array([point])
                 else:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
