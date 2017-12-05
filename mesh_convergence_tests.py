@@ -33,21 +33,21 @@ def destroy_routine(simulation):
     simulation.problem.Destroy()
 
 def error_calculation(currentDataSet, previousDataSet):
-    xError = yError = zError = 0
+    xError = yError = zError = np.zeros(len(currentDataSet))
 
     for i in range(len(currentDataSet)):
-        xError += (currentDataSet[i,0] - previousDataSet[i,0]) ** 2
-        yError += (currentDataSet[i,1] - previousDataSet[i,1]) ** 2
-        zError += (currentDataSet[i,2] - previousDataSet[i,2]) ** 2
+        xError[i] = abs(currentDataSet[i,0] - previousDataSet[i,0])
+        yError[i] = abs(currentDataSet[i,1] - previousDataSet[i,1])
+        zError[i] = abs(currentDataSet[i,2] - previousDataSet[i,2])
 
-    xError = abs(cmath.sqrt(xError/len(currentDataSet)))
-    yError = abs(cmath.sqrt(yError/len(currentDataSet)))
-    zError = abs(cmath.sqrt(zError/len(currentDataSet)))
+    xError = np.max(xError)
+    yError = np.max(yError)
+    zError = np.max(zError)
 
     return xError, yError, zError
 
 # Set the tolerance required for the mesh convergence study
-tolerance = 0.00001
+tolerance = 1e-3
 
 # Prepare the initial conditions for the first simulation
 cantilever_dimensions = np.array([60, 40, 40])
@@ -67,6 +67,7 @@ simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
 simulation.solve_simulation()
 previousDataPoints = simulation.generate_data(3)
 print previousDataPoints
+print '\n'
 
 # A second data set is required to start the loop, so repeat another simulation after changing the number of elements
 # only slightly. This requires clearing the previous simulation.
@@ -98,11 +99,11 @@ while converged == False:
     # Now calculate the new variables which should be used to initialise the next simulation using the error in each
     # direction from the previous iteration.
     if xError > tolerance:
-        cantilever_elements[0] = cantilever_elements[0] * round(abs(cmath.log10(xError/tolerance)))
+        cantilever_elements[0] = round(cantilever_elements[0] * 1.6)
     if yError > tolerance:
-        cantilever_elements[1] = cantilever_elements[1] * round(abs(cmath.log10(yError/tolerance)))
+        cantilever_elements[1] = round(cantilever_elements[1] * 1.3)
     if yError > tolerance:
-        cantilever_elements[2] = cantilever_elements[2] * round(abs(cmath.log10(zError/tolerance)))
+        cantilever_elements[2] = round(cantilever_elements[2] * 1.3)
 
     # Now set up and solve the next simulation with these parameters.
     simulation = CantileverSimulation()
@@ -117,16 +118,24 @@ while converged == False:
     # next set of data from the complete simulation.
     previousDataPoints = currentDataPoints
     currentDataPoints = simulation.generate_data(3)
+    print '\n\n'
+    iteration += 1
+    print "Iteration = %d" % iteration
+    print '\n'
+    print previousDataPoints
+    print '\n'
+    print currentDataPoints
 
     # Calculate the overall error which will be used to check if the overall tolerance has been satisfied.
-    Error = 0
+    errorArray = np.zeros((len(currentDataPoints), len(currentDataPoints[0])))
+    errorCount = 0
     for i in range(len(currentDataPoints)):
         for j in range(len(currentDataPoints[i])):
-            Error += (currentDataPoints[i,j] - previousDataPoints[i,j]) ** 2
+            errorArray[i,j] = abs((currentDataPoints[i,j] - previousDataPoints[i,j]))
+            if errorArray[i,j] > tolerance:
+                errorCount += 1
 
-    Error = abs(cmath.sqrt(zError/len(currentDataPoints)))
-
-    if Error < tolerance:
+    if errorCount == 0:
         converged = True
 
     # Calculate the error in the x, y and z directions.
