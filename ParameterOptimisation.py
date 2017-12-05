@@ -88,21 +88,21 @@ class ParameterEstimation:
 
         # First-order derivatives: 2n function calls needed
         for i in range(n):
-            A[i] = objfun(x + ee[:, i])
-            B[i] = objfun(x - ee[:, i])
+            A[i] = objfun(x + ee[:, i], self.simulation)
+            B[i] = objfun(x - ee[:, i], self.simulation)
 
         # Second-order derivatives based on function calls only (Abramowitz and Stegun 1972, p.884): for dense Hessian, 2n+4n^2/2 function calls needed.
         H = np.zeros((n, n))
         for i in range(n):
-            C = objfun(x + 2 * ee[:, i])
-            E = objfun(x)
-            F = objfun(x - 2 * ee[:, i])
+            C = objfun(x + 2 * ee[:, i], self.simulation)
+            E = objfun(x, self.simulation)
+            F = objfun(x - 2 * ee[:, i], self.simulation)
             H[i, i] = (- C + 16 * A[i] - 30 * E + 16 * B[i] - F) / (12 * (ee[i, i] ** 2))
             for j in range(i + 1, n):
-                G = objfun(x + ee[:, i] + ee[:, j])
-                I = objfun(x + ee[:, i] - ee[:, j])
-                J = objfun(x - ee[:, i] + ee[:, j])
-                K = objfun(x - ee[:, i] - ee[:, j])
+                G = objfun(x + ee[:, i] + ee[:, j], self.simulation)
+                I = objfun(x + ee[:, i] - ee[:, j], self.simulation)
+                J = objfun(x - ee[:, i] + ee[:, j], self.simulation)
+                K = objfun(x - ee[:, i] - ee[:, j], self.simulation)
                 H[i, j] = (G - I - J + K) / (4 * ee[i, i] * ee[j, j])
                 H[j, i] = H[i, j]
 
@@ -119,7 +119,6 @@ class ParameterEstimation:
 
 
 def testParameterEstimation():
-
     """
     Test the parameter estimation routines
     """
@@ -204,7 +203,9 @@ def plotParameterEstimationError(x, y, dx, dy):
 data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
-cantilever_initial_parameter = np.array([1.0, 0.0])
+
+
+cantilever_initial_parameter = np.array([1.0])
 
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
@@ -221,3 +222,6 @@ ps.optimise()
 print ps.solutions.x
 
 #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
+
+[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+print detH
