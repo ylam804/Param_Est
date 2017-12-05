@@ -76,7 +76,7 @@ class ParameterEstimation:
                                        diff_step=1e-5)
         return self.solutions
 
-    def evaluate_hessian(self, x, stepsize):
+    def evaluate_hessian(self, x, stepsize, simulation):
         """
         Routine for evaluating the Hessian matrix using central finite differences
         """
@@ -88,21 +88,21 @@ class ParameterEstimation:
 
         # First-order derivatives: 2n function calls needed
         for i in range(n):
-            A[i] = objfun(x + ee[:, i])
-            B[i] = objfun(x - ee[:, i])
+            A[i] = objfun(x + ee[:, i], simulation)
+            B[i] = objfun(x - ee[:, i], simulation)
 
         # Second-order derivatives based on function calls only (Abramowitz and Stegun 1972, p.884): for dense Hessian, 2n+4n^2/2 function calls needed.
         H = np.zeros((n, n))
         for i in range(n):
-            C = objfun(x + 2 * ee[:, i])
-            E = objfun(x)
-            F = objfun(x - 2 * ee[:, i])
+            C = objfun(x + 2 * ee[:, i], simulation)
+            E = objfun(x, simulation)
+            F = objfun(x - 2 * ee[:, i], simulation)
             H[i, i] = (- C + 16 * A[i] - 30 * E + 16 * B[i] - F) / (12 * (ee[i, i] ** 2))
             for j in range(i + 1, n):
-                G = objfun(x + ee[:, i] + ee[:, j])
-                I = objfun(x + ee[:, i] - ee[:, j])
-                J = objfun(x - ee[:, i] + ee[:, j])
-                K = objfun(x - ee[:, i] - ee[:, j])
+                G = objfun(x + ee[:, i] + ee[:, j], simulation)
+                I = objfun(x + ee[:, i] - ee[:, j], simulation)
+                J = objfun(x - ee[:, i] + ee[:, j], simulation)
+                K = objfun(x - ee[:, i] - ee[:, j], simulation)
                 H[i, j] = (G - I - J + K) / (4 * ee[i, i] * ee[j, j])
                 H[j, i] = H[i, j]
 
@@ -206,6 +206,9 @@ cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([1, 1, 1])
 cantilever_initial_parameter = np.array([1.0, 0.0])
 
+print "Parameters for data generation: C10 = 2.1, C01 = 0.0"
+print "Initial parameters for optimisation: C10 = 1.0, C01 = 0.0"
+
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 ps.initial_parameters = cantilever_initial_parameter
@@ -218,6 +221,13 @@ ps.simulation.prepare_projection()
 simulation_tuple = (ps.simulation,)
 ps.set_objective_function(cantilever_objective_function, simulation_tuple)
 ps.optimise()
+print '\n'
+print "Optimisation routine results:"
 print ps.solutions.x
+
+[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1.e-7, ps.simulation)
+print '\n'
+print "Hessian determinant"
+print detH
 
 #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)

@@ -22,6 +22,7 @@
 
 
 #import opencmiss.iron as iron
+import cmath
 import numpy as np
 from CantileverSimulation import CantileverSimulation
 
@@ -31,7 +32,19 @@ def destroy_routine(simulation):
     simulation.basis.Destroy()
     simulation.problem.Destroy()
 
+def error_calculation(currentDataSet, previousDataSet):
+    xError = yError = zError = 0
 
+    for i in range(len(currentDataSet)):
+        xError += (currentDataSet[i,0] - previousDataSet[i,0]) ** 2
+        yError += (currentDataSet[i,1] - previousDataSet[i,1]) ** 2
+        zError += (currentDataSet[i,2] - previousDataSet[i,2]) ** 2
+
+    xError = cmath.sqrt(xError/len(currentDataSet))
+    yError = cmath.sqrt(yError/len(currentDataSet))
+    zError = cmath.sqrt(zError/len(currentDataSet))
+
+    return xError, yError, zError
 
 # Set the tolerance required for the mesh convergence study
 tolerance = 0.00001
@@ -70,14 +83,54 @@ simulation.solve_simulation()
 currentDataPoints = simulation.generate_data(3)
 print currentDataPoints
 
+# Calculate the error in the data in each of the axial directions using the two sets of data.
+[xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
+
 # Now prepare the loop variables.
 iteration = 1
 converged = False
 
 while converged == False:
     # First, clear the previous simulation out of the simulation variable so it can be used again.
-    simulation = None
+    destroy_routine(simulation)
     simulation = CantileverSimulation()
 
     # Now calculate the new variables which should be used to initialise the next simulation using the error in each
     # direction from the previous iteration.
+    if xError > tolerance:
+        cantilever_elements[0] = cantilever_elements[0] * round(cmath.log10(xError/tolerance))
+    if yError > tolerance:
+        cantilever_elements[1] = cantilever_elements[1] * round(cmath.log10(yError/tolerance))
+    if yError > tolerance:
+        cantilever_elements[2] = cantilever_elements[2] * round(cmath.log10(zError/tolerance))
+
+    # Now set up and solve the next simulation with these parameters.
+    simulation = CantileverSimulation()
+    simulation.set_cantilever_dimensions(cantilever_dimensions)
+    simulation.set_cantilever_elements(cantilever_elements)
+    simulation.set_diagnostic_level(0)
+    simulation.setup_cantilever_simulation()
+    simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
+    simulation.solve_simulation()
+
+    # Move the data from the previous simulation from the current to the previous variable before retrieving the
+    # next set of data from the complete simulation.
+    previousDataPoints = currentDataPoints
+    currentDataPoints = simulation.generate_data(3)
+
+    # Calculate the overall error which will be used to check if the overall tolerance has been satisfied.
+    Error = 0
+    for i in range(len(currentDataPoints)):
+        for j in range(len(currentDataPoints[i])):
+            Error += (currentDataPoints[i,j] - previousDataPoints[i,j]) ** 2
+
+    Error = cmath.sqrt(zError/len(currentDataPoints))
+
+    if Error < tolerance:
+        converged = True
+
+    # Calculate the error in the x, y and z directions.
+    [xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
+
+# Return the final element dimensions required to converge to the tolerance
+print cantilever_elements
