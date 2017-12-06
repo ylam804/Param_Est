@@ -1,7 +1,8 @@
 import numpy as np
-import CantileverSimulation as CantileverSimulation
+from CantileverSimulation import CantileverSimulation
 from CantileverSimulation import cantilever_objective_function
-import ParameterOptimisation as ParamOpt
+from CantileverSimulation import destroy_routine
+from ParameterOptimisation import ParameterEstimation
 import math
 
 # First gather all the data sets. If this is artificial, run a simulation with the known parameters first and extract
@@ -14,7 +15,7 @@ cantilever_elements = np.array([1, 1, 1])
 true_parameter = np.array([1.452])
 guess_parameter = np.array([0.5])
 
-ps = ParamOpt()
+ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 
 # Now enter into the loop and set up each simulation with a different gravity vector.
@@ -24,6 +25,9 @@ designVariableOneStep = 15
 designVariableTwoStart = 0
 designVariableTwoFinish = 360
 designVariableTwoStep = 20
+
+angleOneCounter = 0
+angleTwoCounter = 0
 
 HMatrix = detHMatrix = condHMatrix = detH0Matrix = np.zeros(((designVariableOneFinish-designVariableOneStart)/designVariableOneStep, (designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep))
 
@@ -36,23 +40,30 @@ for i in range(designVariableOneStart, designVariableOneFinish, designVariableOn
         ps.simulation.set_gravity_vector(gravity_vector)
         ps.simulation.set_diagnostic_level(0)
         ps.simulation.setup_cantilever_simulation()
-        ps.simulation.prepare_projection()
         ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
         ps.simulation.solve_simulation()
         data = ps.simulation.generate_data(3)
+        ps.simulation.set_projection_data(data)
+        ps.simulation.prepare_projection()
 
+        # Now that the data points have been obtained, use them to find a set of optimised parameters.
+        destroy_routine(ps.simulation)
+        ps.initial_parameters = guess_parameter
+        ps.simulation.set_projection_data(data)
+        ps.simulation.setup_cantilever_simulation()
+        ps.simulation.prepare_projection()
         simulation_tuple = (ps.simulation,)
         ps.set_objective_function(cantilever_objective_function, simulation_tuple)
+        ps.optimise()
 
-# Now enter into the loops which change the design variables and
+        # Now use those optimised parameters to calculate the Hessian metrics.
+        [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
 
-# Next, run FE models with a guess as to what the material property is and optimise the parameter to provide the best
-# deformation match to the provided data.
-
-
-# Now that the optimal parameters have been found for this orientation, calculate the Hessian and its properties in this
-# orientation and store the results.
-
+        destroy_routine(ps.simulation)
+        angleTwoCounter += 1
+    angleOneCounter += 1
+    angleTwoCounter = 0
 
 # Once all the orientations have been analysed, plot the resulting Hessian metrics against the orientation design
 # variables.
+print 'Done!'
