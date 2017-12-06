@@ -130,7 +130,10 @@ class CantileverSimulation:
         gravity_vector[0] = math.sin(angleOne) * -9.81
 
         remainingMagnitude = 9.81 ** 2 - gravity_vector[0] ** 2
-        gravity_vector[1] = math.sqrt(math.sin(angleTwo) * remainingMagnitude)
+        if angleTwo > math.pi:
+            gravity_vector[1] = -1 * math.sqrt(math.sin(angleTwo-math.pi) * remainingMagnitude)
+        else:
+            gravity_vector[1] = math.sqrt(math.sin(angleTwo) * remainingMagnitude)
         gravity_vector[2] = -1 * math.sqrt(9.81 ** 2 - gravity_vector[0] ** 2 - gravity_vector[1] ** 2)
 
         return gravity_vector

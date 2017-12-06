@@ -21,10 +21,10 @@ ps.simulation = CantileverSimulation()
 # Now enter into the loop and set up each simulation with a different gravity vector.
 designVariableOneStart = -90
 designVariableOneFinish = 90
-designVariableOneStep = 15
+designVariableOneStep = 30
 designVariableTwoStart = 0
 designVariableTwoFinish = 360
-designVariableTwoStep = 20
+designVariableTwoStep = 45
 
 angleOneCounter = 0
 angleTwoCounter = 0
