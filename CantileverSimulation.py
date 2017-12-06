@@ -1,6 +1,6 @@
 from opencmiss.iron import iron
 import numpy as np
-
+import math
 
 class CantileverSimulation:
     """
@@ -110,6 +110,30 @@ class CantileverSimulation:
         """
 
         self.gravity_vector = gravity_vector
+
+    def gravity_vector_calculation(self, angleOne, angleTwo):
+        """
+        Calculates what the gravity vector required is to simulate the cantilever being positioned according to the
+        angles specified.
+
+        :param angleOne: vertical tilt away from a horizontal position.
+        :param angleTwo: twist on the beam.
+        :return: gravity_vector: a 3D vector which is the direction gravity can be thought to act when the cantilever
+                                    is rotated as if the direction of gravity had changed instead of the cantilever
+                                    orientation.
+        """
+
+        gravity_vector = np.zeros(3)
+
+        # First calculate the x component of the gravity vector, which arises due to the first angle which raises or
+        # lowers the beam away from the horizontal.
+        gravity_vector[0] = math.sin(angleOne) * -9.81
+
+        remainingMagnitude = 9.81 ** 2 - gravity_vector[0] ** 2
+        gravity_vector[1] = math.sqrt(math.sin(angleTwo) * remainingMagnitude)
+        gravity_vector[2] = -1 * math.sqrt(9.81 ** 2 - gravity_vector[0] ** 2 - gravity_vector[1] ** 2)
+
+        return gravity_vector
 
     def set_cantilever_density(self, density):
         """
@@ -588,8 +612,16 @@ def cantilever_objective_function(x, simulation):
 # Testing #
 ###########
 
+
+
+
+
 if __name__ == "__main__":
     # Testing the use of the objective function.
+    sim = CantileverSimulation()
+    sim.gravity_vector_calculation(math.pi/3, math.pi/4)
+
+
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
     cantilever_elements = np.array([1, 1, 1])
