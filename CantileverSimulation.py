@@ -131,7 +131,7 @@ class CantileverSimulation:
         gravity = self.gravity_vector
 
         UsePressureBasis = False
-        NumberOfGaussXi = 2
+        NumberOfGaussXi = 4
 
         coordinateSystemUserNumber = 1
         regionUserNumber = 1
@@ -187,7 +187,7 @@ class CantileverSimulation:
         elif InterpolationType in (7,8,9):
             self.basis.type = iron.BasisTypes.SIMPLEX
         self.basis.numberOfXi = numberOfXi
-        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
         if NumberOfGaussXi>0:
             self.basis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
         self.basis.CreateFinish()
@@ -201,7 +201,7 @@ class CantileverSimulation:
             elif InterpolationType in (7,8,9):
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
-            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
