@@ -141,5 +141,7 @@ while converged == False:
     # Calculate the error in the x, y and z directions.
     [xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
 
+    simulation.export_results()
+
 # Return the final element dimensions required to converge to the tolerance
 print cantilever_elements

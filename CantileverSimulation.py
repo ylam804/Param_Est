@@ -152,7 +152,7 @@ class CantileverSimulation:
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
-        numberOfLoadIncrements = 4
+        numberOfLoadIncrements = 10
         numberGlobalXElements = self.cantilever_elements[0]
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
@@ -596,7 +596,7 @@ if __name__ == "__main__":
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
     cantilever_elements = np.array([1, 1, 1])
-    cantilever_initial_parameter = np.array([2.1, 1.0])
+    cantilever_initial_parameter = np.array([2.1])
 
     cantilever_sim = CantileverSimulation()
     cantilever_sim.set_projection_data(data)
