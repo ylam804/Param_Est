@@ -179,7 +179,7 @@ class CantileverSimulation:
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
-        numberOfLoadIncrements = 10
+        numberOfLoadIncrements = 1
         numberGlobalXElements = self.cantilever_elements[0]
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
@@ -325,7 +325,7 @@ class CantileverSimulation:
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3,
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3)
         iron.Field.ComponentValuesInitialiseDP(
-            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,-8.0)
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0)
 
         # Create the material fields.
         self.materialField = iron.Field()
@@ -439,6 +439,8 @@ class CantileverSimulation:
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
     def solve_simulation(self):
         self.problem.Solve()

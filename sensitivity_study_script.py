@@ -11,7 +11,7 @@ import math
 
 # Start by setting some parameters and creating the simulation.
 cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([1, 1, 1])
+cantilever_elements = np.array([2, 2, 2])
 true_parameter = np.array([1.452])
 guess_parameter = np.array([0.5])
 
