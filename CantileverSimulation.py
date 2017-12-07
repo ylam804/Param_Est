@@ -131,7 +131,7 @@ class CantileverSimulation:
         gravity = self.gravity_vector
 
         UsePressureBasis = False
-        NumberOfGaussXi = 4
+        NumberOfGaussXi = 2
 
         coordinateSystemUserNumber = 1
         regionUserNumber = 1
@@ -152,7 +152,7 @@ class CantileverSimulation:
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
-        numberOfLoadIncrements = 10
+        numberOfLoadIncrements = 1
         numberGlobalXElements = self.cantilever_elements[0]
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
@@ -187,7 +187,7 @@ class CantileverSimulation:
         elif InterpolationType in (7,8,9):
             self.basis.type = iron.BasisTypes.SIMPLEX
         self.basis.numberOfXi = numberOfXi
-        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
+        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
         if NumberOfGaussXi>0:
             self.basis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
         self.basis.CreateFinish()
@@ -201,7 +201,7 @@ class CantileverSimulation:
             elif InterpolationType in (7,8,9):
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
-            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
+            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
@@ -298,7 +298,7 @@ class CantileverSimulation:
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3,
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3)
         iron.Field.ComponentValuesInitialiseDP(
-            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,-8.0)
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0)
 
         # Create the material fields.
         self.materialField = iron.Field()
@@ -412,6 +412,9 @@ class CantileverSimulation:
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
+
 
     def solve_simulation(self):
         self.problem.Solve()
@@ -602,7 +605,8 @@ if __name__ == "__main__":
     cantilever_sim.set_projection_data(data)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_diagnostic_level(0)
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0 ,0.0]))
+    cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
 
     cantilever_sim.prepare_projection()

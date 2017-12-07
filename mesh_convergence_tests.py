@@ -47,7 +47,7 @@ def error_calculation(currentDataSet, previousDataSet):
     return xError, yError, zError
 
 # Set the tolerance required for the mesh convergence study
-tolerance = 1e-3
+tolerance = 3e-1
 
 # Prepare the initial conditions for the first simulation
 cantilever_dimensions = np.array([60, 40, 40])
@@ -59,7 +59,7 @@ simulation = CantileverSimulation()
 # determine if mesh convergence has been reached or not.
 simulation.set_cantilever_dimensions(cantilever_dimensions)
 simulation.set_cantilever_elements(cantilever_elements)
-simulation.set_diagnostic_level(0)
+simulation.set_diagnostic_level(1)
 simulation.setup_cantilever_simulation()
 simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
 
@@ -77,7 +77,7 @@ destroy_routine(simulation)
 simulation = CantileverSimulation()
 simulation.set_cantilever_dimensions(cantilever_dimensions)
 simulation.set_cantilever_elements(cantilever_elements)
-simulation.set_diagnostic_level(0)
+simulation.set_diagnostic_level(1)
 simulation.setup_cantilever_simulation()
 simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
 simulation.solve_simulation()
@@ -120,7 +120,7 @@ while converged == False:
     currentDataPoints = simulation.generate_data(3)
     print '\n\n'
     iteration += 1
-    print "Iteration = %d" % iteration
+    print "Mesh Refinement = %d" % iteration
     print '\n'
     print previousDataPoints
     print '\n'
@@ -144,4 +144,8 @@ while converged == False:
     simulation.export_results()
 
 # Return the final element dimensions required to converge to the tolerance
-print cantilever_elements
+print '\n\n\n'
+print "Final Number of Elements:"
+print "              x = %d" % cantilever_elements[0]
+print "              y = %d" % cantilever_elements[1]
+print "              z = %d" % cantilever_elements[2]
