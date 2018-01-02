@@ -1,6 +1,6 @@
 from opencmiss.iron import iron
 import numpy as np
-
+import math
 
 class CantileverSimulation:
     """
@@ -111,6 +111,33 @@ class CantileverSimulation:
 
         self.gravity_vector = gravity_vector
 
+    def gravity_vector_calculation(self, angleOne, angleTwo):
+        """
+        Calculates what the gravity vector required is to simulate the cantilever being positioned according to the
+        angles specified.
+
+        :param angleOne: vertical tilt away from a horizontal position.
+        :param angleTwo: twist on the beam.
+        :return: gravity_vector: a 3D vector which is the direction gravity can be thought to act when the cantilever
+                                    is rotated as if the direction of gravity had changed instead of the cantilever
+                                    orientation.
+        """
+
+        gravity_vector = np.zeros(3)
+
+        # First calculate the x component of the gravity vector, which arises due to the first angle which raises or
+        # lowers the beam away from the horizontal.
+        gravity_vector[0] = math.sin(angleOne) * -9.81
+
+        remainingMagnitude = 9.81 ** 2 - gravity_vector[0] ** 2
+        if angleTwo > math.pi:
+            gravity_vector[1] = -1 * math.sqrt(math.sin(angleTwo-math.pi) * remainingMagnitude)
+        else:
+            gravity_vector[1] = math.sqrt(math.sin(angleTwo) * remainingMagnitude)
+        gravity_vector[2] = -1 * math.sqrt(9.81 ** 2 - gravity_vector[0] ** 2 - gravity_vector[1] ** 2)
+
+        return gravity_vector
+
     def set_cantilever_density(self, density):
         """
         Set the density of the cantilever beam.
@@ -152,7 +179,7 @@ class CantileverSimulation:
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
-        numberOfLoadIncrements = 4
+        numberOfLoadIncrements = 1
         numberGlobalXElements = self.cantilever_elements[0]
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
@@ -298,7 +325,7 @@ class CantileverSimulation:
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3,
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3)
         iron.Field.ComponentValuesInitialiseDP(
-            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,-8.0)
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0)
 
         # Create the material fields.
         self.materialField = iron.Field()
@@ -412,6 +439,8 @@ class CantileverSimulation:
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
     def solve_simulation(self):
         self.problem.Solve()
@@ -546,7 +575,10 @@ class CantileverSimulation:
         """
 
         # First find the number of elements in the FE model.
-        elementNum = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+        elementNum = np.array(self.cantilever_elements[0])
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1])
+        elementNum = np.append(elementNum, ((self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]) - (self.cantilever_elements[0] * (self.cantilever_elements[1]-1))))
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2])
 
         # Now apply
         if scale == 3:
@@ -557,11 +589,11 @@ class CantileverSimulation:
 
             for i in range(0, 4):
                 if i == 0:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.array([point])
                 else:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
@@ -584,6 +616,12 @@ def cantilever_objective_function(x, simulation):
 
     return simulation.error
 
+def destroy_routine(simulation):
+    simulation.coordinate_system.Destroy()
+    simulation.region.Destroy()
+    simulation.basis.Destroy()
+    simulation.problem.Destroy()
+
 ###########
 # Testing #
 ###########
@@ -593,7 +631,7 @@ if __name__ == "__main__":
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
     cantilever_elements = np.array([1, 1, 1])
-    cantilever_initial_parameter = np.array([2.1, 1.0])
+    cantilever_initial_parameter = np.array([2.1])
 
     cantilever_sim = CantileverSimulation()
     cantilever_sim.set_projection_data(data)
