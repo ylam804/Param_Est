@@ -223,5 +223,5 @@ if __name__ == "__main__":
 
     #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
 
-    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-5)
     print detH
