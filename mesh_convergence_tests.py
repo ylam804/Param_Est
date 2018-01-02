@@ -22,8 +22,9 @@
 
 
 #import opencmiss.iron as iron
-import cmath
+import math
 import numpy as np
+import matplotlib.pyplot as plt
 from CantileverSimulation import CantileverSimulation
 
 def destroy_routine(simulation):
@@ -46,6 +47,14 @@ def error_calculation(currentDataSet, previousDataSet):
 
     return xError, yError, zError
 
+def displacement_calculation(currentDataSet):
+    displacementArray = np.zeros((1,len(currentDataSet)))
+
+    for i in range(len(currentDataSet)):
+        displacementArray[0,i] = math.sqrt(currentDataSet[i,0] ** 2 + currentDataSet[i,1] ** 2 + currentDataSet[i,2] ** 2)
+
+    return displacementArray
+
 # Set the tolerance required for the mesh convergence study
 tolerance = 3e-1
 
@@ -66,6 +75,7 @@ simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
 # Solve the simulation and derive the data from the results.
 simulation.solve_simulation()
 previousDataPoints = simulation.generate_data(3)
+displacements = displacement_calculation(previousDataPoints)
 print previousDataPoints
 print '\n'
 
@@ -82,13 +92,14 @@ simulation.setup_cantilever_simulation()
 simulation.set_Mooney_Rivlin_parameter_values(cantilever_initial_parameters)
 simulation.solve_simulation()
 currentDataPoints = simulation.generate_data(3)
+displacements = np.append(displacements, displacement_calculation(currentDataPoints), axis = 0)
 print currentDataPoints
 
 # Calculate the error in the data in each of the axial directions using the two sets of data.
 [xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
 
 # Now prepare the loop variables.
-iteration = 1
+iteration = 0
 converged = False
 
 while converged == False:
@@ -138,6 +149,8 @@ while converged == False:
     if errorCount == 0:
         converged = True
 
+    displacements = np.append(displacements, displacement_calculation(currentDataPoints), axis = 0)
+
     # Calculate the error in the x, y and z directions.
     [xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
 
@@ -149,3 +162,19 @@ print "Final Number of Elements:"
 print "              x = %d" % cantilever_elements[0]
 print "              y = %d" % cantilever_elements[1]
 print "              z = %d" % cantilever_elements[2]
+
+print displacements
+
+
+c1 = c2 = c3 = c4 = np.zeros(len(displacements))
+
+for i in range(len(displacements)):
+    c1[i] = displacements[i,0]
+    c2[i] = displacements[i,1]
+    c3[i] = displacements[i,2]
+    c4[i] = displacements[i,3]
+
+convergenceNumber = range(1, iteration)
+
+plt.plt(convergenceNumber, c1, 'bo', convergenceNumber, c2, 'rx', convergenceNumber, c3, 'g--', convergenceNumber, c4, 'rs')
+plt.show()
