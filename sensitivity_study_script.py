@@ -42,33 +42,26 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
         ps.simulation.set_diagnostic_level(0)
         ps.simulation.setup_cantilever_simulation()
         ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
+        ps.simulation.solve_simulation()
+        data = ps.simulation.generate_data(3)
+        ps.simulation.set_projection_data(data)
+        ps.simulation.prepare_projection()
 
+        # Now that the data points have been obtained, use them to find a set of optimised parameters.
+        destroy_routine(ps.simulation)
+        ps.initial_parameters = guess_parameter
+        ps.simulation.set_projection_data(data)
+        ps.simulation.setup_cantilever_simulation()
+        ps.simulation.prepare_projection()
+        simulation_tuple = (ps.simulation,)
+        ps.set_objective_function(cantilever_objective_function, simulation_tuple)
         try:
-            ps.simulation.solve_simulation()
+            ps.optimise()
         except CMFEError:
-            [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = float('nan')
-
-        if np.isnan(HMatrix[angleOneCounter,angleTwoCounter]) == False:
-
-            data = ps.simulation.generate_data(3)
-            ps.simulation.set_projection_data(data)
-            ps.simulation.prepare_projection()
-
-            # Now that the data points have been obtained, use them to find a set of optimised parameters.
-            destroy_routine(ps.simulation)
-            ps.initial_parameters = guess_parameter
-            ps.simulation.set_projection_data(data)
-            ps.simulation.setup_cantilever_simulation()
-            ps.simulation.prepare_projection()
-            simulation_tuple = (ps.simulation,)
-            ps.set_objective_function(cantilever_objective_function, simulation_tuple)
-            try:
-                ps.optimise()
-            except CMFEError:
-                [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = [float('nan'), float('nan'), float('nan'), float('nan')]
-            else:
-                # Now use those optimised parameters to calculate the Hessian metrics.
-                [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+            [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = [float('nan'), float('nan'), float('nan'), float('nan')]
+        else:
+            # Now use those optimised parameters to calculate the Hessian metrics.
+            [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
 
         destroy_routine(ps.simulation)
         angleTwoCounter += 1
