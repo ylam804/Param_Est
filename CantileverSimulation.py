@@ -152,7 +152,7 @@ class CantileverSimulation:
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
 
-        numberOfLoadIncrements = 4
+        numberOfLoadIncrements = 1
         numberGlobalXElements = self.cantilever_elements[0]
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
@@ -298,7 +298,7 @@ class CantileverSimulation:
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3,
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,3)
         iron.Field.ComponentValuesInitialiseDP(
-            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,-8.0)
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0)
 
         # Create the material fields.
         self.materialField = iron.Field()
@@ -412,6 +412,9 @@ class CantileverSimulation:
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
+
 
     def solve_simulation(self):
         self.problem.Solve()
@@ -546,7 +549,10 @@ class CantileverSimulation:
         """
 
         # First find the number of elements in the FE model.
-        elementNum = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+        elementNum = np.array(self.cantilever_elements[0])
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1])
+        elementNum = np.append(elementNum, ((self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]) - (self.cantilever_elements[0] * (self.cantilever_elements[1]-1))))
+        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2])
 
         # Now apply
         if scale == 3:
@@ -557,11 +563,11 @@ class CantileverSimulation:
 
             for i in range(0, 4):
                 if i == 0:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.array([point])
                 else:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,setOfXi[i],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
                     point = point[0:3]
                     dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
@@ -593,13 +599,14 @@ if __name__ == "__main__":
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
     cantilever_elements = np.array([1, 1, 1])
-    cantilever_initial_parameter = np.array([2.1, 1.0])
+    cantilever_initial_parameter = np.array([2.1])
 
     cantilever_sim = CantileverSimulation()
     cantilever_sim.set_projection_data(data)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_diagnostic_level(0)
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0 ,0.0]))
+    cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
 
     cantilever_sim.prepare_projection()
