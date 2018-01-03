@@ -113,7 +113,7 @@ while converged == False:
         cantilever_elements[0] = round(cantilever_elements[0] * 1.6)
     if yError > tolerance:
         cantilever_elements[1] = round(cantilever_elements[1] * 1.3)
-    if yError > tolerance:
+    if zError > tolerance:
         cantilever_elements[2] = round(cantilever_elements[2] * 1.3)
 
     # Now set up and solve the next simulation with these parameters.

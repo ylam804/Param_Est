@@ -405,7 +405,7 @@ class CantileverSimulation:
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
-        :param parameter_value: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
         """
 
         self.materialField.ComponentValuesInitialiseDP(
@@ -580,6 +580,8 @@ class CantileverSimulation:
         #    rightXi = np.array([[0,1,0], [0.5,1,0], [1,1,0], [0,1,0.5], [0.5,1,0.5], [1,1,0.5], [0,1,1], [0.5,1,1], [1,1,1]])
         #    endXi = np.array([[1,0,0], [1,0.5,0], [1,1,0], [1,0,0.5], [1,0.5,0.5], [1,1,0.5], [1,0,1], [1,0.5,1], [1,1,1]])
 
+
+
         # Redefine the number of elements in each dimension for quicker use.
         x = self.cantilever_elements[0]
         y = self.cantilever_elements[1]
@@ -647,6 +649,7 @@ def cantilever_objective_function(x, simulation):
 
     return simulation.error
 
+
 ###########
 # Testing #
 ###########
@@ -655,14 +658,14 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
-    cantilever_elements = np.array([3, 2, 2])
-    cantilever_initial_parameter = np.array([2.1])
+    cantilever_elements = np.array([1, 1, 1])
+    cantilever_initial_parameter = np.array([2.05])
 
     cantilever_sim = CantileverSimulation()
     cantilever_sim.set_projection_data(data)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0 ,0.0]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
 
@@ -673,5 +676,3 @@ if __name__ == "__main__":
 
     dataLocations = cantilever_sim.generate_data(3)
     print dataLocations
-
-

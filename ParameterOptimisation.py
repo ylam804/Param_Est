@@ -199,39 +199,42 @@ def plotParameterEstimationError(x, y, dx, dy):
 # Testing #
 ###########
 
+if __name__ == "__main__":
 
-data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
-cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([1, 1, 1])
+    #data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
+    cantilever_dimensions = np.array([30, 12, 12])
+    cantilever_elements = np.array([1, 1, 1])
+    cantilever_initial_parameter = np.array([2.05])
+    cantilever_guess_parameter = np.array([0.82])
 
+    print "Parameters for data generation: C10 = 2.05, C01 = 0.0"
+    print "Initial parameters for optimisation: C10 = 0.82, C01 = 0.0"
 
-cantilever_initial_parameter = np.array([1.0])
+    ps = ParameterEstimation()
+    ps.simulation = CantileverSimulation()
+    ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
+    ps.simulation.set_cantilever_elements(cantilever_elements)
+    ps.simulation.set_diagnostic_level(0)
+    ps.simulation.setup_cantilever_simulation()
+    ps.simulation.solve_simulation()
+    data = ps.simulation.generate_data(3)[:,0:3]
 
-print "Parameters for data generation: C10 = 2.1, C01 = 0.0"
-print "Initial parameters for optimisation: C10 = 1.0, C01 = 0.0"
+    ps.simulation.set_projection_data(data)
+    ps.simulation.prepare_projection()
+    ps.initial_parameters = cantilever_guess_parameter
+    simulation_tuple = (ps.simulation,)
+    ps.set_objective_function(cantilever_objective_function, simulation_tuple)
+    ps.optimise()
+    print '\n'
+    print "Optimisation routine results:"
+    print ps.solutions.x
 
-ps = ParameterEstimation()
-ps.simulation = CantileverSimulation()
-ps.initial_parameters = cantilever_initial_parameter
-ps.simulation.set_projection_data(data)
-ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
-ps.simulation.set_cantilever_elements(cantilever_elements)
-ps.simulation.set_diagnostic_level(0)
-ps.simulation.setup_cantilever_simulation()
-ps.simulation.prepare_projection()
-simulation_tuple = (ps.simulation,)
-ps.set_objective_function(cantilever_objective_function, simulation_tuple)
-ps.optimise()
-print '\n'
-print "Optimisation routine results:"
-print ps.solutions.x
+    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1.e-7, ps.simulation)
+    print '\n'
+    print "Hessian determinant"
+    print detH
 
-[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1.e-7, ps.simulation)
-print '\n'
-print "Hessian determinant"
-print detH
+    #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
 
-#print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
-
-#[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
-#print detH
+    #[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+    #print detH
