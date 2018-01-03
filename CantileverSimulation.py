@@ -548,10 +548,7 @@ class CantileverSimulation:
         :return: Sets the simulation's data to a set of points on the surface of the FE model.
         """
 
-        # Redefine the number of elements in each dimension for quicker use.
-        x = self.cantilever_elements[0]
-        y = self.cantilever_elements[1]
-        z = self.cantilever_elements[2]
+
 
         # First find the number of elements in the FE model.
         #elementNum = np.array(self.cantilever_elements[0])
@@ -576,8 +573,6 @@ class CantileverSimulation:
         #            point = point[0:3]
         #            dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
-        dataLocations = np.array([])
-
         #if self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2] == 1:
         #    bottomXi = np.array([[0,0,0], [0.5,0,0], [1,0,0], [0,0.5,0], [0.5,0.5,0], [1,0.5,0], [0,1,0], [0.5,1,0], [1,1,0]])
         #    topXi = np.array([[0,0,1], [0.5,0,1], [1,0,1], [0,0.5,1], [0.5,0.5,1], [1,0.5,1], [0,1,1], [0.5,1,1], [1,1,1]])
@@ -585,13 +580,20 @@ class CantileverSimulation:
         #    rightXi = np.array([[0,1,0], [0.5,1,0], [1,1,0], [0,1,0.5], [0.5,1,0.5], [1,1,0.5], [0,1,1], [0.5,1,1], [1,1,1]])
         #    endXi = np.array([[1,0,0], [1,0.5,0], [1,1,0], [1,0,0.5], [1,0.5,0.5], [1,1,0.5], [1,0,1], [1,0.5,1], [1,1,1]])
 
+        # Redefine the number of elements in each dimension for quicker use.
+        x = self.cantilever_elements[0]
+        y = self.cantilever_elements[1]
+        z = self.cantilever_elements[2]
+
+        dataLocations = np.array([])
+
         leftElems = rightElems = np.array([])
         for i in range(z):
             leftElems = np.append(leftElems, range(i*x*y+1, i*x*y+x+1))
             rightElems = np.append(rightElems, range(i*x*y+x*(y-1)+1, i*x*y+x*(y-1)+x+1))
 
-        leftElems = leftElems.astype('int32')
-        rightElems = rightElems.astype('int32')
+        leftElems = leftElems.astype('int64')
+        rightElems = rightElems.astype('int64')
 
         bottomElems = np.array(range(1, x*y+1))
         topElems = np.array(range((z-1)*x*y+1, x*y*z+1))
@@ -603,32 +605,36 @@ class CantileverSimulation:
         rightXi = np.array([[0,1,0], [1,1,0], [0,1,1], [1,1,1]])
         topXi = np.array([[0,0,1], [1,0,1], [0,1,1], [1,1,1]])
 
-        dataLocations = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],2)
+        dataLocations = np.array([iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],4)])
 
-        for i in len(leftElems):
-            for j in (len(leftXi)-1):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftElems[i],leftXi[j],2)
+        for i in range(len(leftElems)):
+            for j in range(len(leftXi)):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftElems[i],leftXi[j],4)
                 dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
-        for i in len(rightElems):
-            for j in len(bottomXi):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomElems[i],bottomXi[j],3)
+        for i in range(len(rightElems)):
+            for j in range(len(bottomXi)):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomElems[i],bottomXi[j],4)
                 dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
-        for i in len(endElems):
-            for j in len(endXi):
+        for i in range(len(endElems)):
+            for j in range(len(endXi)):
                 point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,endElems[i],endXi[j],4)
                 dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
-        for i in len(rightElems):
-            for j in len(rightXi):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightElems[i],rightXi[j],5)
+        for i in range(len(rightElems)):
+            for j in range(len(rightXi)):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightElems[i],rightXi[j],4)
                 dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
-        for i in len(topElems):
-            for j in len(topXi):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topElems[i],topXi[j],6)
+        for i in range(len(topElems)):
+            for j in range(len(topXi)):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topElems[i],topXi[j],4)
                 dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        # Note: these loops could be reduced down to just three since the left and right as well as the top and bottom
+        #       could be looped through at the same time. This hasn't been done so that all the points on a single face
+        #       of the model are grouped consecutively together in the dataLocations array.
 
         return dataLocations
 
@@ -649,7 +655,7 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
-    cantilever_elements = np.array([4, 3, 2])
+    cantilever_elements = np.array([3, 2, 2])
     cantilever_initial_parameter = np.array([2.1])
 
     cantilever_sim = CantileverSimulation()

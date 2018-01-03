@@ -233,5 +233,5 @@ print detH
 
 #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
 
-[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
-print detH
+#[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+#print detH
