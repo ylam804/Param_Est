@@ -30,7 +30,8 @@ designVariableTwoStep = 45
 angleOneCounter = 0
 angleTwoCounter = 0
 
-HMatrix = detHMatrix = condHMatrix = detH0Matrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
+detHMatrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
+#HMatrix = condHMatrix = detH0Matrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
 
 for i in range(designVariableOneStart, designVariableOneFinish+1, designVariableOneStep):
     for j in range(designVariableTwoStart, designVariableTwoFinish+1, designVariableTwoStep):
@@ -47,21 +48,21 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
         ps.simulation.set_projection_data(data)
         ps.simulation.prepare_projection()
 
-        # Now that the data points have been obtained, use them to find a set of optimised parameters.
         destroy_routine(ps.simulation)
         ps.initial_parameters = guess_parameter
         ps.simulation.set_projection_data(data)
         ps.simulation.setup_cantilever_simulation()
         ps.simulation.prepare_projection()
-        simulation_tuple = (ps.simulation,)
+        simulation_tuple = (ps.simulation, )
         ps.set_objective_function(cantilever_objective_function, simulation_tuple)
         try:
             ps.optimise()
         except CMFEError:
-            [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = [float('nan'), float('nan'), float('nan'), float('nan')]
+            [H, detH, condH, detH0] = [float('nan'), float('nan'), float('nan'), float('nan')]
         else:
-            # Now use those optimised parameters to calculate the Hessian metrics.
-            [HMatrix[angleOneCounter,angleTwoCounter], detHMatrix[angleOneCounter,angleTwoCounter], condHMatrix[angleOneCounter,angleTwoCounter], detH0Matrix[angleOneCounter,angleTwoCounter]] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+            [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+
+        detHMatrix[angleOneCounter, angleTwoCounter] = detH
 
         destroy_routine(ps.simulation)
         angleTwoCounter += 1

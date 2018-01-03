@@ -200,28 +200,60 @@ def plotParameterEstimationError(x, y, dx, dy):
 ###########
 
 if __name__ == "__main__":
-    data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
-    cantilever_dimensions = np.array([60, 40, 40])
-    cantilever_elements = np.array([1, 1, 1])
+    #data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
+    #cantilever_dimensions = np.array([60, 40, 40])
+    #cantilever_elements = np.array([1, 1, 1])
 
 
-    cantilever_initial_parameter = np.array([1.0])
+    #cantilever_initial_parameter = np.array([1.0])
 
-    ps = ParameterEstimation()
-    ps.simulation = CantileverSimulation()
-    ps.initial_parameters = cantilever_initial_parameter
-    ps.simulation.set_projection_data(data)
-    ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
-    ps.simulation.set_cantilever_elements(cantilever_elements)
-    ps.simulation.set_diagnostic_level(0)
-    ps.simulation.setup_cantilever_simulation()
-    ps.simulation.prepare_projection()
-    simulation_tuple = (ps.simulation,)
-    ps.set_objective_function(cantilever_objective_function, simulation_tuple)
-    ps.optimise()
-    print ps.solutions.x
+    #ps = ParameterEstimation()
+    #ps.simulation = CantileverSimulation()
+    #ps.initial_parameters = cantilever_initial_parameter
+    #ps.simulation.set_projection_data(data)
+    #ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
+    #ps.simulation.set_cantilever_elements(cantilever_elements)
+    #ps.simulation.set_diagnostic_level(0)
+    #ps.simulation.setup_cantilever_simulation()
+    #ps.simulation.prepare_projection()
+    #simulation_tuple = (ps.simulation,)
+    #ps.set_objective_function(cantilever_objective_function, simulation_tuple)
+    #ps.optimise()
+    #print ps.solutions.x
 
     #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
 
-    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-5)
-    print detH
+    #[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-5)
+    #print detH
+
+    cantilever_dimensions = np.array([30, 12, 12])
+    cantilever_elements = np.array([2, 2, 2])
+    true_parameter = np.array([2.1])
+    guess_parameter = np.array([0.8])
+    gravity_vector = np.array([0.0, 0.0, -9.81])
+
+    ps = ParameterEstimation()
+    ps.simulation = CantileverSimulation()
+    ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
+    ps.simulation.set_cantilever_elements(cantilever_elements)
+    ps.simulation.set_gravity_vector(gravity_vector)
+    ps.simulation.set_diagnostic_level(0)
+    ps.simulation.setup_cantilever_simulation()
+    ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
+    ps.simulation.solve_simulation()
+    data = ps.simulation.generate_data(3)
+    ps.simulation.set_projection_data(data)
+    ps.simulation.prepare_projection()
+
+    from CantileverSimulation import destroy_routine
+    destroy_routine(ps.simulation)
+    ps.initial_parameters = guess_parameter
+    ps.simulation.set_projection_data(data)
+    ps.simulation.setup_cantilever_simulation()
+    ps.simulation.prepare_projection()
+    simulation_tuple = (ps.simulation, )
+    ps.set_objective_function(cantilever_objective_function, simulation_tuple)
+    ps.optimise()
+    [HMatrix, detHMatrix, condHMatrix, detH0Matrix] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+
+    print detHMatrix
