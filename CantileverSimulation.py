@@ -426,7 +426,7 @@ class CantileverSimulation:
         self.fields.ElementsExport("Cantilever","FORTRAN")
         self.fields.Finalise()
 
-    def prepare_projection(self):
+    def prepare_projection(self, i):
         """
         Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
         dataProjection structures only need to be made once.
@@ -436,18 +436,44 @@ class CantileverSimulation:
                         surface of the real experiment.
         """
 
-        numDatapoints = len(self.data)
+        # Set the number of elements in each direction to easier to use references.
+        x = self.cantilever_elements[0]
+        y = self.cantilever_elements[1]
+        z = self.cantilever_elements[2]
 
+        # Now, depending on which face the projection_calculation function is up to, set the number of data points to
+        # the number of elements on that face, multiplied by the number of points per element. Then also select that
+        # sequence of data points out of the total data set.
+        if i == 2 or i == 5:
+            numDataPoints = x * z * 4
+            if i == 2:
+                points = self.data[1:numDataPoints+1]
+            elif i == 5:
+                points = self.data[((x*z + x*y + y*z)*4 + 1):((2*x*z + x*y + y*z)*4 + 1)]
+        elif i == 3 or i == 6:
+            numDataPoints = x * y * 4
+            if i == 3:
+                points = self.data[(x*z*4 + 1):(x*z + x*y)*4 + 1]
+            elif i == 6:
+                points = self.data[((2*x*z + x*y + y*z)*4 + 1):((2*x*z + 2*x*y + y*z)*4 + 1)]
+        elif i == 4:
+            numDataPoints = y * z * 4
+            points = self.data[((x*z + x*y)*4 + 1):((x*z + x*y + y*z)*4 + 1)]
+
+        # Having defined which points are to be used in this pass of the projection calculation, now create the data
+        # point structure.
         self.dataPoints = iron.DataPoints()
-        self.dataPoints.CreateStart(self.region, numDatapoints)
-        for pointNum, point in enumerate(self.data,1):
+        self.dataPoints.CreateStart(self.region, numDataPoints)
+        for pointNum, point in enumerate(points,1):
             self.dataPoints.ValuesSet(pointNum, point)
         self.dataPoints.CreateFinish()
 
+        # Now create the data projection structure and pass in the data point structure which was just made.
         dataProjectionUserNumber = 1
         self.dataProjection = iron.DataProjection()
         self.dataProjection.CreateStart(dataProjectionUserNumber, self.dataPoints,
                                         self.mesh)
+
         # Set tolerances and other settings for the data projection.
         self.dataProjection.AbsoluteToleranceSet(1.0e-15)
         self.dataProjection.RelativeToleranceSet(1.0e-15)
@@ -456,58 +482,31 @@ class CantileverSimulation:
             iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
         self.dataProjection.CreateFinish()
 
-        # Set the elements for projection and the relevant faces.
+        # The data points stored at first by this function have now been passed to the data projection. To prepare for
+        # the next loop of this calculation, now destroy the data points structure.
+        self.dataPoints.Destroy()
+
+        # Set the elements for projection and the relevant faces. First check which iteration of the projcetion
+        # projection calculation is current. Then select all the elements on the relevant side and set their outward
+        # face to be the one to be used for projection.
         pos = 1
         elements = np.array([])
-        faces = np.array([])
-        for z in range(self.cantilever_elements[2]):
-            for y in range(self.cantilever_elements[1]):
-                for x in range(self.cantilever_elements[0]):
-                    # Check if the element should be a candidate for projection.
-                    if x == 0 or x == (self.cantilever_elements[0]-1) or y == 0 or y == (self.cantilever_elements[1]-1) or z == 0 or z == (self.cantilever_elements[2]-1):
-                        elements = np.append(elements, np.array([pos]))
-                        faces = np.append(faces, np.array([4]))
-                        # Now find which of its faces should be projected onto.
 
-                        ## Info on face locations:
-                        #
-                        # Coordinates at (0,0,0), no error on face 1
-                        # Coordinates at (0,20,20), no error => face 1 is base x-direction
-                        #
-                        # Coordinates at (0,0,0), no error on face 2
-                        # Coordinates at (30,0,20), error = 0.02 => face 2 is base y-direction
-                        #
-                        # Coordinates at (30,20,-3), error = 0.10 on face 3
-                        # Coordinates at (30,20,37), error = 39.9 => face 3 is base z-direction
-                        #
-                        # Coordinates at (60,0,0), error = 2.04 on face 4
-                        # Coordinates at (58.5,0,0), error = 0.5 on face 4
-                        # Coordinates at (58.5,20,20), error = 2.12 => face 4 is end of x-direction
-                        #
-                        # Coordinates at (30,40,20), error = 0.02 on face 5
-                        # Coordinates at (40,40,10), error = 0.08 => face 5 is end of y-direction
-                        #
-                        # Coordinates at (30,20,37), error = 0.03 on face 6
-                        # Coordinates at (40,10,37), error = 0.95 => face 6 is end of z-direction
-
-
-                        #if x == 0:
-                        #    faces = np.append(faces, np.array([1]))
-                        #elif x == (elementArray[0]-1):
-                        #    faces = np.append(faces, np.array([6]))
-                        #elif y == (elementArray[1]-1):
-                        #    faces = np.append(faces, np.array([2]))
-                        #elif y == (elementArray[1]-1):
-                        #    faces = np.append(faces, np.array([5]))
-                        #elif z == (elementArray[2]-1):
-                        #    faces = np.append(faces, np.array([3]))
-                        #else:
-                        #    faces = np.append(faces, np.array([4]))
-                    # Increase the position for the next iteration.
-                    pos += 1
+        if i == 2:
+            for j in range(z):
+                elements = np.append(elements, np.array(range((j*x*y + 1), (j*x*y + x + 1))))
+        elif i == 3:
+            elements = np.array(range(1, (x*y + 1)))
+        elif i == 4:
+            elements = np.array(range(x, x*y*z+1, x))
+        elif i == 5:
+            for j in range(z):
+                elements = np.append(elements, np.array(range((j*x*y + x*(y-1) + 1), ((j+1)*x*y + 1))))
+        elif i == 6:
+            elements = np.array(range((x*y*(z-1) + 1), (x*y*z + 1)))
 
         elements = elements.astype('int32')
-        faces = faces.astype('int32')
+        faces = np.full((1, len(elements)), i, dtype=int)
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
 
     def projection_calculation(self):
@@ -517,6 +516,13 @@ class CantileverSimulation:
 
         :return: error: a measure of the error between the data points and the surface of the FE model.
         """
+
+        # Projections must be done face by face. First step is to loop through the five faces onto which the data points
+        # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
+        # points for projection and calculation their error before destroying both those projection and data sets to
+        # make room for the next set.
+        for i in range(2,7):
+            self.prepare_projection(i)
 
         numDatapoints = len(self.data)
 
