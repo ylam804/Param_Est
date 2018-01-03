@@ -548,36 +548,87 @@ class CantileverSimulation:
         :return: Sets the simulation's data to a set of points on the surface of the FE model.
         """
 
+        # Redefine the number of elements in each dimension for quicker use.
+        x = self.cantilever_elements[0]
+        y = self.cantilever_elements[1]
+        z = self.cantilever_elements[2]
+
         # First find the number of elements in the FE model.
-        elementNum = np.array(self.cantilever_elements[0])
-        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1])
-        elementNum = np.append(elementNum, ((self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]) - (self.cantilever_elements[0] * (self.cantilever_elements[1]-1))))
-        elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2])
+        #elementNum = np.array(self.cantilever_elements[0])
+        #elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1])
+        #elementNum = np.append(elementNum, ((self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]) - (self.cantilever_elements[0] * (self.cantilever_elements[1]-1))))
+        #elementNum = np.append(elementNum, self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2])
 
         # Now apply
-        if scale == 3:
-            setOfXi = np.array([[1, 0, 0]])
-            setOfXi = np.append(setOfXi, [[1, 1, 0]], axis=0)
-            setOfXi = np.append(setOfXi, [[1, 0, 1]], axis=0)
-            setOfXi = np.append(setOfXi, [[1, 1, 1]], axis=0)
+        #if scale == 3:
+        #    setOfXi = np.array([[1, 0, 0]])
+        #    setOfXi = np.append(setOfXi, [[1, 1, 0]], axis=0)
+        #    setOfXi = np.append(setOfXi, [[1, 0, 1]], axis=0)
+        #    setOfXi = np.append(setOfXi, [[1, 1, 1]], axis=0)
 
-            for i in range(0, 4):
-                if i == 0:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
-                    point = point[0:3]
-                    dataLocations = np.array([point])
-                else:
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
-                    point = point[0:3]
-                    dataLocations = np.append(dataLocations, np.array([point]),axis=0)
+        #    for i in range(0, 4):
+        #        if i == 0:
+        #            point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
+        #            point = point[0:3]
+        #            dataLocations = np.array([point])
+        #        else:
+        #            point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elementNum[i],setOfXi[i],4)
+        #            point = point[0:3]
+        #            dataLocations = np.append(dataLocations, np.array([point]),axis=0)
 
-        #elif scale == 2:
-            #asdf
-        #elif scale == 1:
-            #adf
-        #else:
-            #asdf
-        #ParameterSetInterpolateSingleXiDP(self, variableType, fieldSetType, derivativeNumber, userElementNumber, xi, valuesSize)
+        dataLocations = np.array([])
+
+        #if self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2] == 1:
+        #    bottomXi = np.array([[0,0,0], [0.5,0,0], [1,0,0], [0,0.5,0], [0.5,0.5,0], [1,0.5,0], [0,1,0], [0.5,1,0], [1,1,0]])
+        #    topXi = np.array([[0,0,1], [0.5,0,1], [1,0,1], [0,0.5,1], [0.5,0.5,1], [1,0.5,1], [0,1,1], [0.5,1,1], [1,1,1]])
+        #    leftXi = np.array([[0,0,0], [0.5,0,0], [1,0,0], [0,0,0.5], [0.5,0,0.5], [1,0,0.5], [0,0,1], [0.5,0,1], [1,0,1]])
+        #    rightXi = np.array([[0,1,0], [0.5,1,0], [1,1,0], [0,1,0.5], [0.5,1,0.5], [1,1,0.5], [0,1,1], [0.5,1,1], [1,1,1]])
+        #    endXi = np.array([[1,0,0], [1,0.5,0], [1,1,0], [1,0,0.5], [1,0.5,0.5], [1,1,0.5], [1,0,1], [1,0.5,1], [1,1,1]])
+
+        leftElems = rightElems = np.array([])
+        for i in range(z):
+            leftElems = np.append(leftElems, range(i*x*y+1, i*x*y+x+1))
+            rightElems = np.append(rightElems, range(i*x*y+x*(y-1)+1, i*x*y+x*(y-1)+x+1))
+
+        leftElems = leftElems.astype('int32')
+        rightElems = rightElems.astype('int32')
+
+        bottomElems = np.array(range(1, x*y+1))
+        topElems = np.array(range((z-1)*x*y+1, x*y*z+1))
+        endElems = np.array(range(x, x*y*z+1, x))
+
+        leftXi = np.array([[0,0,0], [1,0,0], [0,0,1], [1,0,1]])
+        bottomXi = np.array([[0,0,0], [1,0,0], [0,1,0], [1,1,0]])
+        endXi = np.array([[1,0,0], [1,0,1], [1,1,0], [1,1,1]])
+        rightXi = np.array([[0,1,0], [1,1,0], [0,1,1], [1,1,1]])
+        topXi = np.array([[0,0,1], [1,0,1], [0,1,1], [1,1,1]])
+
+        dataLocations = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],2)
+
+        for i in len(leftElems):
+            for j in (len(leftXi)-1):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftElems[i],leftXi[j],2)
+                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        for i in len(rightElems):
+            for j in len(bottomXi):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomElems[i],bottomXi[j],3)
+                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        for i in len(endElems):
+            for j in len(endXi):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,endElems[i],endXi[j],4)
+                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        for i in len(rightElems):
+            for j in len(rightXi):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightElems[i],rightXi[j],5)
+                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        for i in len(topElems):
+            for j in len(topXi):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topElems[i],topXi[j],6)
+                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
         return dataLocations
 
@@ -598,7 +649,7 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([60, 40, 40])
-    cantilever_elements = np.array([1, 1, 1])
+    cantilever_elements = np.array([4, 3, 2])
     cantilever_initial_parameter = np.array([2.1])
 
     cantilever_sim = CantileverSimulation()
