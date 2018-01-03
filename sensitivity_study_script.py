@@ -71,4 +71,6 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
 
 # Once all the orientations have been analysed, plot the resulting Hessian metrics against the orientation design
 # variables.
+
+
 print 'Done!'
