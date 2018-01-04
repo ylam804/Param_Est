@@ -15,4 +15,3 @@ def exportDatapointsExdata(data, label, directory, filename):
         for value_idx in range(data.shape[1]):
             field_id.write(' {0:.12E}\n'.format(data[point_idx, value_idx]))
     field_id.close()
-

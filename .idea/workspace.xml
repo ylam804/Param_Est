@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3d001257-185a-4e86-8557-915c5d7fbd46" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/visualisation.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/io.py" afterPath="$PROJECT_DIR$/input-output.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" afterPath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CantileverSimulation.py" afterPath="$PROJECT_DIR$/CantileverSimulation.py" />
@@ -20,12 +23,24 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="ParameterOptimisation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="61" column="8" lean-forward="false" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="CantileverSimulation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CantileverSimulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1419">
-              <caret line="667" column="0" lean-forward="false" selection-start-line="667" selection-start-column="0" selection-end-line="667" selection-end-column="0" />
+            <state relative-caret-position="-175">
+              <caret line="159" column="36" lean-forward="false" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="36" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -33,14 +48,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ParameterOptimisation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
+      <file leaf-file-name="mesh_convergence_tests.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/mesh_convergence_tests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="940">
-              <caret line="229" column="10" lean-forward="true" selection-start-line="229" selection-start-column="10" selection-end-line="229" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="391">
+              <caret line="23" column="30" lean-forward="false" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -72,6 +85,7 @@
       <find>des</find>
       <find>destroy</find>
       <find>cubic</find>
+      <find>iron</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -93,15 +107,20 @@
         <option value="$PROJECT_DIR$/cantilever.py" />
         <option value="$PROJECT_DIR$/unit_testing.py" />
         <option value="/hpc_htom/jada201/opt/CantileverParameterOptimisation/CantileverSimulation.py" />
-        <option value="$PROJECT_DIR$/mesh_convergence_tests.py" />
         <option value="$PROJECT_DIR$/sensitivity_study_script.py" />
+        <option value="$PROJECT_DIR$/mesh_convergence_tests.py" />
         <option value="$PROJECT_DIR$/ParameterOptimisation.py" />
+        <option value="$PROJECT_DIR$/Expected_Test_Output/io.py" />
+        <option value="$PROJECT_DIR$/io.py" />
+        <option value="$PROJECT_DIR$/input-output.py" />
+        <option value="$PROJECT_DIR$/visualisation.py" />
         <option value="$PROJECT_DIR$/CantileverSimulation.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="22" />
+    <option name="x" value="8" />
+    <option name="y" value="30" />
     <option name="width" value="1920" />
     <option name="height" value="1018" />
   </component>
@@ -139,7 +158,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -147,15 +165,21 @@
               <item name="CantileverParameterOptimisation" type="b2602c69:ProjectViewProjectNode" />
               <item name="CantileverParameterOptimisation" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="CantileverParameterOptimisation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CantileverParameterOptimisation" type="462c0819:PsiDirectoryNode" />
+              <item name="Expected_Test_Output" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../265" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -200,23 +224,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CantileverParameterOptimisation" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ParameterOptimisation.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-    </configuration>
-    <configuration name="cantilever" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CantileverParameterOptimisation" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cantilever.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -272,21 +279,38 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
+    <configuration name="visualisation" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="CantileverParameterOptimisation" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/visualisation.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Python.laplace" />
-      <item index="1" class="java.lang.String" itemvalue="Python.cantilever" />
-      <item index="2" class="java.lang.String" itemvalue="Python.ParameterOptimisation" />
-      <item index="3" class="java.lang.String" itemvalue="Python.CantileverSimulation" />
-      <item index="4" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
-      <item index="5" class="java.lang.String" itemvalue="Python.sensitivity_study_script" />
+      <item index="1" class="java.lang.String" itemvalue="Python.ParameterOptimisation" />
+      <item index="2" class="java.lang.String" itemvalue="Python.CantileverSimulation" />
+      <item index="3" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
+      <item index="4" class="java.lang.String" itemvalue="Python.sensitivity_study_script" />
+      <item index="5" class="java.lang.String" itemvalue="Python.visualisation" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.CantileverSimulation" />
-        <item index="1" class="java.lang.String" itemvalue="Python.sensitivity_study_script" />
+        <item index="1" class="java.lang.String" itemvalue="Python.visualisation" />
         <item index="2" class="java.lang.String" itemvalue="Python.ParameterOptimisation" />
-        <item index="3" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
-        <item index="4" class="java.lang.String" itemvalue="Python.cantilever" />
+        <item index="3" class="java.lang.String" itemvalue="Python.sensitivity_study_script" />
+        <item index="4" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
       </list>
     </recent_temporary>
   </component>
@@ -294,14 +318,14 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1920" height="1018" extended-state="0" />
+    <frame x="8" y="30" width="1920" height="1018" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14057508" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1400426" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32597265" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3438486" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38801262" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2113951" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41745532" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25665602" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -326,18 +350,43 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/ParameterOptimisation.py</url>
-          <line>234</line>
-          <option name="timeStamp" value="176" />
+          <line>222</line>
+          <option name="timeStamp" value="199" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/ParameterOptimisation.py</url>
+          <line>219</line>
+          <option name="timeStamp" value="200" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
-          <line>605</line>
-          <option name="timeStamp" value="186" />
+          <line>446</line>
+          <option name="timeStamp" value="201" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
-          <line>647</line>
-          <option name="timeStamp" value="187" />
+          <line>519</line>
+          <option name="timeStamp" value="202" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
+          <line>508</line>
+          <option name="timeStamp" value="203" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
+          <line>673</line>
+          <option name="timeStamp" value="206" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
+          <line>464</line>
+          <option name="timeStamp" value="207" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/CantileverSimulation.py</url>
+          <line>467</line>
+          <option name="timeStamp" value="209" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -350,28 +399,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="188" />
+      <option name="time" value="210" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/laplace.py" />
-    <entry file="file://$PROJECT_DIR$/laplace.py" />
-    <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3298">
-          <caret line="195" column="25" lean-forward="false" selection-start-line="195" selection-start-column="25" selection-end-line="195" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cantilever.py" />
-    <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3298">
-          <caret line="195" column="25" lean-forward="false" selection-start-line="195" selection-start-column="25" selection-end-line="195" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cantilever.py" />
     <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/iron.py" />
     <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/_utils.py" />
@@ -438,36 +470,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/sensitivity_study_script.py" />
     <entry file="file://$PROJECT_DIR$/mesh_convergence_tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-137">
-          <caret line="55" column="28" lean-forward="false" selection-start-line="55" selection-start-column="28" selection-end-line="55" selection-end-column="28" />
+        <state relative-caret-position="391">
+          <caret line="23" column="30" lean-forward="false" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sensitivity_study_script.py">
+    <entry file="file://$PROJECT_DIR$/Expected_Test_Output/io.py" />
+    <entry file="file://$PROJECT_DIR$/visualisation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1275">
-          <caret line="75" column="0" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="12" lean-forward="false" selection-start-line="0" selection-start-column="12" selection-end-line="0" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/input-output.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="20" lean-forward="false" selection-start-line="16" selection-start-column="20" selection-end-line="16" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ParameterOptimisation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="940">
-          <caret line="229" column="10" lean-forward="true" selection-start-line="229" selection-start-column="10" selection-end-line="229" selection-end-column="10" />
+        <state relative-caret-position="540">
+          <caret line="61" column="8" lean-forward="false" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharmEdu4.0/system/python_stubs/-829596263/opencmiss/iron/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmEdu4.0/system/python_stubs/-829596263/opencmiss/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CantileverSimulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1419">
-          <caret line="667" column="0" lean-forward="false" selection-start-line="667" selection-start-column="0" selection-end-line="667" selection-end-column="0" />
+        <state relative-caret-position="-175">
+          <caret line="159" column="36" lean-forward="false" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="36" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>

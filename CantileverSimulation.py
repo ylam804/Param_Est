@@ -157,7 +157,7 @@ class CantileverSimulation:
         numberGlobalYElements = self.cantilever_elements[1]
         numberGlobalZElements = self.cantilever_elements[2]
         InterpolationType = 1
-        if numberGlobalZElements==0:
+        if numberGlobalZElements == 0:
             numberOfXi = 2
         else:
             numberOfXi = 3
@@ -447,18 +447,18 @@ class CantileverSimulation:
         if i == 2 or i == 5:
             numDataPoints = x * z * 4
             if i == 2:
-                points = self.data[1:numDataPoints+1]
+                points = self.data[1:numDataPoints+1, 0:3]
             elif i == 5:
-                points = self.data[((x*z + x*y + y*z)*4 + 1):((2*x*z + x*y + y*z)*4 + 1)]
+                points = self.data[((x*z + x*y + y*z)*4 + 1):((2*x*z + x*y + y*z)*4 + 1), 0:3]
         elif i == 3 or i == 6:
             numDataPoints = x * y * 4
             if i == 3:
-                points = self.data[(x*z*4 + 1):(x*z + x*y)*4 + 1]
+                points = self.data[(x*z*4 + 1):(x*z + x*y)*4 + 1, 0:3]
             elif i == 6:
-                points = self.data[((2*x*z + x*y + y*z)*4 + 1):((2*x*z + 2*x*y + y*z)*4 + 1)]
+                points = self.data[((2*x*z + x*y + y*z)*4 + 1):((2*x*z + 2*x*y + y*z)*4 + 1), 0:3]
         elif i == 4:
             numDataPoints = y * z * 4
-            points = self.data[((x*z + x*y)*4 + 1):((x*z + x*y + y*z)*4 + 1)]
+            points = self.data[((x*z + x*y)*4 + 1):((x*z + x*y + y*z)*4 + 1), 0:3]
 
         # Having defined which points are to be used in this pass of the projection calculation, now create the data
         # point structure.
@@ -469,7 +469,7 @@ class CantileverSimulation:
         self.dataPoints.CreateFinish()
 
         # Now create the data projection structure and pass in the data point structure which was just made.
-        dataProjectionUserNumber = 1
+        dataProjectionUserNumber = i
         self.dataProjection = iron.DataProjection()
         self.dataProjection.CreateStart(dataProjectionUserNumber, self.dataPoints,
                                         self.mesh)
@@ -482,14 +482,9 @@ class CantileverSimulation:
             iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
         self.dataProjection.CreateFinish()
 
-        # The data points stored at first by this function have now been passed to the data projection. To prepare for
-        # the next loop of this calculation, now destroy the data points structure.
-        self.dataPoints.Destroy()
-
         # Set the elements for projection and the relevant faces. First check which iteration of the projcetion
         # projection calculation is current. Then select all the elements on the relevant side and set their outward
         # face to be the one to be used for projection.
-        pos = 1
         elements = np.array([])
 
         if i == 2:
@@ -506,8 +501,9 @@ class CantileverSimulation:
             elements = np.array(range((x*y*(z-1) + 1), (x*y*z + 1)))
 
         elements = elements.astype('int32')
-        faces = np.full((1, len(elements)), i, dtype=int)
+        faces = np.full(len(elements), i, dtype='int32')
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
+        return numDataPoints
 
     def projection_calculation(self):
         """
@@ -517,27 +513,33 @@ class CantileverSimulation:
         :return: error: a measure of the error between the data points and the surface of the FE model.
         """
 
+        errorValues = np.array([])
+
         # Projections must be done face by face. First step is to loop through the five faces onto which the data points
         # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
         # points for projection and calculation their error before destroying both those projection and data sets to
         # make room for the next set.
         for i in range(2,7):
-            self.prepare_projection(i)
+            numDataPoints = self.prepare_projection(i)
 
-        numDatapoints = len(self.data)
+            # Now perform the projections.
+            self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
+            projectionErr = np.zeros(numDataPoints)
+            for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
+                projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
 
-        # Now perform the projections.
-        self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
-        projectionErr = np.zeros(numDatapoints)
-        for pointNum, pointIdx in enumerate(range(numDatapoints), 1):
-            projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
+            errorValues = np.append(errorValues, projectionErr)
+
+            # The data points stored at first by this function have now been passed to the data projection. To prepare
+            # for the next loop of this calculation, now destroy the data points structure.
+            self.dataPoints.Destroy()
 
         # Having found the projection errors, calculate the RMS error.
         self.error = 0
-        for i in range(numDatapoints):
-            self.error += projectionErr[i] ** 2
+        for i in range(len(errorValues)):
+            errorValues[i] = errorValues[i] ** 2
 
-        self.error = np.sqrt(np.average(self.error))
+        self.error = np.sqrt(np.average(errorValues))
 
         return self.error
 
@@ -655,6 +657,7 @@ def cantilever_objective_function(x, simulation):
 
     return simulation.error
 
+#def
 
 ###########
 # Testing #
@@ -663,22 +666,24 @@ def cantilever_objective_function(x, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
-    cantilever_dimensions = np.array([60, 40, 40])
-    cantilever_elements = np.array([1, 1, 1])
+    cantilever_dimensions = np.array([30, 12, 12])
+    cantilever_elements = np.array([3, 2, 2])
     cantilever_initial_parameter = np.array([2.05])
+    cantilever_guess_parameter = np.array([50])
 
     cantilever_sim = CantileverSimulation()
-    cantilever_sim.set_projection_data(data)
+
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
     cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
+    cantilever_sim.solve_simulation()
 
-    cantilever_sim.prepare_projection()
-    error = cantilever_objective_function(cantilever_initial_parameter, cantilever_sim)
+    data = cantilever_sim.generate_data(3)
+    print data
+    cantilever_sim.set_projection_data(data)
+
+    error = cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
     print('RMS Error = ', error)
     print '\n'
-
-    dataLocations = cantilever_sim.generate_data(3)
-    print dataLocations
