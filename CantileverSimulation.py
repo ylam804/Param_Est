@@ -441,24 +441,26 @@ class CantileverSimulation:
         y = self.cantilever_elements[1]
         z = self.cantilever_elements[2]
 
+        size = 11
+
         # Now, depending on which face the projection_calculation function is up to, set the number of data points to
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
         if i == 2 or i == 5:
-            numDataPoints = x * z * 4
+            numDataPoints = x * z * size**2
             if i == 2:
                 points = self.data[1:numDataPoints+1, 0:3]
             elif i == 5:
-                points = self.data[((x*z + x*y + y*z)*4 + 1):((2*x*z + x*y + y*z)*4 + 1), 0:3]
+                points = self.data[((x*z + x*y + y*z)*size**2 + 1):((2*x*z + x*y + y*z)*size**2 + 1), 0:3]
         elif i == 3 or i == 6:
-            numDataPoints = x * y * 4
+            numDataPoints = x * y * size**2
             if i == 3:
-                points = self.data[(x*z*4 + 1):(x*z + x*y)*4 + 1, 0:3]
+                points = self.data[(x*z*size**2 + 1):(x*z + x*y)*size**2+ 1, 0:3]
             elif i == 6:
-                points = self.data[((2*x*z + x*y + y*z)*4 + 1):((2*x*z + 2*x*y + y*z)*4 + 1), 0:3]
+                points = self.data[((2*x*z + x*y + y*z)*size**2 + 1):((2*x*z + 2*x*y + y*z)*size**2 + 1), 0:3]
         elif i == 4:
-            numDataPoints = y * z * 4
-            points = self.data[((x*z + x*y)*4 + 1):((x*z + x*y + y*z)*4 + 1), 0:3]
+            numDataPoints = y * z * size**2
+            points = self.data[((x*z + x*y)*size**2 + 1):((x*z + x*y + y*z)*size**2 + 1), 0:3]
 
         # Having defined which points are to be used in this pass of the projection calculation, now create the data
         # point structure.
@@ -608,6 +610,25 @@ class CantileverSimulation:
         bottomElems = np.array(range(1, x*y+1))
         topElems = np.array(range((z-1)*x*y+1, x*y*z+1))
         endElems = np.array(range(x, x*y*z+1, x))
+
+        size = 11
+
+        array = np.linspace(0, 1, size)
+
+        for i in range(size):
+            for j in range(size):
+                if i == 0 and j == 0:
+                    leftXi = np.array([])
+                    bottomXi = np.array([])
+                    endXi = np.array([])
+                    rightXi = np.array([])
+                    topXi = np.array([])
+
+                leftXi = np.append(leftXi, np.array([]), axis=0)
+                bottomXi = np.append(bottomXi, np.array([]), axis=0)
+                endXi = np.append(endXi, np.array([]), axis=0)
+                rightXi = np.append(rightXi, np.array([]), axis=0)
+                topXi = np.append(topXi, np.array([]), axis=0)
 
         leftXi = np.array([[0,0,0], [1,0,0], [0,0,1], [1,0,1]])
         bottomXi = np.array([[0,0,0], [1,0,0], [0,1,0], [1,1,0]])
