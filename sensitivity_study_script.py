@@ -2,7 +2,7 @@ import numpy as np
 from opencmiss.iron._utils import CMFEError
 from CantileverSimulation import CantileverSimulation
 from CantileverSimulation import cantilever_objective_function
-from CantileverSimulation import destroy_routine
+#from CantileverSimulation import destroy_routine
 from ParameterOptimisation import ParameterEstimation
 import math
 
@@ -14,10 +14,14 @@ import math
 cantilever_dimensions = np.array([60, 40, 40])
 cantilever_elements = np.array([2, 2, 2])
 true_parameter = np.array([1.452])
-guess_parameter = np.array([0.5])
 
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
+ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
+ps.simulation.set_cantilever_elements(cantilever_elements)
+ps.simulation.set_diagnostic_level(0)
+ps.simulation.setup_cantilever_simulation()
+ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
 
 # Now enter into the loop and set up each simulation with a different gravity vector.
 designVariableOneStart = -90
@@ -33,34 +37,28 @@ angleTwoCounter = 0
 detHMatrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
 #HMatrix = condHMatrix = detH0Matrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
 
+
+
+
 for i in range(designVariableOneStart, designVariableOneFinish+1, designVariableOneStep):
     for j in range(designVariableTwoStart, designVariableTwoFinish+1, designVariableTwoStep):
-        gravity_vector = ps.simulation.gravity_vector_calculation(i*math.pi/180, j*math.pi/180)
 
-        ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
-        ps.simulation.set_cantilever_elements(cantilever_elements)
+        gravity_vector = ps.simulation.gravity_vector_calculation(i*math.pi/180, j*math.pi/180)
         ps.simulation.set_gravity_vector(gravity_vector)
-        ps.simulation.set_diagnostic_level(0)
-        ps.simulation.setup_cantilever_simulation()
-        ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
         ps.simulation.solve_simulation()
+
         data = ps.simulation.generate_data(3)
         ps.simulation.set_projection_data(data)
-        ps.simulation.prepare_projection()
+        #ps.simulation.prepare_projection()
 
-        destroy_routine(ps.simulation)
-        ps.initial_parameters = guess_parameter
-        ps.simulation.set_projection_data(data)
-        ps.simulation.setup_cantilever_simulation()
-        ps.simulation.prepare_projection()
+        #destroy_routine(ps.simulation)
+        #ps.initial_parameters = guess_parameter
+        #ps.simulation.set_projection_data(data)
+        #ps.simulation.setup_cantilever_simulation()
+        #ps.simulation.prepare_projection()
         simulation_tuple = (ps.simulation, )
         ps.set_objective_function(cantilever_objective_function, simulation_tuple)
-        try:
-            ps.optimise()
-        except CMFEError:
-            [H, detH, condH, detH0] = [float('nan'), float('nan'), float('nan'), float('nan')]
-        else:
-            [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
+        [H, detH, condH, detH0] = ps.evaluate_hessian(true_parameter, 1e-7)
 
         detHMatrix[angleOneCounter, angleTwoCounter] = detH
 
