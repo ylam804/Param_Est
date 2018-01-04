@@ -614,27 +614,29 @@ class CantileverSimulation:
         size = 11
 
         array = np.linspace(0, 1, size)
+        [grid1, grid2] = np.meshgrid(array, array)
 
         for i in range(size):
             for j in range(size):
                 if i == 0 and j == 0:
-                    leftXi = np.array([])
-                    bottomXi = np.array([])
-                    endXi = np.array([])
-                    rightXi = np.array([])
-                    topXi = np.array([])
+                    leftXi = np.array([[grid1[i,j], 0, grid2[i,j]]])
+                    bottomXi = np.array([[grid1[i,j], grid2[i,j], 0]])
+                    endXi = np.array([[1, grid1[i,j], grid2[i,j]]])
+                    rightXi = np.array([[grid1[i,j], 1, grid2[i,j]]])
+                    topXi = np.array([[grid1[i,j], grid2[i,j], 1]])
 
-                leftXi = np.append(leftXi, np.array([]), axis=0)
-                bottomXi = np.append(bottomXi, np.array([]), axis=0)
-                endXi = np.append(endXi, np.array([]), axis=0)
-                rightXi = np.append(rightXi, np.array([]), axis=0)
-                topXi = np.append(topXi, np.array([]), axis=0)
+                else:
+                    leftXi = np.append(leftXi, np.array([[grid1[i,j], 0, grid2[i,j]]]), axis=0)
+                    bottomXi = np.append(bottomXi, np.array([[grid1[i,j], grid2[i,j], 0]]), axis=0)
+                    endXi = np.append(endXi, np.array([[1, grid1[i,j], grid2[i,j]]]), axis=0)
+                    rightXi = np.append(rightXi, np.array([[grid1[i,j], 1, grid2[i,j]]]), axis=0)
+                    topXi = np.append(topXi, np.array([[grid1[i,j], grid2[i,j], 1]]), axis=0)
 
-        leftXi = np.array([[0,0,0], [1,0,0], [0,0,1], [1,0,1]])
-        bottomXi = np.array([[0,0,0], [1,0,0], [0,1,0], [1,1,0]])
-        endXi = np.array([[1,0,0], [1,0,1], [1,1,0], [1,1,1]])
-        rightXi = np.array([[0,1,0], [1,1,0], [0,1,1], [1,1,1]])
-        topXi = np.array([[0,0,1], [1,0,1], [0,1,1], [1,1,1]])
+        #leftXi = np.array([[0,0,0], [1,0,0], [0,0,1], [1,0,1]])
+        #bottomXi = np.array([[0,0,0], [1,0,0], [0,1,0], [1,1,0]])
+        #endXi = np.array([[1,0,0], [1,0,1], [1,1,0], [1,1,1]])
+        #rightXi = np.array([[0,1,0], [1,1,0], [0,1,1], [1,1,1]])
+        #topXi = np.array([[0,0,1], [1,0,1], [0,1,1], [1,1,1]])
 
         dataLocations = np.array([iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],4)])
 
@@ -690,7 +692,7 @@ if __name__ == "__main__":
     cantilever_dimensions = np.array([30, 12, 12])
     cantilever_elements = np.array([3, 2, 2])
     cantilever_initial_parameter = np.array([2.05])
-    cantilever_guess_parameter = np.array([50])
+    cantilever_guess_parameter = np.array([2.05])
 
     cantilever_sim = CantileverSimulation()
 
