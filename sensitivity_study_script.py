@@ -44,7 +44,6 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
     for j in range(designVariableTwoStart, designVariableTwoFinish+1, designVariableTwoStep):
 
         gravity_vector = ps.simulation.gravity_vector_calculation(i*math.pi/180, j*math.pi/180)
-        ps.simulation.set_gravity_vector(gravity_vector)
         ps.simulation.solve_simulation()
 
         data = ps.simulation.generate_data(3)

@@ -120,14 +120,38 @@ class CantileverSimulation:
         :param phi: Twist of the beam about its longitudinal axis.
         """
 
-        vector = np.array((1,3))
-        z = -9.81 * math.sin(theta)
+        # To find the 3D rotation of the gravity vector, start by calculating the x and z components of the vector which
+        # are due to the lift away from the x-axis denoted by theta.
+        value = (-9.81) ** 2 * math.sin(theta) ** 2
+        if theta > 0:
+            v = np.array([math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
+        else:
+            v = np.array([-math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
 
-        magnitude = (-9.81) ** 2 - vector[2] ** 2
-        y =
+        # Now, to find how this is influenced by the rotation of the beam about its longitudinal axis, use Rodrigues'
+        # rotation formula to decompose that vector into its parts parallel and perpendicular to the beam and then only
+        # rotate those parts which are perpendicular.
 
+        # The formula is:
+        # Vrotated = V cos(theta) + (k x V) * sin(theta) + k (k . V)(1 - cos(theta)
 
-        self.gravity_vector = np.array([x, y, z])
+        # Where V is the unrotated vector.
+        #       Vrotated is the resultant vector.
+        #       k is a unit vector along the axis being rotated about.
+        #       theta is the angle of rotation.
+
+        # Since we know that the x-axis will be the one rotated about, we can set k
+        k = np.array([0, 0, 1])
+
+        # Calculate the cross of k and v
+        kcrossV = np.array([(k[1]*v[2] - k[2]*v[1]), (k[2]*v[0] - k[0]*v[2]), (k[0]*v[1] - k[1]*v[0])])
+
+        # Now calculate the dot of k and v
+        kdotV = k[0]*v[0] + k[1]*v[1] + k[2]*v[2]
+
+        # Now in the final calculation we replace the angel theta in the formula with phi because that is the angle
+        # which denotes the rotation of the beam about its longitudinal axis.
+        self.gravity_vector = v * math.cos(phi) + (kcrossV * math.sin(phi)) + (k * kdotV * (1 - math.cos(phi)))
 
     def set_cantilever_density(self, density):
         """
@@ -554,14 +578,20 @@ class CantileverSimulation:
             # Now perform the projections.
             self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
             projectionErr = np.zeros(numDataPoints)
+            projectionErrVec = np.zeros((numDataPoints,3))
             for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
                 projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
+                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet( pointNum, 3)
 
             errorValues = np.append(errorValues, projectionErr)
+
+
 
             # The data points stored at first by this function have now been passed to the data projection. To prepare
             # for the next loop of this calculation, now destroy the data points structure.
             self.dataPoints.Destroy()
+
+        exportDatapointsErrorExdata(self.data[726*3+484:,:], projectionErrVec, 'error', './', 'error')
 
         # Having found the projection errors, calculate the RMS error.
         self.error = 0
@@ -667,7 +697,67 @@ def cantilever_objective_function(x, simulation):
 
     return simulation.error
 
-#def
+def exportDatapointsErrorExdata(data, error, label, directory,
+                                   filename):
+
+    data = data[1:,:]
+    # Shape of data should be a [num_datapoints,dim] numpy array.
+    field_id = open(directory + filename + '.exdata', 'w')
+    field_id.write(' Group name: {0}\n'.format(label))
+    field_id.write(' #Fields=3\n')
+    field_id.write(
+        ' 1) coordinates, coordinate, rectangular cartesian, #Components=3\n')
+    field_id.write('   x.  Value index= 1, #Derivatives=0\n')
+    field_id.write('   y.  Value index= 2, #Derivatives=0\n')
+    field_id.write('   z.  Value index= 3, #Derivatives=0\n')
+    field_id.write(' 2) error, field, rectangular cartesian, #Components=3\n')
+    field_id.write('   x.  Value index= 4, #Derivatives=0\n')
+    field_id.write('   y.  Value index= 5, #Derivatives=0\n')
+    field_id.write('   z.  Value index= 6, #Derivatives=0\n')
+    field_id.write(' 3) scale, field, rectangular cartesian, #Components=3\n')
+    field_id.write('   x.  Value index= 7, #Derivatives=0\n')
+    field_id.write('   y.  Value index= 8, #Derivatives=0\n')
+    field_id.write('   z.  Value index= 9, #Derivatives=0\n')
+
+    for point_idx, point in enumerate(range(1, data.shape[0] + 1)):
+        field_id.write(' Node: {0}\n'.format(point))
+        for value_idx in range(data.shape[1]):
+            field_id.write(' {0:.12E}\n'.format(data[point_idx, value_idx]))
+        for value_idx in range(data.shape[1]):
+            field_id.write(' {0:.12E}\n'.format(error[point_idx, value_idx]))
+        # Scale field is absolute of the error field to ensure vector
+        # direction does not change.
+        for value_idx in range(data.shape[1]):
+            field_id.write(
+                ' {0:.12E}\n'.format(abs(error[point_idx, value_idx])))
+    field_id.close()
+
+
+def exportDatapointsExdata(data, label, directory, filename):
+    # Shape of data should be a [num_datapoints,dim] numpy array.
+
+    field_id = open(directory + filename + '.exdata', 'w')
+    field_id.write(' Group name: {0}\n'.format(label))
+    field_id.write(' #Fields=1\n')
+    field_id.write(
+        ' 1) coordinates, coordinate, rectangular cartesian, #Components=3\n')
+    field_id.write('  x.  Value index=1, #Derivatives=0, #Versions=1\n')
+    field_id.write('  y.  Value index=2, #Derivatives=0, #Versions=1\n')
+    field_id.write('  z.  Value index=3, #Derivatives=0, #Versions=1\n')
+
+    for point_idx, point in enumerate(range(1, data.shape[0] + 1)):
+        field_id.write(' Node: {0}\n'.format(point))
+        for value_idx in range(data.shape[1]):
+            field_id.write(' {0:.12E}\n'.format(data[point_idx, value_idx]))
+    field_id.close()
+
+    import h5py
+    hdf5_filename = '{0}/{1}.h5'.format(directory, filename)
+    hdf5_main_grip = h5py.File(hdf5_filename, 'w')
+
+    hdf5_main_grip.create_dataset(label, data)
+
+    hdf5_main_grip.close()
 
 ###########
 # Testing #
@@ -690,8 +780,10 @@ if __name__ == "__main__":
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.solve_simulation()
 
-    data = cantilever_sim.generate_data(3)
+    data = cantilever_sim.generate_data(3)[:,0:3]
 
+    #from input-output import exportDatapointsExdata
+    #exportDatapointsExdata(data, 'test', '/hpc/jada201/opt/CantileverParameterOptimisation/', 'data')
 
     print data
     cantilever_sim.set_projection_data(data)
