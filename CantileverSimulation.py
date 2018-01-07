@@ -124,9 +124,9 @@ class CantileverSimulation:
         # are due to the lift away from the x-axis denoted by theta.
         value = (-9.81) ** 2 * math.sin(theta) ** 2
         if theta > 0:
-            v = np.array([math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
-        else:
             v = np.array([-math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
+        else:
+            v = np.array([math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
 
         # Now, to find how this is influenced by the rotation of the beam about its longitudinal axis, use Rodrigues'
         # rotation formula to decompose that vector into its parts parallel and perpendicular to the beam and then only
@@ -151,7 +151,9 @@ class CantileverSimulation:
 
         # Now in the final calculation we replace the angel theta in the formula with phi because that is the angle
         # which denotes the rotation of the beam about its longitudinal axis.
-        self.gravity_vector = v * math.cos(phi) + (kcrossV * math.sin(phi)) + (k * kdotV * (1 - math.cos(phi)))
+        v = v * math.cos(phi) + (kcrossV * math.sin(phi)) + (k * kdotV * (1 - math.cos(phi)))
+
+        return v
 
     def set_cantilever_density(self, density):
         """
