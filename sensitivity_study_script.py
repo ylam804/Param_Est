@@ -9,8 +9,8 @@ import math
 # orientation's data in each loop.
 
 # Start by setting some parameters and creating the simulation.
-cantilever_dimensions = np.array([60, 40, 40])
-cantilever_elements = np.array([2, 2, 2])
+cantilever_dimensions = np.array([30, 12, 12])
+cantilever_elements = np.array([1, 1, 1])
 true_parameter = np.array([1.452])
 
 ps = ParameterEstimation()
@@ -24,10 +24,10 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
 # Now enter into the loop and set up each simulation with a different gravity vector.
 designVariableOneStart = -90
 designVariableOneFinish = 90
-designVariableOneStep = 10
+designVariableOneStep = 1
 designVariableTwoStart = 0
-designVariableTwoFinish = 180
-designVariableTwoStep = 10
+designVariableTwoFinish = 90
+designVariableTwoStep = 1
 
 angleOneCounter = 0
 angleTwoCounter = 0
@@ -36,6 +36,11 @@ detHMatrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designV
 HMatrix = condHMatrix = detH0Matrix = np.zeros((((designVariableOneFinish-designVariableOneStart)/designVariableOneStep) + 1, ((designVariableTwoFinish-designVariableTwoStart)/designVariableTwoStep) + 1))
 
 for i in range(designVariableOneStart, designVariableOneFinish+1, designVariableOneStep):
+
+    print('\n')
+    print angleOneCounter
+    print('\n\n\n')
+
     for j in range(designVariableTwoStart, designVariableTwoFinish+1, designVariableTwoStep):
 
         gravity_vector = ps.simulation.gravity_vector_calculation(i*math.pi/180, j*math.pi/180)
@@ -55,6 +60,8 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
 
         #destroy_routine(ps.simulation)
         angleTwoCounter += 1
+        print angleTwoCounter
+
     angleOneCounter += 1
     angleTwoCounter = 0
 
