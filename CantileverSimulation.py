@@ -483,10 +483,6 @@ class CantileverSimulation:
         """
         Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
         dataProjection structures only need to be made once.
-
-        :param simulation: A set up FE model.
-        :param data: An array of length n where each row is 3D the coordinates of a single data point measured from the
-                        surface of the real experiment.
         """
 
         # Set the number of elements in each direction to easier to use references.
