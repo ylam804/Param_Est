@@ -238,3 +238,4 @@ if __name__ == "__main__":
 
     #[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
     #print detH
+
