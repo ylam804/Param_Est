@@ -24,10 +24,10 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(true_parameter)
 # Now enter into the loop and set up each simulation with a different gravity vector.
 designVariableOneStart = -90
 designVariableOneFinish = 90
-designVariableOneStep = 1
+designVariableOneStep = 60
 designVariableTwoStart = 0
 designVariableTwoFinish = 90
-designVariableTwoStep = 1
+designVariableTwoStep = 45
 
 angleOneCounter = 0
 angleTwoCounter = 0
@@ -51,7 +51,7 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
         simulation_tuple = (ps.simulation, )
 
         ps.set_objective_function(cantilever_objective_function, simulation_tuple)
-        [H, detH, condH, detH0] = ps.evaluate_hessian(true_parameter, 1e-7)
+        [H, detH, condH, detH0] = ps.evaluate_hessian(true_parameter, 1e-7, simulation_tuple)
 
         HMatrix[angleOneCounter, angleTwoCounter] = H
         detHMatrix[angleOneCounter, angleTwoCounter] = detH
@@ -66,9 +66,9 @@ for i in range(designVariableOneStart, designVariableOneFinish+1, designVariable
     angleTwoCounter = 0
 
 # Once all the orientations have been analysed, plot the resulting Hessian metrics against the orientation design
-# variables. This must be done in a seperate visualisation script, so save the output data.
-np.savetxt('sensitivity_detH_output.txt', detHMatrix, delimiter=' || ', newline='\n')
+# variables. This must be done in a separate visualisation script, so save the output data.
+np.savetxt('Z:\opt\Visualisation\sensitivity_detH_output.txt', detHMatrix, delimiter=' || ', newline='\n')
 designVariables = np.array([designVariableOneStart, designVariableOneFinish, designVariableOneStep, designVariableTwoStart, designVariableTwoFinish, designVariableTwoStep])
-np.savetxt('sensitivity_design_variables.txt', designVariables, delimiter=" || ", newline="\n")
+np.savetxt('Z:\opt\Visualisation\sensitivity_design_variables.txt', designVariables, delimiter=" || ", newline="\n")
 
 print 'Done!'
