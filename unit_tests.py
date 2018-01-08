@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
-import CantileverSimulation
-from CantileverSimulation import cantilever_objective_function
+import cantilever_simulation
+from cantilever_simulation import cantilever_objective_function
 
 class CantileverBoundaryConditions(unittest.TestCase):
 
@@ -10,7 +10,7 @@ class CantileverBoundaryConditions(unittest.TestCase):
         Tests that the Cantilever simulation is creating the boundary conditions of a simple cube as expected.
         """
 
-        sim = CantileverSimulation()
+        sim = cantilever_simulation()
         sim.set_cantilever_dimensions(np.array([60, 40, 40]))
         sim.set_cantilever_elements(np.array([1, 1, 1]))
         sim.setup_cantilever_simulation()
@@ -30,7 +30,7 @@ class CantileverDataGeneration(unittest.TestCase):
         the FE model.
         """
 
-        sim = CantileverSimulation()
+        sim = cantilever_simulation()
         sim.set_cantilever_dimensions(np.array([60, 40, 40]))
         sim.set_cantilever_elements(np.array([1, 1, 1]))
         sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))

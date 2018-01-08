@@ -1,7 +1,7 @@
 import numpy as np
-from CantileverSimulation import CantileverSimulation
-from CantileverSimulation import cantilever_objective_function
-from ParameterOptimisation import ParameterEstimation
+from cantilever_simulation import CantileverSimulation
+from cantilever_simulation import cantilever_objective_function
+from parameter_optimisation import ParameterEstimation
 import math
 
 # First gather all the data sets. If this is artificial, run a simulation with the known parameters first and extract

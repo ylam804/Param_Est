@@ -1,6 +1,6 @@
 import numpy as np
-from CantileverSimulation import CantileverSimulation
-from CantileverSimulation import cantilever_objective_function
+from cantilever_simulation import CantileverSimulation
+from cantilever_simulation import cantilever_objective_function
 from scipy.optimize import least_squares
 
 
@@ -116,84 +116,6 @@ class ParameterEstimation:
                 H0[j, k] = H[j, k] / np.abs((cmath.sqrt(H[j, j] * H[k, k])))
         detH0 = np.linalg.det(H0)
         return H, detH, condH, detH0
-
-
-def testParameterEstimation():
-    """
-    Test the parameter estimation routines
-    """
-
-    ps = ParameterEstimation()
-    ps.set_initial_parameters(np.array([0.5,0.5]))
-    ps.set_objective_function(fun_rosenbrock_mse)
-    ps.optimise()
-    ps.set_objective_function(fun_rosenbrock_mse)
-    ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
-
-    return ps
-
-
-def fun_rosenbrock(x):
-    """
-    An objective function for testing
-    """
-    return np.array([10 * (x[1] - x[0] ** 2), (1 - x[0])])
-
-
-def fun_rosenbrock_mse(x):
-    """
-    An objective function for testing
-    """
-    vector = np.array([100 * (x[1] - x[0] ** 2), (1 - x[0])])
-    mse = np.mean(vector * vector)
-    return mse
-
-
-def plotParameterEstimationError(x, y, dx, dy):
-    """
-    Using a grid of points as some initial inputs to the parameter estimation function, plots the error at each of
-    points.
-
-    :param x: a np.array containing two numbers which are the initial and final values of the first parameter.
-    :param y: a np.array containing two numbers which are the initial and final values of the second parameter.
-    :param dx: the number of points needed in the x direction.
-    :param dy: the number of points needed in the y direction.
-    :return: None, but plots a graph of the error as the two parameters change
-    """
-
-    # First create the grid space by making an array which extends from the initial to final value of each parameter
-    # in steps of the grid spacing.
-    xvalues = np.linspace(x[0], x[1], dx)
-    yvalues = np.linspace(y[0], y[1], dy)
-
-    # Create a matrix which can store all the error values calculated by the ParameterEstimation function.
-    errorMatrix = np.zeros((dx, dy))
-
-    # Now loop through these two arrays and call the ParameterEstimation function to find the error associated with
-    # each combination of initial parameter values.
-    for i in range(dx):
-        for j in range(dy):
-            ps = ParameterEstimation()
-            ps.set_initial_parameters(np.array([xvalues[i],yvalues[j]]))
-            ps.set_objective_function(fun_rosenbrock_mse)
-            errorMatrix[i,j] = ps.objective_function(ps.initial_parameters)
-
-
-
-    # Now that the error has been calculated at each point in the grid, plot this as a surface.
-    #import matplotlib.pyplot as plt
-    #from matplotlib import cm
-    #fig = plt.figure()
-    #ax = fig.gca(projection='3d')
-    #xgrid, ygrid = np.meshgrid(yvalues, xvalues)
-    #surf = ax.plot_surface(xgrid, ygrid, errorMatrix, cmap=cm.coolwarm,
-    #                       linewidth=0, antialiased=False)
-    #plt.show()
-
-    # Now calculate the optimal values of
-    ps.optimise()
-    ps.set_objective_function(fun_rosenbrock_mse)
-    ps.H, ps.detH, ps.condH, ps.detH0 = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
 
 ###########
 # Testing #

@@ -19,12 +19,10 @@
 #
 ####################################################################################################################
 
-
-
 #import opencmiss.iron as iron
 import math
 import numpy as np
-from CantileverSimulation import CantileverSimulation
+from cantilever_simulation import CantileverSimulation
 
 class ConvergenceTest:
     """
@@ -57,6 +55,15 @@ class ConvergenceTest:
         self.simulation.region.Destroy()
         self.simulation.basis.Destroy()
         self.simulation.problem.Destroy()
+
+    def calculate_axial_error(self, currentData, previousData):
+        """
+        Calculates the error in each dimension at each point in the data set
+
+        :param currentData:
+        :param previousData:
+        :return:
+        """
 
 def destroy_routine(simulation):
     simulation.coordinate_system.Destroy()

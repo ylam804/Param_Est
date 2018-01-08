@@ -49,6 +49,7 @@ class CantileverSimulation:
         self.dataProjection = None
         self.error = None
         self.fields = None
+        self.numPointsPerFace = 2
 
     def set_projection_data(self, data):
         """
@@ -154,6 +155,16 @@ class CantileverSimulation:
         v = v * math.cos(phi) + (kcrossV * math.sin(phi)) + (k * kdotV * (1 - math.cos(phi)))
 
         return v
+
+    def set_Xi_points_num(self, numPoints):
+        """
+        Sets the number of points along each side of a face which will be used to generate Xi coordinates used for
+        interpolating the surface position of each element.
+
+        :param numPointsPerFace: An integer value for the number of points along one side.
+        """
+
+        self.numPointsPerFace = numPoints
 
     def set_cantilever_density(self, density):
         """
@@ -357,13 +368,6 @@ class CantileverSimulation:
 
         self.equationsSet.MaterialsCreateFinish()
 
-        ##############################################################
-        ##                                                          ##
-        ## Need to allow for different constitutive relation and/or ##
-        ##          parameter values to be selected.                ##
-        ##                                                          ##
-        ##############################################################
-
         # Set Mooney-Rivlin constants c10 and c01 respectively. Done in objective function using function.
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.V,iron.FieldParameterSetTypes.VALUES,1,density)
@@ -479,6 +483,185 @@ class CantileverSimulation:
         self.fields.ElementsExport("Cantilever","FORTRAN")
         self.fields.Finalise()
 
+    def generate_data(self, scale):
+        """
+        Create some artificial data which can be used to test if the optimisation routine can be used to find the
+        parameters which generated the data.
+
+        :param scale: Sets the number of points which will be generated.
+                scale = 0 => Testing corner location mode           ** Note: model should only contain one element **
+                scale = 1 => Determined by self.numPointsPerFace
+
+        :return: Sets the simulation's data to a set of points on the surface of the FE model.
+        """
+
+        if scale == 0:
+            a = 1
+
+        elif scale == 1:
+            # First, select the relevant elements for each face.
+            [leftEls, bottomEls, endEls, rightEls, topEls] = self.select_elements()
+
+            # Next, create the grids of Xi values.
+            [leftXi, bottomXi, endXi, rightXi, topXi] = self.create_Xi_grids()
+
+            # Now use interpolation to find the coordinates at each Xi point.
+            dataLocations = self.interpolate_Xi_points(leftEls, bottomEls, endEls, rightEls, topEls, leftXi, bottomXi, endXi, rightXi, topXi)
+
+        return dataLocations
+
+    def select_elements(self):
+        """
+        Finds which elements are on which face of the model and stores these. They can't be stored in a 2D array where
+        each row corresponds to a particular face because each face can have a different number of elements on it, which
+        does not allow for the formation of a 2D array.
+
+        If this was really necessary, then the maximum number of elements could be found and a 2D array initialised with
+        zeros on every row for that length. Then, for each row the elements could be copied into this array over the
+        zeros. Since zero isn't a valid elements number, a loop could be used to extract the element numbers for each
+        face from the corresponding row, stopping when the first zero is reached. This seems of limited use though.
+        """
+
+
+        # Redefine the number of elements in each dimension for quicker use.
+        x = self.cantilever_elements[0]
+        y = self.cantilever_elements[1]
+        z = self.cantilever_elements[2]
+
+        # Select the correct elements for each face (put in own function)
+        leftEls = rightEls = np.array([])
+        for i in range(z):
+            leftEls = np.append(leftEls, range(i*x*y+1, i*x*y+x+1))
+            rightEls = np.append(rightEls, range(i*x*y+x*(y-1)+1, i*x*y+x*(y-1)+x+1))
+
+        leftEls = leftEls.astype('int64')
+        rightEls = rightEls.astype('int64')
+
+        bottomEls = np.array(range(1, x*y+1))
+        topEls = np.array(range((z-1)*x*y+1, x*y*z+1))
+        endEls = np.array(range(x, x*y*z+1, x))
+
+        return leftEls, bottomEls, endEls, rightEls, topEls
+
+    def create_Xi_grids(self):
+
+        # With number of points per face defined, generate the Xi grids.
+        array = np.linspace(0, 1, self.numPointsPerFace)
+        [grid1, grid2] = np.meshgrid(array, array)
+
+        for i in range(self.numPointsPerFace):
+            for j in range(self.numPointsPerFace):
+                if i == 0 and j == 0:
+                    leftXi = np.array([[grid1[i,j], 0, grid2[i,j]]])
+                    bottomXi = np.array([[grid1[i,j], grid2[i,j], 0]])
+                    endXi = np.array([[1, grid1[i,j], grid2[i,j]]])
+                    rightXi = np.array([[grid1[i,j], 1, grid2[i,j]]])
+                    topXi = np.array([[grid1[i,j], grid2[i,j], 1]])
+
+                else:
+                    leftXi = np.append(leftXi, np.array([[grid1[i,j], 0, grid2[i,j]]]), axis=0)
+                    bottomXi = np.append(bottomXi, np.array([[grid1[i,j], grid2[i,j], 0]]), axis=0)
+                    endXi = np.append(endXi, np.array([[1, grid1[i,j], grid2[i,j]]]), axis=0)
+                    rightXi = np.append(rightXi, np.array([[grid1[i,j], 1, grid2[i,j]]]), axis=0)
+                    topXi = np.append(topXi, np.array([[grid1[i,j], grid2[i,j], 1]]), axis=0)
+
+        return leftXi, bottomXi, endXi, rightXi, topXi
+
+    def interpolate_Xi_points(self, leftEls, bottomEls, endEls, rightEls, topEls, leftXi, bottomXi, endXi, rightXi, topXi):
+
+        dataLocations = np.array([iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],4)])
+
+        for i in range(5):
+            if i == 0:
+                Xi = leftXi
+                elements = leftEls
+            elif i == 1:
+                Xi = bottomXi
+                elements = bottomEls
+            elif i == 2:
+                Xi = endXi
+                elements = endEls
+            elif i == 3:
+                Xi = rightXi
+                elements = rightEls
+            elif i == 4:
+                Xi = topXi
+                elements = topEls
+
+            for j in range(len(elements)):
+                for k in range(len(Xi)):
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftEls[i],leftXi[j],4)
+                    dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        #for i in range(len(leftEls)):
+        #    for j in range(len(leftXi)):
+        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftEls[i],leftXi[j],4)
+        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        #for i in range(len(rightEls)):
+        #    for j in range(len(bottomXi)):
+        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomEls[i],bottomXi[j],4)
+        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        #for i in range(len(endEls)):
+        #    for j in range(len(endXi)):
+        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,endEls[i],endXi[j],4)
+        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        #for i in range(len(rightEls)):
+        #    for j in range(len(rightXi)):
+        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightEls[i],rightXi[j],4)
+        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        #for i in range(len(topEls)):
+        #    for j in range(len(topXi)):
+        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topEls[i],topXi[j],4)
+        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
+
+        return dataLocations
+
+    def projection_calculation(self):
+        """
+        Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
+        the surface of a real experiment.
+
+        :return: error: a measure of the error between the data points and the surface of the FE model.
+        """
+
+        errorValues = np.array([])
+
+        # Projections must be done face by face. First step is to loop through the five faces onto which the data points
+        # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
+        # points for projection and calculation their error before destroying both those projection and data sets to
+        # make room for the next set.
+        for i in range(2,7):
+            numDataPoints = self.prepare_projection(i)
+
+            # Now perform the projections.
+            self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
+            projectionErr = np.zeros(numDataPoints)
+            projectionErrVec = np.zeros((numDataPoints,3))
+            for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
+                projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
+                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet( pointNum, 3)
+
+            errorValues = np.append(errorValues, projectionErr)
+
+            # The data points stored at first by this function have now been passed to the data projection. To prepare
+            # for the next loop of this calculation, now destroy the data points structure.
+            self.dataPoints.Destroy()
+
+        exportDatapointsErrorExdata(self.data[726*3+484:,:], projectionErrVec, 'error', './', 'error')
+
+        # Having found the projection errors, calculate the RMS error.
+        self.error = 0
+        for i in range(len(errorValues)):
+            errorValues[i] = errorValues[i] ** 2
+
+        self.error = np.sqrt(np.average(errorValues))
+
+        return self.error
+
     def prepare_projection(self, i):
         """
         Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
@@ -490,26 +673,24 @@ class CantileverSimulation:
         y = self.cantilever_elements[1]
         z = self.cantilever_elements[2]
 
-        size = 11
-
         # Now, depending on which face the projection_calculation function is up to, set the number of data points to
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
         if i == 2 or i == 5:
-            numDataPoints = x * z * size**2
+            numDataPoints = x * z * self.numPointsPerFace**2
             if i == 2:
                 points = self.data[1:numDataPoints+1, 0:3]
             elif i == 5:
-                points = self.data[((x*z + x*y + y*z)*size**2 + 1):((2*x*z + x*y + y*z)*size**2 + 1), 0:3]
+                points = self.data[((x*z + x*y + y*z)*self.numPointsPerFace**2 + 1):((2*x*z + x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
         elif i == 3 or i == 6:
-            numDataPoints = x * y * size**2
+            numDataPoints = x * y * self.numPointsPerFace**2
             if i == 3:
-                points = self.data[(x*z*size**2 + 1):(x*z + x*y)*size**2+ 1, 0:3]
+                points = self.data[(x*z*self.numPointsPerFace**2 + 1):(x*z + x*y)*self.numPointsPerFace**2+ 1, 0:3]
             elif i == 6:
-                points = self.data[((2*x*z + x*y + y*z)*size**2 + 1):((2*x*z + 2*x*y + y*z)*size**2 + 1), 0:3]
+                points = self.data[((2*x*z + x*y + y*z)*self.numPointsPerFace**2 + 1):((2*x*z + 2*x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
         elif i == 4:
-            numDataPoints = y * z * size**2
-            points = self.data[((x*z + x*y)*size**2 + 1):((x*z + x*y + y*z)*size**2 + 1), 0:3]
+            numDataPoints = y * z * self.numPointsPerFace**2
+            points = self.data[((x*z + x*y)*self.numPointsPerFace**2 + 1):((x*z + x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
 
         # Having defined which points are to be used in this pass of the projection calculation, now create the data
         # point structure.
@@ -554,135 +735,8 @@ class CantileverSimulation:
         elements = elements.astype('int32')
         faces = np.full(len(elements), i, dtype='int32')
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
+
         return numDataPoints
-
-    def projection_calculation(self):
-        """
-        Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
-        the surface of a real experiment.
-
-        :return: error: a measure of the error between the data points and the surface of the FE model.
-        """
-
-        errorValues = np.array([])
-
-        # Projections must be done face by face. First step is to loop through the five faces onto which the data points
-        # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
-        # points for projection and calculation their error before destroying both those projection and data sets to
-        # make room for the next set.
-        for i in range(2,7):
-            numDataPoints = self.prepare_projection(i)
-
-            # Now perform the projections.
-            self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
-            projectionErr = np.zeros(numDataPoints)
-            projectionErrVec = np.zeros((numDataPoints,3))
-            for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
-                projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
-                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet( pointNum, 3)
-
-            errorValues = np.append(errorValues, projectionErr)
-
-            # The data points stored at first by this function have now been passed to the data projection. To prepare
-            # for the next loop of this calculation, now destroy the data points structure.
-            self.dataPoints.Destroy()
-
-        exportDatapointsErrorExdata(self.data[726*3+484:,:], projectionErrVec, 'error', './', 'error')
-
-        # Having found the projection errors, calculate the RMS error.
-        self.error = 0
-        for i in range(len(errorValues)):
-            errorValues[i] = errorValues[i] ** 2
-
-        self.error = np.sqrt(np.average(errorValues))
-
-        return self.error
-
-    def generate_data(self, scale):
-        """
-        Create some artificial data which can be used to test if the optimisation routine can be used to find the
-        parameters which generated the data.
-
-        :param scale: Sets the number of points which will be generated.
-                Coarse = 0
-                Moderate = 1
-                Fine = 2
-                Testing = 3     ** Note: model should only contain one element **
-        :return: Sets the simulation's data to a set of points on the surface of the FE model.
-        """
-
-        # Redefine the number of elements in each dimension for quicker use.
-        x = self.cantilever_elements[0]
-        y = self.cantilever_elements[1]
-        z = self.cantilever_elements[2]
-
-        dataLocations = np.array([])
-
-        leftElems = rightElems = np.array([])
-        for i in range(z):
-            leftElems = np.append(leftElems, range(i*x*y+1, i*x*y+x+1))
-            rightElems = np.append(rightElems, range(i*x*y+x*(y-1)+1, i*x*y+x*(y-1)+x+1))
-
-        leftElems = leftElems.astype('int64')
-        rightElems = rightElems.astype('int64')
-
-        bottomElems = np.array(range(1, x*y+1))
-        topElems = np.array(range((z-1)*x*y+1, x*y*z+1))
-        endElems = np.array(range(x, x*y*z+1, x))
-
-        size = 11
-
-        array = np.linspace(0, 1, size)
-        [grid1, grid2] = np.meshgrid(array, array)
-
-        for i in range(size):
-            for j in range(size):
-                if i == 0 and j == 0:
-                    leftXi = np.array([[grid1[i,j], 0, grid2[i,j]]])
-                    bottomXi = np.array([[grid1[i,j], grid2[i,j], 0]])
-                    endXi = np.array([[1, grid1[i,j], grid2[i,j]]])
-                    rightXi = np.array([[grid1[i,j], 1, grid2[i,j]]])
-                    topXi = np.array([[grid1[i,j], grid2[i,j], 1]])
-
-                else:
-                    leftXi = np.append(leftXi, np.array([[grid1[i,j], 0, grid2[i,j]]]), axis=0)
-                    bottomXi = np.append(bottomXi, np.array([[grid1[i,j], grid2[i,j], 0]]), axis=0)
-                    endXi = np.append(endXi, np.array([[1, grid1[i,j], grid2[i,j]]]), axis=0)
-                    rightXi = np.append(rightXi, np.array([[grid1[i,j], 1, grid2[i,j]]]), axis=0)
-                    topXi = np.append(topXi, np.array([[grid1[i,j], grid2[i,j], 1]]), axis=0)
-
-        dataLocations = np.array([iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],4)])
-
-        for i in range(len(leftElems)):
-            for j in range(len(leftXi)):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftElems[i],leftXi[j],4)
-                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        for i in range(len(rightElems)):
-            for j in range(len(bottomXi)):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomElems[i],bottomXi[j],4)
-                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        for i in range(len(endElems)):
-            for j in range(len(endXi)):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,endElems[i],endXi[j],4)
-                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        for i in range(len(rightElems)):
-            for j in range(len(rightXi)):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightElems[i],rightXi[j],4)
-                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        for i in range(len(topElems)):
-            for j in range(len(topXi)):
-                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topElems[i],topXi[j],4)
-                dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        # Note: these loops could be reduced down to just three since the left and right as well as the top and bottom
-        #       could be looped through at the same time. This hasn't been done so that all the points on a single face
-        #       of the model are grouped consecutively together in the dataLocations array.
-
-        return dataLocations
 
 def cantilever_objective_function(x, simulation):
 
