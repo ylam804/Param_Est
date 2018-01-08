@@ -48,7 +48,7 @@ class CantileverSimulation:
         self.boundaryConditions = None
         self.dataPoints = None
         self.dataProjection = None
-        self.error = None
+        self.error = 0
         self.fields = None
         self.numPointsPerFace = 2
 
@@ -607,7 +607,7 @@ class CantileverSimulation:
         """
 
         errorValues = np.array([])
-        #errorVectors = np.array([])
+        errorVects = np.array([[0, 0, 0]]) # This must be initialised with a 1-by-3 array in order to allow appending of more such arrays
         dataIdx = 0
 
         # Projections must be done face by face. First step is to loop through the five faces onto which the data points
@@ -626,18 +626,18 @@ class CantileverSimulation:
                 projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet(pointNum, 3)
 
             errorValues = np.append(errorValues, projectionErr)
+            errorVects = np.append(errorVects, projectionErrVec, axis=0)
 
             # The data points stored at first by this function have now been passed to the data projection. To prepare
             # for the next loop of this calculation, now destroy the data points structure.
             self.dataPoints.Destroy()
 
-        exportDatapointsErrorExdata(self.data[726*3+484:,:], projectionErrVec, 'error', './', 'error')
+        errorVects = errorVects[1:,:] # This removes the initialised 1-by-3 array so the data is not out of sync.
+        exportDatapointsErrorExdata(self.data, errorVects, 'error', './', 'error')
 
         # Having found the projection errors, calculate the RMS error.
-        self.error = 0
         for i in range(len(errorValues)):
             errorValues[i] = errorValues[i] ** 2
-
         self.error = np.sqrt(np.average(errorValues))
 
         return self.error
