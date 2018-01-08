@@ -520,6 +520,8 @@ class CantileverSimulation:
         zeros on every row for that length. Then, for each row the elements could be copied into this array over the
         zeros. Since zero isn't a valid elements number, a loop could be used to extract the element numbers for each
         face from the corresponding row, stopping when the first zero is reached. This seems of limited use though.
+
+        :return: Returns the sets of elements which have been calculated for each of the FE model's faces.
         """
 
         # Redefine the number of elements in each dimension for quicker use.
@@ -543,6 +545,12 @@ class CantileverSimulation:
         return leftEls, bottomEls, endEls, rightEls, topEls
 
     def create_Xi_grids(self):
+        """
+        Using the specified number of points to be generated per side of each element face, the grids of Xi coordinates
+        are created so that those points can be interpolated.
+
+        :return: Returns the arrays of Xi coordinates for each of FE model's faces.
+        """
 
         # With number of points per face defined, generate the Xi grids.
         array = np.linspace(0, 1, self.numPointsPerFace)
@@ -567,6 +575,22 @@ class CantileverSimulation:
         return leftXi, bottomXi, endXi, rightXi, topXi
 
     def interpolate_Xi_points(self, leftEls, bottomEls, endEls, rightEls, topEls, leftXi, bottomXi, endXi, rightXi, topXi):
+        """
+        Using the specified elements for each face of the FE model and the set of Xi coordinates for that face, this
+        function will interpolate the position of all the data points on each face of the FE model.
+
+        :param leftEls: The set of elements for interpolating points on the model's left face.
+        :param bottomEls: The set of elements for interpolating points on the model's bottom face.
+        :param endEls: The set of elements for interpolating points on the model's end face.
+        :param rightEls: The set of elements for interpolating points on the model's right face.
+        :param topEls: The set of elements for interpolating points on the model's top face.
+        :param leftXi: The set of Xi coordinates which specify where to interpolate points on the left face.
+        :param bottomXi: The set of Xi coordinates which specify where to interpolate points on the bottom face.
+        :param endXi: The set of Xi coordinates which specify where to interpolate points on the end face.
+        :param rightXi: The set of Xi coordinates which specify where to interpolate points on the right face.
+        :param topXi: The set of Xi coordinates which specify where to interpolate points on the top face.
+        :return: Returns an N-by-3 array of data points at the specified coordinates. Note that there are no duplicates.
+        """
 
         dataLocations = np.array([iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,leftXi[0],4)])
 
@@ -584,8 +608,8 @@ class CantileverSimulation:
                 Xi = rightXi
                 elements = rightEls
             elif i == 4:
-                Xi = topXi
-                elements = topEls
+                 Xi = topXi
+                 elements = topEls
 
             for j in range(len(elements)):
                 for k in range(len(Xi)):
@@ -598,12 +622,13 @@ class CantileverSimulation:
 
         return dataLocations
 
-    def projection_calculation(self):
+    def point_projection(self):
         """
         Objective function for measuring the error between a FE model (contained in simulation) and the data measured from
         the surface of a real experiment.
 
-        :return: error: a measure of the error between the data points and the surface of the FE model.
+        :return: error: A measure of the error between the data points and the surface of the FE model, stored as a float
+                        in the simulation class itself.
         """
 
         errorValues = np.array([])
@@ -615,15 +640,12 @@ class CantileverSimulation:
         # points for projection and calculation their error before destroying both those projection and data sets to
         # make room for the next set.
         for i in range(2,7):
-            numDataPoints, dataIdx = self.prepare_projection(i, dataIdx)
+            numDataPoints, points, dataIdx = self.select_points(i, dataIdx)
+            self.create_data_projection(i, numDataPoints, points)
+            self.set_projection_elements(i)
 
             # Now perform the projections.
-            self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
-            projectionErr = np.zeros(numDataPoints)
-            projectionErrVec = np.zeros((numDataPoints,3))
-            for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
-                projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
-                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet(pointNum, 3)
+            projectionErr, projectionErrVec = self.perform_projection(numDataPoints)
 
             errorValues = np.append(errorValues, projectionErr)
             errorVects = np.append(errorVects, projectionErrVec, axis=0)
@@ -632,20 +654,16 @@ class CantileverSimulation:
             # for the next loop of this calculation, now destroy the data points structure.
             self.dataPoints.Destroy()
 
-        errorVects = errorVects[1:,:] # This removes the initialised 1-by-3 array so the data is not out of sync.
-        exportDatapointsErrorExdata(self.data, errorVects, 'error', './', 'error')
+        self.projection_error(errorValues, errorVects[1:,:]) # This removes the initialised 1-by-3 array so the data is not out of sync.
 
-        # Having found the projection errors, calculate the RMS error.
-        for i in range(len(errorValues)):
-            errorValues[i] = errorValues[i] ** 2
-        self.error = np.sqrt(np.average(errorValues))
-
-        return self.error
-
-    def prepare_projection(self, i, prevDataIdx):
+    def select_points(self, faceNum, prevDataIdx):
         """
-        Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
-        dataProjection structures only need to be made once.
+        Finds which points to use for data projection depending on which face of the FE model is being used.
+
+        :param faceNum: The OpenCMISS face ID to which the points will be projected, as an integer.
+        :param prevDataIdx: The number of data points which have already been used for projections onto other faces,
+                            as an integer
+        :return:
         """
 
         # Set the number of elements in each direction to easier to use references.
@@ -660,33 +678,44 @@ class CantileverSimulation:
         # Now, depending on which face the projection_calculation function is up to, set the number of data points to
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
-        if i == 2:
+        if faceNum == 2:
             numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + ((2 * pts**2 - 3 * pts + 1) * (x - 1))
-        elif i == 3:
+        elif faceNum == 3:
             numDataPoints = y * ((pts**2 - pts) + (pts**2 - 2 * pts + 1) * (x - 1))
-        elif i == 4:
+        elif faceNum == 4:
             numDataPoints = y * z * (pts**2 - 2 * pts + 1)
-        elif i == 5:
+        elif faceNum == 5:
             numDataPoints = x * z * (pts**2 - 2 * pts + 1)
-        elif i == 6:
+        elif faceNum == 6:
             numDataPoints = x * ((y - 1) * (pts**2 - 2 * pts + 1) + (pts**2 - 3 * pts + 2))
 
+        # Now isolate the points relevant to this face using the number of points calculated to exist on this face and
+        # the record of how many points have already been used. Update how many points have been used as well.
         points = self.data[prevDataIdx:(prevDataIdx + numDataPoints)]
         prevDataIdx += numDataPoints
 
-        # Having defined which points are to be used in this pass of the projection calculation, now create the data
-        # point structure.
+        return numDataPoints, points, prevDataIdx
+
+    def create_data_projection(self, faceNum, numPoints, dataPoints):
+        """
+        Using OpenCMISS.iron, creates the necessary data projection class and applies all the relevant settings.
+
+        :param faceNum: The OpenCMISS face ID to which the points will be projected, as an integer.
+        :param numPoints: The number of points which are to be projected, as an integer.
+        :param dataPoints: The coordinates of each data point to be projected, as an N-by-3 numpy array.
+        """
+
+        # The data points have been passed into this function, so loop through them after creating the structure to
+        # house them so they can be used for projections.
         self.dataPoints = iron.DataPoints()
-        self.dataPoints.CreateStart(self.region, numDataPoints)
-        for pointNum, point in enumerate(points,1):
+        self.dataPoints.CreateStart(self.region, numPoints)
+        for pointNum, point in enumerate(dataPoints,1):
             self.dataPoints.ValuesSet(pointNum, point)
         self.dataPoints.CreateFinish()
 
         # Now create the data projection structure and pass in the data point structure which was just made.
-        dataProjectionUserNumber = i
         self.dataProjection = iron.DataProjection()
-        self.dataProjection.CreateStart(dataProjectionUserNumber, self.dataPoints,
-                                        self.mesh)
+        self.dataProjection.CreateStart(faceNum, self.dataPoints, self.mesh)
 
         # Set tolerances and other settings for the data projection.
         self.dataProjection.AbsoluteToleranceSet(1.0e-15)
@@ -696,38 +725,98 @@ class CantileverSimulation:
             iron.DataProjectionProjectionTypes.BOUNDARY_FACES)
         self.dataProjection.CreateFinish()
 
+    def set_projection_elements(self, faceNum):
+        """
+        Selects the elements for the current projection, allowing the data points to be projected onto only the faces
+        of the relevant elements of the FE model.
+
+        :param faceNum: The OpenCMISS face ID of the face which will be projected onto, as an integer.
+        """
+
+        # Set the number of elements in each direction to easier to use references.
+        x = self.cantilever_elements[0]
+        y = self.cantilever_elements[1]
+        z = self.cantilever_elements[2]
+
         # Set the elements for projection and the relevant faces. First check which iteration of the projcetion
         # projection calculation is current. Then select all the elements on the relevant side and set their outward
         # face to be the one to be used for projection.
         elements = np.array([])
 
-        if i == 2:
+        if faceNum == 2:
             for j in range(z):
                 elements = np.append(elements, np.array(range((j*x*y + 1), (j*x*y + x + 1))))
-        elif i == 3:
+        elif faceNum == 3:
             elements = np.array(range(1, (x*y + 1)))
-        elif i == 4:
+        elif faceNum == 4:
             elements = np.array(range(x, x*y*z+1, x))
-        elif i == 5:
+        elif faceNum == 5:
             for j in range(z):
                 elements = np.append(elements, np.array(range((j*x*y + x*(y-1) + 1), ((j+1)*x*y + 1))))
-        elif i == 6:
+        elif faceNum == 6:
             elements = np.array(range((x*y*(z-1) + 1), (x*y*z + 1)))
 
         elements = elements.astype('int32')
-        faces = np.full(len(elements), i, dtype='int32')
+        faces = np.full(len(elements), faceNum, dtype='int32')
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
 
-        return numDataPoints, prevDataIdx
+    def perform_projection(self, numDataPoints):
+        """
+        Using the data projection structure previously set up in the simulation class, this function now calculates the
+        distance (or the error) between the data points and the surface of the FE model which has most recently been
+        solved.
 
-def cantilever_objective_function(x, simulation):
+        :param numDataPoints: The number of points which are to be evaluated, as an integer.
+        :return:
+        """
 
-    simulation.set_Mooney_Rivlin_parameter_values(x)
+        self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
+        projectionErr = np.zeros(numDataPoints)
+        projectionErrVec = np.zeros((numDataPoints,3))
+        for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
+            projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
+            projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet(pointNum, 3)
+
+        return projectionErr, projectionErrVec
+
+    def projection_error(self, errorValues, errorVects):
+        """
+        Deals with the errors calculated from the data projections, both finding the RMS error between the two data sets
+        as well as exporting the error vectors.
+
+        :param errorValues: A 1D array containing the error values for each point in the two data sets.
+        :param errorVects: A N-by-3 array containing the coordinate vectors which describe the difference between each
+                            pair of points in the two data sets.
+        """
+
+        # Having found the projection errors, calculate the RMS error.
+        for i in range(len(errorValues)):
+            errorValues[i] = errorValues[i] ** 2
+        self.error = np.sqrt(np.average(errorValues))
+
+        # Now export the resultant vectors.
+        exportDatapointsErrorExdata(self.data, errorVects, 'error', './', 'error')
+
+
+def cantilever_objective_function(material_parameters, simulation):
+    """
+    The objective function is used in the optimal design and consists of setting the material parameters which were
+    passed into the function, solving the FE model with those parameters and then projecting the data set onto the
+    surface of the model to find the error between the two sets of material parameters.
+
+    This can be used to determine what the true material parameters of an object are if the data set is obtained from
+    an experiment with an unknown parameter. If the error output from this function is minimised, then the material
+    parameter value which is being passed into this function must be close to that of the true parameter.
+
+    :param material_parameters: The value of the material parameters, as a 1D numpy array of floats.
+    :param simulation: A tuple containing the set up simulation.
+    """
+
+    simulation.set_Mooney_Rivlin_parameter_values(material_parameters)
     simulation.solve_simulation()
     simulation.export_results()
-    simulation.error = simulation.projection_calculation()
+    simulation.point_projection()
 
-    return simulation.error
 
 ###########
 # Testing #
@@ -738,7 +827,7 @@ if __name__ == "__main__":
     cantilever_dimensions = np.array([30, 12, 12])
     cantilever_elements = np.array([4, 2, 2])
     cantilever_true_parameter = np.array([2.054])
-    cantilever_guess_parameter = np.array([2.01])
+    cantilever_guess_parameter = np.array([2.054])
 
     cantilever_sim = CantileverSimulation()
 
@@ -757,11 +846,11 @@ if __name__ == "__main__":
     print '\n'
     cantilever_sim.set_projection_data(data)
 
-    error = cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
+    cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
     data2 = cantilever_sim.generate_data(1)[:,0:3]
     print '2nd Data Set'
     print '\n'
     print data2
     print '\n'
-    print('RMS Error = ', error)
+    print('RMS Error = ', cantilever_sim.error)
     print '\n'
