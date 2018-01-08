@@ -139,10 +139,9 @@ if __name__ == "__main__":
     ps.simulation.set_diagnostic_level(0)
     ps.simulation.setup_cantilever_simulation()
     ps.simulation.solve_simulation()
-    data = ps.simulation.generate_data(3)[:,0:3]
+    data = ps.simulation.generate_data(1)
 
     ps.simulation.set_projection_data(data)
-    ps.simulation.prepare_projection()
     ps.initial_parameters = cantilever_guess_parameter
     simulation_tuple = (ps.simulation,)
     ps.set_objective_function(cantilever_objective_function, simulation_tuple)

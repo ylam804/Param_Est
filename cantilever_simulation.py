@@ -50,7 +50,7 @@ class CantileverSimulation:
         self.dataProjection = None
         self.error = 0
         self.fields = None
-        self.numPointsPerFace = 2
+        self.numPointsPerFace = 3
 
     def set_projection_data(self, data):
         """
@@ -162,8 +162,15 @@ class CantileverSimulation:
         Sets the number of points along each side of a face which will be used to generate Xi coordinates used for
         interpolating the surface position of each element.
 
+        This won't work with two or fewer points per side because one of the data projection created later would have
+        zero points in it, which isn't allowed. So if the number of points is less than two, change it so that it is
+        equal to three.
+
         :param numPointsPerFace: An integer value for the number of points along one side.
         """
+
+        if numPoints <= 2:
+            numPoints = 3
 
         self.numPointsPerFace = numPoints
 
@@ -816,6 +823,8 @@ def cantilever_objective_function(material_parameters, simulation):
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()
+
+    return simulation.error
 
 
 ###########
