@@ -1,6 +1,7 @@
 from opencmiss.iron import iron
 import numpy as np
 import math
+from input_output import exportDatapointsErrorExdata
 
 
 class CantileverSimulation:
@@ -472,7 +473,6 @@ class CantileverSimulation:
         iron.Field.ComponentValuesInitialiseDP(
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
-
     def solve_simulation(self):
         self.problem.Solve()
 
@@ -521,7 +521,6 @@ class CantileverSimulation:
         zeros. Since zero isn't a valid elements number, a loop could be used to extract the element numbers for each
         face from the corresponding row, stopping when the first zero is reached. This seems of limited use though.
         """
-
 
         # Redefine the number of elements in each dimension for quicker use.
         x = self.cantilever_elements[0]
@@ -590,33 +589,8 @@ class CantileverSimulation:
 
             for j in range(len(elements)):
                 for k in range(len(Xi)):
-                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftEls[i],leftXi[j],4)
+                    point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[j],Xi[k],4)
                     dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        #for i in range(len(leftEls)):
-        #    for j in range(len(leftXi)):
-        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,leftEls[i],leftXi[j],4)
-        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        #for i in range(len(rightEls)):
-        #    for j in range(len(bottomXi)):
-        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,bottomEls[i],bottomXi[j],4)
-        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        #for i in range(len(endEls)):
-        #    for j in range(len(endXi)):
-        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,endEls[i],endXi[j],4)
-        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        #for i in range(len(rightEls)):
-        #    for j in range(len(rightXi)):
-        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,rightEls[i],rightXi[j],4)
-        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
-
-        #for i in range(len(topEls)):
-        #    for j in range(len(topXi)):
-        #        point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,topEls[i],topXi[j],4)
-        #        dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
         return dataLocations
 
@@ -629,6 +603,7 @@ class CantileverSimulation:
         """
 
         errorValues = np.array([])
+        #errorVectors = np.array([])
 
         # Projections must be done face by face. First step is to loop through the five faces onto which the data points
         # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
@@ -643,7 +618,7 @@ class CantileverSimulation:
             projectionErrVec = np.zeros((numDataPoints,3))
             for pointNum, pointIdx in enumerate(range(numDataPoints), 1):
                 projectionErr[pointIdx] = self.dataProjection.ResultDistanceGet(pointNum)
-                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet( pointNum, 3)
+                projectionErrVec[pointIdx,:] = self.dataProjection.ResultProjectionVectorGet(pointNum, 3)
 
             errorValues = np.append(errorValues, projectionErr)
 
@@ -691,6 +666,8 @@ class CantileverSimulation:
         elif i == 4:
             numDataPoints = y * z * self.numPointsPerFace**2
             points = self.data[((x*z + x*y)*self.numPointsPerFace**2 + 1):((x*z + x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
+
+        #points = np.unique(points, axis=0)
 
         # Having defined which points are to be used in this pass of the projection calculation, now create the data
         # point structure.
@@ -747,97 +724,39 @@ def cantilever_objective_function(x, simulation):
 
     return simulation.error
 
-def exportDatapointsErrorExdata(data, error, label, directory,
-                                   filename):
-
-    data = data[1:,:]
-    # Shape of data should be a [num_datapoints,dim] numpy array.
-    field_id = open(directory + filename + '.exdata', 'w')
-    field_id.write(' Group name: {0}\n'.format(label))
-    field_id.write(' #Fields=3\n')
-    field_id.write(
-        ' 1) coordinates, coordinate, rectangular cartesian, #Components=3\n')
-    field_id.write('   x.  Value index= 1, #Derivatives=0\n')
-    field_id.write('   y.  Value index= 2, #Derivatives=0\n')
-    field_id.write('   z.  Value index= 3, #Derivatives=0\n')
-    field_id.write(' 2) error, field, rectangular cartesian, #Components=3\n')
-    field_id.write('   x.  Value index= 4, #Derivatives=0\n')
-    field_id.write('   y.  Value index= 5, #Derivatives=0\n')
-    field_id.write('   z.  Value index= 6, #Derivatives=0\n')
-    field_id.write(' 3) scale, field, rectangular cartesian, #Components=3\n')
-    field_id.write('   x.  Value index= 7, #Derivatives=0\n')
-    field_id.write('   y.  Value index= 8, #Derivatives=0\n')
-    field_id.write('   z.  Value index= 9, #Derivatives=0\n')
-
-    for point_idx, point in enumerate(range(1, data.shape[0] + 1)):
-        field_id.write(' Node: {0}\n'.format(point))
-        for value_idx in range(data.shape[1]):
-            field_id.write(' {0:.12E}\n'.format(data[point_idx, value_idx]))
-        for value_idx in range(data.shape[1]):
-            field_id.write(' {0:.12E}\n'.format(error[point_idx, value_idx]))
-        # Scale field is absolute of the error field to ensure vector
-        # direction does not change.
-        for value_idx in range(data.shape[1]):
-            field_id.write(
-                ' {0:.12E}\n'.format(abs(error[point_idx, value_idx])))
-    field_id.close()
-
-
-def exportDatapointsExdata(data, label, directory, filename):
-    # Shape of data should be a [num_datapoints,dim] numpy array.
-
-    field_id = open(directory + filename + '.exdata', 'w')
-    field_id.write(' Group name: {0}\n'.format(label))
-    field_id.write(' #Fields=1\n')
-    field_id.write(
-        ' 1) coordinates, coordinate, rectangular cartesian, #Components=3\n')
-    field_id.write('  x.  Value index=1, #Derivatives=0, #Versions=1\n')
-    field_id.write('  y.  Value index=2, #Derivatives=0, #Versions=1\n')
-    field_id.write('  z.  Value index=3, #Derivatives=0, #Versions=1\n')
-
-    for point_idx, point in enumerate(range(1, data.shape[0] + 1)):
-        field_id.write(' Node: {0}\n'.format(point))
-        for value_idx in range(data.shape[1]):
-            field_id.write(' {0:.12E}\n'.format(data[point_idx, value_idx]))
-    field_id.close()
-
-    import h5py
-    hdf5_filename = '{0}/{1}.h5'.format(directory, filename)
-    hdf5_main_grip = h5py.File(hdf5_filename, 'w')
-
-    hdf5_main_grip.create_dataset(label, data)
-
-    hdf5_main_grip.close()
-
 ###########
 # Testing #
 ###########
 
 if __name__ == "__main__":
     # Testing the use of the objective function.
-    data = np.array([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]])
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([3, 2, 2])
-    cantilever_initial_parameter = np.array([2.05])
-    cantilever_guess_parameter = np.array([2.05])
+    cantilever_elements = np.array([1, 1, 1])
+    cantilever_true_parameter = np.array([2.054])
+    cantilever_guess_parameter = np.array([2.01])
 
     cantilever_sim = CantileverSimulation()
 
+    cantilever_sim.set_Xi_points_num(2)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
     cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
-    cantilever_sim.set_diagnostic_level(1)
+    cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
+    cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
-    data = cantilever_sim.generate_data(3)[:,0:3]
-
-    #from input-output import exportDatapointsExdata
-    #exportDatapointsExdata(data, 'test', '/hpc/jada201/opt/CantileverParameterOptimisation/', 'data')
-
+    data = cantilever_sim.generate_data(1)[:,0:3]
+    print '1st Data Set'
     print data
+    print '\n'
     cantilever_sim.set_projection_data(data)
 
     error = cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
+    data2 = cantilever_sim.generate_data(1)[:,0:3]
+    print '2nd Data Set'
+    print '\n'
+    print data2
+    print '\n'
     print('RMS Error = ', error)
     print '\n'

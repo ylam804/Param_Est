@@ -25,6 +25,15 @@ class ModelFace:
 
         self.data = data
 
+    def append_data(self, data):
+        """
+        Appends data points to the end of the current data point array.
+
+        :param data: An N-by-3 array of data points, as per the add_data function.
+        """
+
+        self.data = np.append(self.data, data, axis=0)
+
     def set_face_ID(self, faceID):
         """
         Set the face number which is used by OpenCMISS for projecting the data points onto.
