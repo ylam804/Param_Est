@@ -592,6 +592,10 @@ class CantileverSimulation:
                     point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[j],Xi[k],4)
                     dataLocations = np.append(dataLocations, np.array([point]), axis=0)
 
+        from np_1_13_unique import unique
+        dataLocations, dataIdx = unique(dataLocations[:,0:3], return_index=True, axis=0)
+        dataLocations = dataLocations[np.argsort(dataIdx)]
+
         return dataLocations
 
     def projection_calculation(self):
@@ -604,13 +608,14 @@ class CantileverSimulation:
 
         errorValues = np.array([])
         #errorVectors = np.array([])
+        dataIdx = 0
 
         # Projections must be done face by face. First step is to loop through the five faces onto which the data points
         # will be projected. Once the faces for projection are set for one group of elements, select the corresponding
         # points for projection and calculation their error before destroying both those projection and data sets to
         # make room for the next set.
         for i in range(2,7):
-            numDataPoints = self.prepare_projection(i)
+            numDataPoints, dataIdx = self.prepare_projection(i, dataIdx)
 
             # Now perform the projections.
             self.dataProjection.DataPointsProjectionEvaluate(self.dependentField)
@@ -637,7 +642,7 @@ class CantileverSimulation:
 
         return self.error
 
-    def prepare_projection(self, i):
+    def prepare_projection(self, i, prevDataIdx):
         """
         Prepare the simulation object for data projection processes. This should only be run once as the dataPoints and
         dataProjection structures only need to be made once.
@@ -648,26 +653,26 @@ class CantileverSimulation:
         y = self.cantilever_elements[1]
         z = self.cantilever_elements[2]
 
+        # To make the following algorithms actually readable, the number of points along a single edge is reassigned
+        # to a smaller variable name.
+        pts = self.numPointsPerFace
+
         # Now, depending on which face the projection_calculation function is up to, set the number of data points to
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
-        if i == 2 or i == 5:
-            numDataPoints = x * z * self.numPointsPerFace**2
-            if i == 2:
-                points = self.data[1:numDataPoints+1, 0:3]
-            elif i == 5:
-                points = self.data[((x*z + x*y + y*z)*self.numPointsPerFace**2 + 1):((2*x*z + x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
-        elif i == 3 or i == 6:
-            numDataPoints = x * y * self.numPointsPerFace**2
-            if i == 3:
-                points = self.data[(x*z*self.numPointsPerFace**2 + 1):(x*z + x*y)*self.numPointsPerFace**2+ 1, 0:3]
-            elif i == 6:
-                points = self.data[((2*x*z + x*y + y*z)*self.numPointsPerFace**2 + 1):((2*x*z + 2*x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
+        if i == 2:
+            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + ((2 * pts**2 - 3 * pts + 1) * (x - 1))
+        elif i == 3:
+            numDataPoints = y * ((pts**2 - pts) + (pts**2 - 2 * pts + 1) * (x - 1))
         elif i == 4:
-            numDataPoints = y * z * self.numPointsPerFace**2
-            points = self.data[((x*z + x*y)*self.numPointsPerFace**2 + 1):((x*z + x*y + y*z)*self.numPointsPerFace**2 + 1), 0:3]
+            numDataPoints = y * z * (pts**2 - 2 * pts + 1)
+        elif i == 5:
+            numDataPoints = x * z * (pts**2 - 2 * pts + 1)
+        elif i == 6:
+            numDataPoints = x * ((y - 1) * (pts**2 - 2 * pts + 1) + (pts**2 - 3 * pts + 2))
 
-        #points = np.unique(points, axis=0)
+        points = self.data[prevDataIdx:(prevDataIdx + numDataPoints)]
+        prevDataIdx += numDataPoints
 
         # Having defined which points are to be used in this pass of the projection calculation, now create the data
         # point structure.
@@ -713,7 +718,7 @@ class CantileverSimulation:
         faces = np.full(len(elements), i, dtype='int32')
         self.dataProjection.ProjectionCandidatesSet(elements, faces)
 
-        return numDataPoints
+        return numDataPoints, prevDataIdx
 
 def cantilever_objective_function(x, simulation):
 
@@ -731,13 +736,13 @@ def cantilever_objective_function(x, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([1, 1, 1])
+    cantilever_elements = np.array([4, 2, 2])
     cantilever_true_parameter = np.array([2.054])
     cantilever_guess_parameter = np.array([2.01])
 
     cantilever_sim = CantileverSimulation()
 
-    cantilever_sim.set_Xi_points_num(2)
+    cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
     cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
@@ -746,7 +751,7 @@ if __name__ == "__main__":
     cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
-    data = cantilever_sim.generate_data(1)[:,0:3]
+    data = cantilever_sim.generate_data(1)
     print '1st Data Set'
     print data
     print '\n'
