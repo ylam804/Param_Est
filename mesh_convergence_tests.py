@@ -24,7 +24,6 @@
 #import opencmiss.iron as iron
 import math
 import numpy as np
-import matplotlib.pyplot as plt
 from CantileverSimulation import CantileverSimulation
 
 def destroy_routine(simulation):
@@ -45,7 +44,12 @@ def error_calculation(currentDataSet, previousDataSet):
     yError = np.max(yError)
     zError = np.max(zError)
 
-    return xError, yError, zError
+    RMSError = np.zeros(len(currentDataSet))
+    for i in range(len(currentDataSet)):
+        RMSError[i] = np.sqrt(np.average(np.array([(currentDataSet[i,0] - previousDataSet[i,0]) ** 2, (currentDataSet[i,1] - previousDataSet[i,1]) ** 2, (currentDataSet[i,2] - previousDataSet[i,2]) ** 2])))
+    maxRMSError = np.max(RMSError)
+
+    return xError, yError, zError, maxRMSError
 
 def displacement_calculation(currentDataSet):
     displacementArray = np.zeros((1,len(currentDataSet)))
@@ -56,12 +60,12 @@ def displacement_calculation(currentDataSet):
     return displacementArray
 
 # Set the tolerance required for the mesh convergence study
-tolerance = 3e-1
+tolerance = 0.3
 
 # Prepare the initial conditions for the first simulation
-cantilever_dimensions = np.array([60, 40, 40])
+cantilever_dimensions = np.array([30, 12, 12])
 cantilever_elements = np.array([1, 1, 1])
-cantilever_initial_parameters = np.array([1.5, 1.0])
+cantilever_initial_parameters = np.array([1.452])
 simulation = CantileverSimulation()
 
 # Now run the first simulation and collect the first data set which can then be used inside the while loop to
@@ -96,13 +100,16 @@ displacements = np.append(displacements, displacement_calculation(currentDataPoi
 print currentDataPoints
 
 # Calculate the error in the data in each of the axial directions using the two sets of data.
-[xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
-
+[xError, yError, zError, RMSError] = error_calculation(currentDataPoints, previousDataPoints)
+xErrorArray = np.array([xError])
+yErrorArray = np.array([yError])
+zErrorArray = np.array([zError])
+RMSErrorArray = np.array([RMSError])
 # Now prepare the loop variables.
 iteration = 0
 converged = False
 
-while converged == False:
+while converged == False and iteration < 10:
     # First, clear the previous simulation out of the simulation variable so it can be used again.
     destroy_routine(simulation)
     simulation = CantileverSimulation()
@@ -113,7 +120,7 @@ while converged == False:
         cantilever_elements[0] = round(cantilever_elements[0] * 1.6)
     if yError > tolerance:
         cantilever_elements[1] = round(cantilever_elements[1] * 1.3)
-    if yError > tolerance:
+    if zError > tolerance:
         cantilever_elements[2] = round(cantilever_elements[2] * 1.3)
 
     # Now set up and solve the next simulation with these parameters.
@@ -152,8 +159,11 @@ while converged == False:
     displacements = np.append(displacements, displacement_calculation(currentDataPoints), axis = 0)
 
     # Calculate the error in the x, y and z directions.
-    [xError, yError, zError] = error_calculation(currentDataPoints, previousDataPoints)
-
+    [xError, yError, zError, RMSError] = error_calculation(currentDataPoints, previousDataPoints)
+    xErrorArray = np.append(xErrorArray, xError)
+    yErrorArray = np.append(yErrorArray, yError)
+    zErrorArray = np.append(zErrorArray, zError)
+    RMSErrorArray = np.append(RMSErrorArray, RMSError)
     simulation.export_results()
 
 # Return the final element dimensions required to converge to the tolerance
@@ -165,6 +175,12 @@ print "              z = %d" % cantilever_elements[2]
 
 print displacements
 
+# Now construct an array which will be saved to a file for visualisation.
+printingArray = np.array([xErrorArray])
+printingArray = np.append(printingArray, np.array([yErrorArray]), axis=0)
+printingArray = np.append(printingArray, np.array([zErrorArray]), axis=0)
+printingArray = np.append(printingArray, np.array([RMSErrorArray]), axis=0)
+np.savetxt('convergence_error_output.txt', printingArray, delimiter=' || ', newline="\n")
 
 c1 = c2 = c3 = c4 = np.zeros(len(displacements))
 
@@ -176,5 +192,6 @@ for i in range(len(displacements)):
 
 convergenceNumber = range(1, iteration)
 
-plt.plt(convergenceNumber, c1, 'bo', convergenceNumber, c2, 'rx', convergenceNumber, c3, 'g--', convergenceNumber, c4, 'rs')
-plt.show()
+#plt.plt(convergenceNumber, c1, 'bo', convergenceNumber, c2, 'rx', convergenceNumber, c3, 'g--', convergenceNumber, c4, 'rs')
+#plt.show()
+
