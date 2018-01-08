@@ -26,6 +26,38 @@ import math
 import numpy as np
 from CantileverSimulation import CantileverSimulation
 
+class ConvergenceTest:
+    """
+    Class for holding and running convergence tests of a FE model.
+    """
+
+    def __init__(self):
+        """
+        Create new instance of a test.
+        """
+
+        self.simulation =  None
+
+    def set_simulation(self, simulation):
+        """
+        Sets the type of simulation model which will have the convergence tested on.
+
+        :param simulation: A class containing all the set-up methods required to get the desired simulation running.
+        :return:
+        """
+
+        self.simulation = simulation
+
+    def destroy_routine(self):
+        """
+        Destroys some parts of the simulation so that they can be re-initialised with new values.
+        """
+
+        self.simulation.coordinate_system.Destroy()
+        self.simulation.region.Destroy()
+        self.simulation.basis.Destroy()
+        self.simulation.problem.Destroy()
+
 def destroy_routine(simulation):
     simulation.coordinate_system.Destroy()
     simulation.region.Destroy()
@@ -181,17 +213,3 @@ printingArray = np.append(printingArray, np.array([yErrorArray]), axis=0)
 printingArray = np.append(printingArray, np.array([zErrorArray]), axis=0)
 printingArray = np.append(printingArray, np.array([RMSErrorArray]), axis=0)
 np.savetxt('convergence_error_output.txt', printingArray, delimiter=' || ', newline="\n")
-
-c1 = c2 = c3 = c4 = np.zeros(len(displacements))
-
-for i in range(len(displacements)):
-    c1[i] = displacements[i,0]
-    c2[i] = displacements[i,1]
-    c3[i] = displacements[i,2]
-    c4[i] = displacements[i,3]
-
-convergenceNumber = range(1, iteration)
-
-#plt.plt(convergenceNumber, c1, 'bo', convergenceNumber, c2, 'rx', convergenceNumber, c3, 'g--', convergenceNumber, c4, 'rs')
-#plt.show()
-
