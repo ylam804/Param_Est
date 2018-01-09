@@ -846,23 +846,16 @@ if __name__ == "__main__":
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -0.058]))
     cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
-    #data = cantilever_sim.generate_data(1)
-    #print '1st Data Set'
-    #print data
-    #print '\n'
-    #cantilever_sim.set_projection_data(data)
-
     cantilever_sim.set_projection_data()
-    data = cantilever_sim.generate_data(1)
     print '1st Data Set'
     print '\n'
-    print data
+    print cantilever_sim.data
     print '\n'
 
 
