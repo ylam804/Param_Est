@@ -69,8 +69,12 @@ ps.simulation.set_projection_data()
 ps.set_objective_function(cantilever_objective_function)
 [H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
 
-print grav_vect
-print detH
+print 'Gravity Vector Values:'
+print '         x = %d', grav_vect[0]
+print '         y = %d', grav_vect[1]
+print '         z = %d', grav_vect[2]
+print '\n'
+print 'Determinant of Hessian = %d', detH
 
 #        HMatrix[theta/thetaStep, phi/phiStep] = H
 #        detHMatrix[theta/thetaStep, phi/phiStep] = detH
