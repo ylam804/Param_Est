@@ -46,42 +46,41 @@ ps.simulation.setup_cantilever_simulation()
 ps.simulation.set_Mooney_Rivlin_parameter_values(parameter_value)
 
 # Now define the design variables.
-#thetaStart = -90
-#thetaEnd = 90
-#thetaStep = 90
-#phiStart = 0
-#phiEnd = 180
-#phiStep = 90
-
-theta = 23
-phi = 85
-
-#HMatrix = detHMatrix = condHMatrix = detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+thetaStart = -90
+thetaEnd = 90
+thetaStep = 90
+phiStart = 0
+phiEnd = 180
+phiStep = 90
+HMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 
 # Now loop through the design variables and solve the simulation under each condition.
-#for theta in range(thetaStart, thetaEnd+1, thetaStep):
-#    for phi in range(phiStart, phiEnd+1, phiStep):
-grav_vect = ps.simulation.gravity_vector_calculation((theta * math.pi / 180), (phi * math.pi / 180))
-ps.simulation.set_gravity_vector(grav_vect)
-ps.simulation.solve_simulation()
-ps.simulation.set_projection_data()
+for theta in range(thetaStart, thetaEnd+1, thetaStep):
+    for phi in range(phiStart, phiEnd+1, phiStep):
+        grav_vect = ps.simulation.gravity_vector_calculation((theta * math.pi / 180), (phi * math.pi / 180))
+        ps.simulation.set_gravity_vector(grav_vect)
+        ps.simulation.solve_simulation()
+        ps.simulation.set_projection_data()
 
-ps.set_objective_function(cantilever_objective_function)
-[H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
+        ps.set_objective_function(cantilever_objective_function)
+        [H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
 
-print 'Gravity Vector Values:'
-print '         x = %f' % grav_vect[0]
-print '         y = %f' % grav_vect[1]
-print '         z = %f' % grav_vect[2]
-print '\n'
-print 'Determinant of Hessian = %f' % detH
+        print 'Gravity Vector Values:'
+        print '         x = %f' % grav_vect[0]
+        print '         y = %f' % grav_vect[1]
+        print '         z = %f' % grav_vect[2]
+        print '\n'
+        print 'Determinant of Hessian = %f' % detH
 
-#        HMatrix[theta/thetaStep, phi/phiStep] = H
-#        detHMatrix[theta/thetaStep, phi/phiStep] = detH
-#        condHMatrix[theta/thetaStep, phi/phiStep] = condH
-#        detH0Matrix[theta/thetaStep, phi/phiStep] = detH0
+        HMatrix[theta/thetaStep + 1, phi/phiStep] = H
+        detHMatrix[theta/thetaStep + 1, phi/phiStep] = detH
+        condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
+        detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
 
 # Next calculate the Hessian matrix for each design variable combination.
-#print detHMatrix
+print detHMatrix
 
 # Now compile these into a matrix and export them for visualisation.
