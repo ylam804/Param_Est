@@ -1,12 +1,12 @@
  Group name: Region 1
  Shape.  Dimension=3
  #Scale factor sets= 1
- l.Lagrange*l.Lagrange*l.Lagrange, #Scale factors=8
- #Nodes=           8
+ c.Lagrange*c.Lagrange*c.Lagrange, #Scale factors=64
+ #Nodes=           64
  #Fields=7
  1) Geometry, coordinate, rectangular cartesian, #Components=3
-   x.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+   x.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -31,8 +31,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   y.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   y.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -57,8 +225,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   z.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   z.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -83,9 +419,177 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
  2) Fibre, anatomical, fibre, #Components=3
-   1.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+   1.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -110,8 +614,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   2.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   2.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -136,8 +808,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   3.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   3.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -162,9 +1002,177 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
  3) Dependent, field,  rectangular cartesian, #Components=4
-   1.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+   1.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -189,8 +1197,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   2.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   2.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -215,8 +1391,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   3.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   3.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -241,11 +1585,179 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
    4.   constant*constant*constant, no modify, grid based.
      #xi1=0, #xi2=0, #xi3=0
  4) del U_del n, field,  rectangular cartesian, #Components=4
-   1.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+   1.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -270,8 +1782,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   2.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   2.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -296,8 +1976,176 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
-   3.   l.Lagrange*l.Lagrange*l.Lagrange, no modify, standard node based.
-     #Nodes= 8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
+   3.   c.Lagrange*c.Lagrange*c.Lagrange, no modify, standard node based.
+     #Nodes= 64
      1.  #Values=1
       Value indices:     1
       Scale factor indices:    1
@@ -322,6 +2170,174 @@
      8.  #Values=1
       Value indices:     1
       Scale factor indices:    8
+     9.  #Values=1
+      Value indices:     1
+      Scale factor indices:    9
+    10.  #Values=1
+      Value indices:     1
+      Scale factor indices:   10
+    11.  #Values=1
+      Value indices:     1
+      Scale factor indices:   11
+    12.  #Values=1
+      Value indices:     1
+      Scale factor indices:   12
+    13.  #Values=1
+      Value indices:     1
+      Scale factor indices:   13
+    14.  #Values=1
+      Value indices:     1
+      Scale factor indices:   14
+    15.  #Values=1
+      Value indices:     1
+      Scale factor indices:   15
+    16.  #Values=1
+      Value indices:     1
+      Scale factor indices:   16
+    17.  #Values=1
+      Value indices:     1
+      Scale factor indices:   17
+    18.  #Values=1
+      Value indices:     1
+      Scale factor indices:   18
+    19.  #Values=1
+      Value indices:     1
+      Scale factor indices:   19
+    20.  #Values=1
+      Value indices:     1
+      Scale factor indices:   20
+    21.  #Values=1
+      Value indices:     1
+      Scale factor indices:   21
+    22.  #Values=1
+      Value indices:     1
+      Scale factor indices:   22
+    23.  #Values=1
+      Value indices:     1
+      Scale factor indices:   23
+    24.  #Values=1
+      Value indices:     1
+      Scale factor indices:   24
+    25.  #Values=1
+      Value indices:     1
+      Scale factor indices:   25
+    26.  #Values=1
+      Value indices:     1
+      Scale factor indices:   26
+    27.  #Values=1
+      Value indices:     1
+      Scale factor indices:   27
+    28.  #Values=1
+      Value indices:     1
+      Scale factor indices:   28
+    29.  #Values=1
+      Value indices:     1
+      Scale factor indices:   29
+    30.  #Values=1
+      Value indices:     1
+      Scale factor indices:   30
+    31.  #Values=1
+      Value indices:     1
+      Scale factor indices:   31
+    32.  #Values=1
+      Value indices:     1
+      Scale factor indices:   32
+    33.  #Values=1
+      Value indices:     1
+      Scale factor indices:   33
+    34.  #Values=1
+      Value indices:     1
+      Scale factor indices:   34
+    35.  #Values=1
+      Value indices:     1
+      Scale factor indices:   35
+    36.  #Values=1
+      Value indices:     1
+      Scale factor indices:   36
+    37.  #Values=1
+      Value indices:     1
+      Scale factor indices:   37
+    38.  #Values=1
+      Value indices:     1
+      Scale factor indices:   38
+    39.  #Values=1
+      Value indices:     1
+      Scale factor indices:   39
+    40.  #Values=1
+      Value indices:     1
+      Scale factor indices:   40
+    41.  #Values=1
+      Value indices:     1
+      Scale factor indices:   41
+    42.  #Values=1
+      Value indices:     1
+      Scale factor indices:   42
+    43.  #Values=1
+      Value indices:     1
+      Scale factor indices:   43
+    44.  #Values=1
+      Value indices:     1
+      Scale factor indices:   44
+    45.  #Values=1
+      Value indices:     1
+      Scale factor indices:   45
+    46.  #Values=1
+      Value indices:     1
+      Scale factor indices:   46
+    47.  #Values=1
+      Value indices:     1
+      Scale factor indices:   47
+    48.  #Values=1
+      Value indices:     1
+      Scale factor indices:   48
+    49.  #Values=1
+      Value indices:     1
+      Scale factor indices:   49
+    50.  #Values=1
+      Value indices:     1
+      Scale factor indices:   50
+    51.  #Values=1
+      Value indices:     1
+      Scale factor indices:   51
+    52.  #Values=1
+      Value indices:     1
+      Scale factor indices:   52
+    53.  #Values=1
+      Value indices:     1
+      Scale factor indices:   53
+    54.  #Values=1
+      Value indices:     1
+      Scale factor indices:   54
+    55.  #Values=1
+      Value indices:     1
+      Scale factor indices:   55
+    56.  #Values=1
+      Value indices:     1
+      Scale factor indices:   56
+    57.  #Values=1
+      Value indices:     1
+      Scale factor indices:   57
+    58.  #Values=1
+      Value indices:     1
+      Scale factor indices:   58
+    59.  #Values=1
+      Value indices:     1
+      Scale factor indices:   59
+    60.  #Values=1
+      Value indices:     1
+      Scale factor indices:   60
+    61.  #Values=1
+      Value indices:     1
+      Scale factor indices:   61
+    62.  #Values=1
+      Value indices:     1
+      Scale factor indices:   62
+    63.  #Values=1
+      Value indices:     1
+      Scale factor indices:   63
+    64.  #Values=1
+      Value indices:     1
+      Scale factor indices:   64
    4.   constant*constant*constant, no modify, grid based.
      #xi1=0, #xi2=0, #xi3=0
  5) Material, field,  rectangular cartesian, #Components=2
@@ -341,169 +2357,29 @@
      #xi1=0, #xi2=0, #xi3=0
  Element:            1 0 0
    Values:
-     -4.0958080869004637E-01
-     1.6475709685437323E-13
-     2.0199997999999999E+00
+     0.0000000000000000E+00
+     0.0000000000000000E+00
+     2.0539999999999998E+00
      0.0000000000000000E+00
      8.9999999999999998E-04
      0.0000000000000000E+00
      0.0000000000000000E+00
-     -9.8100000000000005E+00
+     0.0000000000000000E+00
    Nodes:
-           1           2           5           6          13          14          17          18
+           1           2           3           4           8           9          10          11          15          16          17          18          22          23          24          25          29          30          31          32          36          37          38          39          43          44          45          46          50          51          52          53          57          58          59          60          64          65          66          67          71          72          73          74          78          79          80          81          85          86          87          88          92          93          94          95          99         100         101         102         106         107         108         109
    Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
+     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
  Element:            2 0 0
    Values:
-     3.2180723345635659E-03
-     -2.5501822875639846E-13
-     2.0199997999999999E+00
+     0.0000000000000000E+00
+     0.0000000000000000E+00
+     2.0539999999999998E+00
      0.0000000000000000E+00
      8.9999999999999998E-04
      0.0000000000000000E+00
      0.0000000000000000E+00
-     -9.8100000000000005E+00
+     0.0000000000000000E+00
    Nodes:
-           2           3           6           7          14          15          18          19
+           4           5           6           7          11          12          13          14          18          19          20          21          25          26          27          28          32          33          34          35          39          40          41          42          46          47          48          49          53          54          55          56          60          61          62          63          67          68          69          70          74          75          76          77          81          82          83          84          88          89          90          91          95          96          97          98         102         103         104         105         109         110         111         112
    Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            3 0 0
-   Values:
-     -3.7814281715631372E-02
-     9.9920072216264089E-14
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-           3           4           7           8          15          16          19          20
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            4 0 0
-   Values:
-     -4.0957542401223046E-01
-     2.1538326677728037E-14
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-           5           6           9          10          17          18          21          22
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            5 0 0
-   Values:
-     3.2154340126436228E-03
-     4.6884718329920361E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-           6           7          10          11          18          19          22          23
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            6 0 0
-   Values:
-     -3.7846382172590419E-02
-     -2.4424906541753444E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-           7           8          11          12          19          20          23          24
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            7 0 0
-   Values:
-     4.4456413015117652E-01
-     4.4741987892393809E-14
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          13          14          17          18          25          26          29          30
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            8 0 0
-   Values:
-     1.3920312075434779E-02
-     1.7541523789077473E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          14          15          18          19          26          27          30          31
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            9 0 0
-   Values:
-     4.6103666897589990E-02
-     -1.8507417820501360E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          15          16          19          20          27          28          31          32
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            10 0 0
-   Values:
-     4.4456812265479528E-01
-     -2.2204460492503131E-16
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          17          18          21          22          29          30          33          34
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            11 0 0
-   Values:
-     1.3923512528442358E-02
-     -1.2856382625159313E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          18          19          22          23          30          31          34          35
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
- Element:            12 0 0
-   Values:
-     4.6078842209080151E-02
-     2.6922908347160046E-13
-     2.0199997999999999E+00
-     0.0000000000000000E+00
-     8.9999999999999998E-04
-     0.0000000000000000E+00
-     0.0000000000000000E+00
-     -9.8100000000000005E+00
-   Nodes:
-          19          20          23          24          31          32          35          36
-   Scale factors:
-     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00
+     1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00   1.0000000000000000E+00

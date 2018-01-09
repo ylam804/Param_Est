@@ -197,7 +197,7 @@ class CantileverSimulation:
         gravity = self.gravity_vector
 
         UsePressureBasis = False
-        NumberOfGaussXi = 2
+        NumberOfGaussXi = 4
 
         coordinateSystemUserNumber = 1
         regionUserNumber = 1
@@ -253,7 +253,7 @@ class CantileverSimulation:
         elif InterpolationType in (7,8,9):
             self.basis.type = iron.BasisTypes.SIMPLEX
         self.basis.numberOfXi = numberOfXi
-        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
         if NumberOfGaussXi>0:
             self.basis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
         self.basis.CreateFinish()
@@ -267,7 +267,7 @@ class CantileverSimulation:
             elif InterpolationType in (7,8,9):
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
-            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
@@ -689,7 +689,7 @@ class CantileverSimulation:
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
         if faceNum == 2:
-            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + ((2 * pts**2 - 3 * pts + 1) * (x - 1))
+            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + (((pts**2 - pts) + (z - 1) * (pts**2 - 2 * pts + 1)) * (x - 1))
         elif faceNum == 3:
             numDataPoints = y * ((pts**2 - pts) + (pts**2 - 2 * pts + 1) * (x - 1))
         elif faceNum == 4:
@@ -837,7 +837,7 @@ def cantilever_objective_function(material_parameters, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([4, 2, 2])
+    cantilever_elements = np.array([2, 1, 1])
     cantilever_true_parameter = np.array([2.054])
     cantilever_guess_parameter = np.array([2.054])
 
@@ -846,7 +846,7 @@ if __name__ == "__main__":
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))
     cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
@@ -859,12 +859,18 @@ if __name__ == "__main__":
     #cantilever_sim.set_projection_data(data)
 
     cantilever_sim.set_projection_data()
+    data = cantilever_sim.generate_data(1)
+    print '1st Data Set'
+    print '\n'
+    print data
+    print '\n'
+
 
     cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
-    data2 = cantilever_sim.generate_data(1)[:,0:3]
+    data2 = cantilever_sim.generate_data(1)
     print '2nd Data Set'
     print '\n'
     print data2
     print '\n'
-    print('RMS Error = ', cantilever_sim.error)
+    print 'RMS Error = %f' % cantilever_sim.error
     print '\n'
