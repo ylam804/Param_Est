@@ -1,1 +1,4 @@
-
+*.pyc
+*.part0.exelem
+*.part0.exnode
+*.xml
