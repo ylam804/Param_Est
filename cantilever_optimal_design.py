@@ -32,8 +32,8 @@ import math
 
 # First set up the variables needed to create the simulation.
 dimensions = np.array([30, 12, 12])
-elements = np.array([2, 1, 1])
-parameter_value = np.array([2.05])
+elements = np.array([3, 2, 2])
+parameter_value = np.array([2.02])
 
 # Next, create the instance of the simulation class and add the initialised variables to it.
 ps = ParameterEstimation()
@@ -53,8 +53,8 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(parameter_value)
 #phiEnd = 180
 #phiStep = 90
 
-theta = 45
-phi = 20
+theta = 23
+phi = 85
 
 #HMatrix = detHMatrix = condHMatrix = detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 
@@ -69,6 +69,7 @@ ps.simulation.set_projection_data()
 ps.set_objective_function(cantilever_objective_function)
 [H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
 
+print grav_vect
 print detH
 
 #        HMatrix[theta/thetaStep, phi/phiStep] = H
