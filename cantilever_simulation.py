@@ -689,7 +689,7 @@ class CantileverSimulation:
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
         if faceNum == 2:
-            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + ((2 * pts**2 - 3 * pts + 1) * (x - 1))
+            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + (((pts**2 - pts) + (z - 1) * (pts**2 - 2 * pts + 1))* (x - 1))
         elif faceNum == 3:
             numDataPoints = y * ((pts**2 - pts) + (pts**2 - 2 * pts + 1) * (x - 1))
         elif faceNum == 4:

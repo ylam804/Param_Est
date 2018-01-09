@@ -53,8 +53,8 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(parameter_value)
 #phiEnd = 180
 #phiStep = 90
 
-theta = 23
-phi = 85
+theta = 65
+phi = 27
 
 #HMatrix = detHMatrix = condHMatrix = detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 
