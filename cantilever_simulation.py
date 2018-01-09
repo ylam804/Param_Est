@@ -52,14 +52,17 @@ class CantileverSimulation:
         self.fields = None
         self.numPointsPerFace = 3
 
-    def set_projection_data(self, data):
+    def set_projection_data(self, data=None):
         """
         Initialises the set of data points which were scanned on the surface of the deformed experiment.
 
         :param data: A 2D array where each row is three point in mm of the x, y, and z coordinates respectively.
         """
 
-        self.data = data
+        if data == None:
+            self.data = self.generate_data(1)
+        else:
+            self.data = data
 
     def set_diagnostic_level(self, diagnostics_choice):
         """
@@ -143,7 +146,7 @@ class CantileverSimulation:
         #       theta is the angle of rotation.
 
         # Since we know that the x-axis will be the one rotated about, we can set k
-        k = np.array([0, 0, 1])
+        k = np.array([1, 0, 0])
 
         # Calculate the cross of k and v
         kcrossV = np.array([(k[1]*v[2] - k[2]*v[1]), (k[2]*v[0] - k[0]*v[2]), (k[0]*v[1] - k[1]*v[0])])
@@ -849,11 +852,13 @@ if __name__ == "__main__":
     cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
-    data = cantilever_sim.generate_data(1)
-    print '1st Data Set'
-    print data
-    print '\n'
-    cantilever_sim.set_projection_data(data)
+    #data = cantilever_sim.generate_data(1)
+    #print '1st Data Set'
+    #print data
+    #print '\n'
+    #cantilever_sim.set_projection_data(data)
+
+    cantilever_sim.set_projection_data()
 
     cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
     data2 = cantilever_sim.generate_data(1)[:,0:3]

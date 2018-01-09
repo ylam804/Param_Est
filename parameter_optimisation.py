@@ -76,7 +76,7 @@ class ParameterEstimation:
                                        diff_step=1e-5)
         return self.solutions
 
-    def evaluate_hessian(self, x, stepsize, simulation):
+    def evaluate_hessian(self, x, stepsize):
         """
         Routine for evaluating the Hessian matrix using central finite differences
         """
