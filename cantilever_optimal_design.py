@@ -48,14 +48,17 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(parameter_value)
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
-thetaStep = 90
+thetaStep = 15
 phiStart = 0
 phiEnd = 180
-phiStep = 90
+phiStep = 15
 HMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+
+loopCounter = 1
+loopMax = (((thetaEnd - thetaStart) / thetaStep) + 1) * (((phiEnd - phiStart) / phiStep) + 1)
 
 # Now loop through the design variables and solve the simulation under each condition.
 for theta in range(thetaStart, thetaEnd+1, thetaStep):
@@ -65,22 +68,30 @@ for theta in range(thetaStart, thetaEnd+1, thetaStep):
         ps.simulation.solve_simulation()
         ps.simulation.set_projection_data()
 
+        # Next calculate the Hessian matrix for each design variable combination.
         ps.set_objective_function(cantilever_objective_function)
         [H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
 
-        print 'Gravity Vector Values:'
-        print '         x = %f' % grav_vect[0]
-        print '         y = %f' % grav_vect[1]
-        print '         z = %f' % grav_vect[2]
+        print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
+        print 'Determinant of Hessian = {0}'.format(detH)
         print '\n'
-        print 'Determinant of Hessian = %f' % detH
 
+        loopCounter += 1
+
+        # Now compile these into a matrix
         HMatrix[theta/thetaStep + 1, phi/phiStep] = H
         detHMatrix[theta/thetaStep + 1, phi/phiStep] = detH
         condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
         detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
 
-# Next calculate the Hessian matrix for each design variable combination.
-print detHMatrix
 
-# Now compile these into a matrix and export them for visualisation.
+print 'Optimal Design finished.'
+print '\n'
+print 'Printing results to file for visualisation:'
+
+# Export the matrix results for visualisation.
+np.savetxt('optimal_design_detH.txt', detHMatrix, delimiter=' ', newline='\n')
+designVariables = np.array([thetaStart, thetaEnd, thetaStep, phiStart, phiEnd, phiStep])
+np.savetxt('optimal_design_variables.txt', designVariables, delimiter=" ", newline="\n")
+
+print 'Files generated'
