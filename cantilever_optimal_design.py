@@ -33,7 +33,7 @@ import math
 # First set up the variables needed to create the simulation.
 dimensions = np.array([30, 12, 12])
 elements = np.array([3, 2, 2])
-parameter_value = np.array([2.02])
+parameter_value = np.array([1.42])
 
 # Next, create the instance of the simulation class and add the initialised variables to it.
 ps = ParameterEstimation()
@@ -48,10 +48,10 @@ ps.simulation.set_Mooney_Rivlin_parameter_values(parameter_value)
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
-thetaStep = 15
+thetaStep = 10
 phiStart = 0
 phiEnd = 180
-phiStep = 15
+phiStep = 10
 HMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
