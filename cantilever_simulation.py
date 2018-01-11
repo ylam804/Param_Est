@@ -499,14 +499,28 @@ class CantileverSimulation:
         parameters which generated the data.
 
         :param scale: Sets the number of points which will be generated.
-                scale = 0 => Testing corner location mode           ** Note: model should only contain one element **
+                scale = 0 => Testing corner location mode
                 scale = 1 => Determined by self.numPointsPerFace
 
         :return: Sets the simulation's data to a set of points on the surface of the FE model.
         """
 
         if scale == 0:
-            a = 1
+            dataLocations = np.array([[0, 0, 0]])
+            print dataLocations
+
+            elements = np.array([self.cantilever_elements[0], self.cantilever_elements[0] * self.cantilever_elements[1],
+                                 self.cantilever_elements[0] + (self.cantilever_elements[0] * self.cantilever_elements[1]
+                                 * (self.cantilever_elements[2] - 1)), self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]])
+            Xi = np.array([[1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]])
+
+            for i in range(4):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[i],Xi[i],4)
+                print point
+                print point[0:3]
+                dataLocations = np.append(dataLocations, np.array([point[0:3]]), axis=0)
+
+            dataLocations = dataLocations[1:, 0:3]
 
         elif scale == 1:
             # First, select the relevant elements for each face.
