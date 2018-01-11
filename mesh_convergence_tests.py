@@ -34,14 +34,15 @@ class ConvergenceTest:
         Create new instance of a test.
         """
 
-        self.simulation =  None
+        self.sim =  None
         self.tolerance = 1e-3
         self.convergenceCriteria = False
         self.meshIterationCounter = 0
+        self.elements = np.array([1, 1, 1])
         self.currentDataSet = None
         self.previousDataSet = None
-        self.RMSError = self.tolerance + 1
-        self.axialError = None
+        self.RMSError = self.tolerance * 2
+        self.axialError = np.array([1.0, 1.0, 1.0])
 
     def set_simulation(self, simulation):
         """
@@ -58,10 +59,10 @@ class ConvergenceTest:
         Destroys some parts of the simulation so that they can be re-initialised with new values.
         """
 
-        self.simulation.coordinate_system.Destroy()
-        self.simulation.region.Destroy()
-        self.simulation.basis.Destroy()
-        self.simulation.problem.Destroy()
+        self.sim.coordinate_system.Destroy()
+        self.sim.region.Destroy()
+        self.sim.basis.Destroy()
+        self.sim.problem.Destroy()
 
     def calculate_axial_error(self):
         """
@@ -70,19 +71,16 @@ class ConvergenceTest:
         :return: RMS error in each of the axial directions.
         """
 
-        axialErr = np.zeros(3, len(self.currentDataSet))
-        axErr = np.zeros(1,3)
+        axErr = np.zeros((3, len(self.currentDataSet)))
 
         for i in range(len(self.currentDataSet)):
-            axialErr[0, i] = (self.currentDataSet[i,0] - self.previousDataSet[i,0])
-            axialErr[1, i] = (self.currentDataSet[i,1] - self.previousDataSet[i,1])
-            axialErr[2, i] = (self.currentDataSet[i,2] - self.previousDataSet[i,2])
+            axErr[0, i] = ((self.currentDataSet[i,0] - self.previousDataSet[i,0])**2)
+            axErr[1, i] = ((self.currentDataSet[i,1] - self.previousDataSet[i,1])**2)
+            axErr[2, i] = ((self.currentDataSet[i,2] - self.previousDataSet[i,2])**2)
 
-        axErr[0] = np.sqrt(np.average(axialErr[0]))
-        axErr[1] = np.sqrt(np.average(axialErr[1]))
-        axErr[2] = np.sqrt(np.average(axialErr[2]))
-
-        return axErr
+        self.axialError[0] = np.sqrt(np.average(axErr[0]))
+        self.axialError[1] = np.sqrt(np.average(axErr[1]))
+        self.axialError[2] = np.sqrt(np.average(axErr[2]))
 
     def calculate_RMS_error(self):
         """
@@ -91,26 +89,31 @@ class ConvergenceTest:
         :return: The RMS error for the total distance between each corner point
         """
 
-        err = np.zeros(1,4)
+        err = np.array([0.0, 0.0, 0.0, 0.0])
 
         for i in range(len(self.currentDataSet)):
             err[i] = np.sqrt((self.currentDataSet[i,0] - self.previousDataSet[i,0])**2
                              + (self.currentDataSet[i,1] - self.previousDataSet[i,1])**2
                              + (self.currentDataSet[i,2] - self.previousDataSet[i,2])**2)
 
-        self.RMSErr = np.sqrt(np.average(err))
+        self.RMSError = np.sqrt(np.average(err))
 
-    def calculate_new_elements(self, direction, err):
+    def calculate_new_elements(self, direction):
         """
         Calculate the new number of elements for a given direction.
 
         :param direction: The x, y, or z direction denoted by an integer of 0, 1, or 2 respectively.
-        :param err: The error along that direction.
         :return:
         """
 
-        newEls = self.simulation.cantilever_elements[direction] * 1.1 ** (err/self.tolerance) + 1 # Needs refining
-        self.simulation.cantilever_elements[direction] = newEls
+        newEls = self.elements[direction] * (self.axialError[direction]/self.tolerance) + 1 # Needs refining
+
+        if newEls < self.elements[direction]:
+            newEls = self.elements[direction]
+        elif newEls > 1.4 * self.elements[direction]:
+            newEls = 1.4 * self.elements[direction]
+
+        self.elements[direction] = newEls
 
 
 # Create instance of ConvergenceTest class
@@ -135,16 +138,21 @@ conTest.sim.solve_simulation()
 conTest.currentDataSet = conTest.sim.generate_data(0)
 
 # Increase the number of elements before running the next simulation.
-conTest.sim.set_cantilever_elements(np.array([2, 2, 2]))
+conTest.elements = np.array([2, 2, 2])
+
+# Lastly create an array for storing the errors from each iteration so they can be plotted later.
+errorArray = np.array([[1, 1, 1, 1]])
 
 # Now start the convergence loop.
 while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance:
 
     # First, reset the simulation.
+    conTest.destroy_routine()
     conTest.sim = CantileverSimulation()
 
     # Now repeat all the settings.
     conTest.sim.set_cantilever_dimensions(np.array([30, 12, 12]))
+    conTest.sim.set_cantilever_elements(conTest.elements)
     conTest.sim.setup_cantilever_simulation()
     conTest.sim.set_Mooney_Rivlin_parameter_values(np.array([1.452]))
 
@@ -161,15 +169,18 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     conTest.calculate_RMS_error()
 
     # Using these errors, calculate how much the number of elements should increase by.
-
+    for i in range(len(conTest.sim.cantilever_elements)):
+        conTest.calculate_new_elements(i)
 
     # Then compile these errors into a 1-by-4 array and append them to the errorArray for printing to a file and
     # visualisation later.
-
+    errorArray = np.append(errorArray, np.array([[conTest.RMSError, conTest.axialError[0], conTest.axialError[1], conTest.axialError[2]]]), axis=0)
 
     # Increase the convergence iteration counter.
+    conTest.meshIterationCounter += 1
 
-    
+# Now that the convergence has finished, print out the array full of errors.
+np.savetxt('convergence_error_output.txt', errorArray, newline="\n")
 
 #def destroy_routine(simulation):
 #    simulation.coordinate_system.Destroy()

@@ -517,7 +517,7 @@ class CantileverSimulation:
                 point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[i],Xi[i],4)
                 dataLocations = np.append(dataLocations, np.array([point[0:3]]), axis=0)
 
-            dataLocations = dataLocations[1:, 0:3]
+            dataLocations = dataLocations[1:, :]
 
         elif scale == 1:
             # First, select the relevant elements for each face.
