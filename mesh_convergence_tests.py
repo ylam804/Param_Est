@@ -40,6 +40,8 @@ class ConvergenceTest:
         self.meshIterationCounter = 0
         self.currentDataSet = None
         self.previousDataSet = None
+        self.RMSError = self.tolerance + 1
+        self.axialError = None
 
     def set_simulation(self, simulation):
         """
@@ -96,9 +98,7 @@ class ConvergenceTest:
                              + (self.currentDataSet[i,1] - self.previousDataSet[i,1])**2
                              + (self.currentDataSet[i,2] - self.previousDataSet[i,2])**2)
 
-        RMSErr = np.sqrt(np.average(err))
-
-        return RMSErr
+        self.RMSErr = np.sqrt(np.average(err))
 
     def calculate_new_elements(self, direction, err):
         """
@@ -109,26 +109,67 @@ class ConvergenceTest:
         :return:
         """
 
-        newEls = self.simulation.cantilever_elements * 1.1 ** (err/self.tolerance) + 1 # Needs refining
+        newEls = self.simulation.cantilever_elements[direction] * 1.1 ** (err/self.tolerance) + 1 # Needs refining
         self.simulation.cantilever_elements[direction] = newEls
 
 
 # Create instance of ConvergenceTest class
 conTest = ConvergenceTest()
 
+# Define some useful variables.
+dimensions = np.array([30, 12, 12])
+parameterValue = np.array([1.452])
+conTest.tolerance = 1e-3
+
 # Add a simulation to the convergence
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
 conTest.sim.set_cantilever_elements(np.array([1, 1, 1]))
-conTest.sim.set_cantilever_dimensions(np.array([30, 12, 12]))
+conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.setup_cantilever_simulation()
-conTest.sim.set_Mooney_Rivlin_parameter_values(np.array([1.452]))
+conTest.sim.set_Mooney_Rivlin_parameter_values(parameterValue)
 
 # Now solve the simulation and generate a data set
 conTest.sim.solve_simulation()
 conTest.currentDataSet = conTest.sim.generate_data(0)
 
+# Increase the number of elements before running the next simulation.
+conTest.sim.set_cantilever_elements(np.array([2, 2, 2]))
+
+# Now start the convergence loop.
+while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance:
+
+    # First, reset the simulation.
+    conTest.sim = CantileverSimulation()
+
+    # Now repeat all the settings.
+    conTest.sim.set_cantilever_dimensions(np.array([30, 12, 12]))
+    conTest.sim.setup_cantilever_simulation()
+    conTest.sim.set_Mooney_Rivlin_parameter_values(np.array([1.452]))
+
+    # Solve the simulation.
+    conTest.sim.solve_simulation()
+
+    # Move the previous iteration's generated data to the correct variable, then generate new data.
+    conTest.previousDataSet = conTest.currentDataSet
+    conTest.currentDataSet = conTest.sim.generate_data(0)
+
+    # Use these two data sets to calculate both the RMS error in each axial direction along with the RMS error for the
+    # total distance between a corner in the two data sets.
+    conTest.calculate_axial_error()
+    conTest.calculate_RMS_error()
+
+    # Using these errors, calculate how much the number of elements should increase by.
+
+
+    # Then compile these errors into a 1-by-4 array and append them to the errorArray for printing to a file and
+    # visualisation later.
+
+
+    # Increase the convergence iteration counter.
+
+    
 
 #def destroy_routine(simulation):
 #    simulation.coordinate_system.Destroy()
