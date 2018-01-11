@@ -373,9 +373,9 @@ class CantileverSimulation:
         self.materialField.VariableLabelSet(iron.FieldVariableTypes.V,"Density")
 
 
-        #loop through component number
-        #    self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,componentNumber,iron.FieldInterpolationTypes.ELEMENT_BASED)
-
+        # If the gel has two layers, use these lines to create the two component sets.
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,1,iron.FieldInterpolationTypes.ELEMENT_BASED)
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,2,iron.FieldInterpolationTypes.ELEMENT_BASED)
 
         self.equationsSet.MaterialsCreateFinish()
 
@@ -383,8 +383,13 @@ class CantileverSimulation:
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.V,iron.FieldParameterSetTypes.VALUES,1,density)
 
+        # If the gel has two layers, use this loop to set the elements which are in each of the layers.
+        for i in range(self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2] / 2, 1):
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U,
+                                                           iron.FieldParameterSetTypes.VALUES, i, 1, material)
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES,
+                                                           i + (cantilever_elements[0] * cantilever_elements[1] * cantilever_elements[2] / 2), 2, material)
 
-        #self.materialField.ParameterSetUpdateElementDP(variableType, fieldSetType, userElementNumber, componentNumber, value)
 
         # Create the source field with the gravity vector
         self.sourceField = iron.Field()
@@ -479,7 +484,7 @@ class CantileverSimulation:
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
         self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, parameter_values[1])
         iron.Field.ComponentValuesInitialiseDP(
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
@@ -837,16 +842,16 @@ def cantilever_objective_function(material_parameters, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([4, 2, 2])
-    cantilever_true_parameter = np.array([2.054])
-    cantilever_guess_parameter = np.array([2.054])
+    cantilever_elements = np.array([3, 2, 2])
+    cantilever_true_parameter = np.array([3.8, 3.66])
+    cantilever_guess_parameter = np.array([3.8, 3.66])
 
     cantilever_sim = CantileverSimulation()
 
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0, 10.0]))
     cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
