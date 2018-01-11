@@ -507,7 +507,6 @@ class CantileverSimulation:
 
         if scale == 0:
             dataLocations = np.array([[0, 0, 0]])
-            print dataLocations
 
             elements = np.array([self.cantilever_elements[0], self.cantilever_elements[0] * self.cantilever_elements[1],
                                  self.cantilever_elements[0] + (self.cantilever_elements[0] * self.cantilever_elements[1]
@@ -516,8 +515,6 @@ class CantileverSimulation:
 
             for i in range(4):
                 point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[i],Xi[i],4)
-                print point
-                print point[0:3]
                 dataLocations = np.append(dataLocations, np.array([point[0:3]]), axis=0)
 
             dataLocations = dataLocations[1:, 0:3]

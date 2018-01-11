@@ -35,6 +35,9 @@ class ConvergenceTest:
         """
 
         self.simulation =  None
+        self.tolerance = 1e-3
+        self.currentDataSet = None
+        self.previousDataSet = None
 
     def set_simulation(self, simulation):
         """
@@ -56,14 +59,55 @@ class ConvergenceTest:
         self.simulation.basis.Destroy()
         self.simulation.problem.Destroy()
 
-    def calculate_axial_error(self, currentData, previousData):
+    def calculate_axial_error(self):
         """
         Calculates the error in each dimension at each point in the data set
 
-        :param currentData:
-        :param previousData:
-        :return:
+        :return: RMS error in each of the axial directions.
         """
+
+        axialErr = np.zeros(3, len(self.currentDataSet))
+        axErr = np.zeros(1,3)
+
+        for i in range(len(self.currentDataSet)):
+            axialErr[0, i] = (self.currentDataSet[i,0] - self.previousDataSet[i,0])
+            axialErr[1, i] = (self.currentDataSet[i,1] - self.previousDataSet[i,1])
+            axialErr[2, i] = (self.currentDataSet[i,2] - self.previousDataSet[i,2])
+
+        axErr[0] = np.sqrt(np.average(axialErr[0]))
+        axErr[1] = np.sqrt(np.average(axialErr[1]))
+        axErr[2] = np.sqrt(np.average(axialErr[2]))
+
+        return axErr
+
+    def calculate_RMS_error(self):
+        """
+        Find the RMS error of the absolute error distance between the current and previous corner pairs.
+
+        :return: The RMS error for the total distance between each corner point
+        """
+
+        err = np.zeros(1,4)
+
+        for i in range(len(self.currentDataSet)):
+            err[i] = np.sqrt((self.currentDataSet[i,0] - self.previousDataSet[i,0])**2
+                             + (self.currentDataSet[i,1] - self.previousDataSet[i,1])**2
+                             + (self.currentDataSet[i,2] - self.previousDataSet[i,2])**2)
+
+        RMSErr = np.sqrt(np.average(err))
+
+        return RMSErr
+
+    def calculate_new_elements(self, direction, err):
+        """
+        Calculate the new number of elements for a given direction.
+
+        :param err: The error along that direction.
+        """
+
+        newEls = self.simulation.cantilever_elements * 1.1 ** (err/tolerance) + 1 # Needs refining
+        self.simulation.cantilever_elements[direction] = newEls
+
 
 def destroy_routine(simulation):
     simulation.coordinate_system.Destroy()
