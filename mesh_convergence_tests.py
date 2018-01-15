@@ -19,7 +19,6 @@
 #
 ####################################################################################################################
 
-#import opencmiss.iron as iron
 import math
 import numpy as np
 from cantilever_simulation import CantileverSimulation
@@ -128,7 +127,7 @@ conTest.tolerance = 1e-3
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.sim.set_cantilever_elements(np.array([1, 1, 1]))
+conTest.sim.set_cantilever_elements(np.array([9, 9, 9]))
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.setup_cantilever_simulation()
 conTest.sim.set_Mooney_Rivlin_parameter_values(parameterValue)
@@ -138,7 +137,7 @@ conTest.sim.solve_simulation()
 conTest.currentDataSet = conTest.sim.generate_data(0)
 
 # Increase the number of elements before running the next simulation.
-conTest.elements = np.array([2, 2, 2])
+conTest.elements = np.array([13, 13, 13])
 
 # Lastly create an array for storing the errors from each iteration so they can be plotted later.
 errorArray = np.array([[1, 1, 1, 1]])

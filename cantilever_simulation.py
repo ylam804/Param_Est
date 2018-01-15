@@ -443,6 +443,11 @@ class CantileverSimulation:
             self.nonLinearSolver.outputType = iron.SolverOutputTypes.NONE
 
         self.nonLinearSolver.NewtonJacobianCalculationTypeSet(iron.JacobianCalculationTypes.FD)
+        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonMaximumIterationsSet(int(1e6))
+        self.nonLinearSolver.NewtonMaximumFunctionEvaluationsSet(int(1e6))
         self.nonLinearSolver.NewtonLinearSolverGet(self.linearSolver)
         self.linearSolver.linearType = iron.LinearSolverTypes.DIRECT
         #linearSolver.libraryType = iron.SolverLibraries.LAPACK
