@@ -197,7 +197,7 @@ class CantileverSimulation:
         gravity = self.gravity_vector
 
         UsePressureBasis = False
-        NumberOfGaussXi = 2
+        NumberOfGaussXi = 4
 
         coordinateSystemUserNumber = 1
         regionUserNumber = 1
@@ -253,7 +253,7 @@ class CantileverSimulation:
         elif InterpolationType in (7,8,9):
             self.basis.type = iron.BasisTypes.SIMPLEX
         self.basis.numberOfXi = numberOfXi
-        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+        self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
         if NumberOfGaussXi>0:
             self.basis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
         self.basis.CreateFinish()
@@ -267,7 +267,7 @@ class CantileverSimulation:
             elif InterpolationType in (7,8,9):
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
-            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
+            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
@@ -351,7 +351,6 @@ class CantileverSimulation:
         if InterpolationType == 4:
             self.dependentField.fieldScalingType = iron.FieldScalingTypes.ARITHMETIC_MEAN
         self.equationsSet.DependentCreateFinish()
-
 
         # Initialise dependent field from undeformed geometry and displacement bcs and set hydrostatic pressure
         iron.Field.ParametersToFieldParametersComponentCopy(
@@ -463,10 +462,24 @@ class CantileverSimulation:
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
 
-        for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
+
+        numberOfNodes = (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))\
+                        * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalYElements-1))\
+                          * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalZElements-1))
+
+        #for nodeNum in range(1, numberOfNodes):
+        #    xValue = np.array([self.materialField.ParameterSetGetNodeDP(
+        #        iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,nodeNum,1)])
+
+            #if #np.isclose(xValue, 0.0):
+        for nodeNum in range(1, numberOfNodes+1, (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))):
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
 
         self.solverEquations.BoundaryConditionsCreateFinish()
 
@@ -884,9 +897,10 @@ def two_layer_objective_function(material_parameters, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([3, 2, 2])
+
+    cantilever_elements = np.array([1, 1, 1])
     cantilever_true_parameter = np.array([1.2])
-    cantilever_guess_parameter = np.array([1.4])
+    cantilever_guess_parameter = np.array([1.2])
 
     cantilever_sim = CantileverSimulation()
 
@@ -894,9 +908,9 @@ if __name__ == "__main__":
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
     cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
-    cantilever_sim.set_diagnostic_level(0)
+    cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.set_Neo_Hookean_single_layer_parameter(cantilever_true_parameter[0])
+    cantilever_sim.set_Neo_Hookean_single_layer_parameter(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
     #data = cantilever_sim.generate_data(1)
@@ -913,5 +927,5 @@ if __name__ == "__main__":
     print '\n'
     print data2
     print '\n'
-    print('RMS Error = ', cantilever_sim.error)
+    print "RMS Error = {0}".format(cantilever_sim.error)
     print '\n'
