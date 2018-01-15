@@ -42,13 +42,14 @@ class ConvergenceTest:
         self.previousDataSet = None
         self.RMSError = self.tolerance * 2
         self.axialError = np.array([1.0, 1.0, 1.0])
+        self.dataRecord = np.array([])
+        self.elementRecord = np.array([])
 
     def set_simulation(self, simulation):
         """
         Sets the type of simulation model which will have the convergence tested on.
 
         :param simulation: A class containing all the set-up methods required to get the desired simulation running.
-        :return:
         """
 
         self.simulation = simulation
@@ -66,8 +67,6 @@ class ConvergenceTest:
     def calculate_axial_error(self):
         """
         Calculates the error in each dimension at each point in the data set
-
-        :return: RMS error in each of the axial directions.
         """
 
         axErr = np.zeros((3, len(self.currentDataSet)))
@@ -84,8 +83,6 @@ class ConvergenceTest:
     def calculate_RMS_error(self):
         """
         Find the RMS error of the absolute error distance between the current and previous corner pairs.
-
-        :return: The RMS error for the total distance between each corner point
         """
 
         err = np.array([0.0, 0.0, 0.0, 0.0])
@@ -102,7 +99,6 @@ class ConvergenceTest:
         Calculate the new number of elements for a given direction.
 
         :param direction: The x, y, or z direction denoted by an integer of 0, 1, or 2 respectively.
-        :return:
         """
 
         newEls = self.elements[direction] * (self.axialError[direction]/self.tolerance) + 1 # Needs refining
@@ -114,30 +110,54 @@ class ConvergenceTest:
 
         self.elements[direction] = newEls
 
+    def store_data(self):
+        """
+        In order to calculate the errors, each iteration needs to be compared to the most recent one. To do this, every
+        each iteration's data needs to be recorded. Then, once the test has ended each iteration can be compared and
+        the residuals plotted.
+        """
+
+        if len(self.dataRecord) == 0:
+            self.dataRecord = np.array([self.currentDataSet])
+        else:
+            self.dataRecord = np.append(self.dataRecord, np.array([self.currentDataSet]), axis=1)
+
+    def store_elements(self):
+        """
+
+        """
+
+        if len(self.elementRecord) == 0:
+            self.elementRecord = np.array([self.elements[0] * self.elements[1] * self.elements[2]])
+        else:
+            self.elementRecord = np.append(self.elementRecord, [self.elements[0] * self.elements[1] * self.elements[2]])
 
 # Create instance of ConvergenceTest class
 conTest = ConvergenceTest()
 
 # Define some useful variables.
 dimensions = np.array([30, 12, 12])
-parameterValue = np.array([1.452])
+parameterValue = np.array([60.2])
 conTest.tolerance = 1e-3
 
 # Add a simulation to the convergence
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.sim.set_cantilever_elements(np.array([9, 9, 9]))
+conTest.sim.set_cantilever_elements(np.array([1, 1, 1]))
 conTest.sim.set_cantilever_dimensions(dimensions)
+conTest.sim.set_diagnostic_level(1)
 conTest.sim.setup_cantilever_simulation()
-conTest.sim.set_Mooney_Rivlin_parameter_values(parameterValue)
+conTest.sim.set_Neo_Hookean_single_layer_parameter(parameterValue)
 
 # Now solve the simulation and generate a data set
 conTest.sim.solve_simulation()
 conTest.currentDataSet = conTest.sim.generate_data(0)
+conTest.store_data()
+conTest.store_elements()
 
 # Increase the number of elements before running the next simulation.
-conTest.elements = np.array([13, 13, 13])
+conTest.elements = np.array([2, 2, 2])
 
 # Lastly create an array for storing the errors from each iteration so they can be plotted later.
 errorArray = np.array([[1, 1, 1, 1]])
@@ -152,8 +172,9 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     # Now repeat all the settings.
     conTest.sim.set_cantilever_dimensions(np.array([30, 12, 12]))
     conTest.sim.set_cantilever_elements(conTest.elements)
+    conTest.sim.set_diagnostic_level(1)
     conTest.sim.setup_cantilever_simulation()
-    conTest.sim.set_Mooney_Rivlin_parameter_values(np.array([1.452]))
+    conTest.sim.set_Neo_Hookean_single_layer_parameter(np.array([1.452]))
 
     # Solve the simulation.
     conTest.sim.solve_simulation()
@@ -161,6 +182,8 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     # Move the previous iteration's generated data to the correct variable, then generate new data.
     conTest.previousDataSet = conTest.currentDataSet
     conTest.currentDataSet = conTest.sim.generate_data(0)
+    conTest.store_data()
+    conTest.store_elements()
 
     # Use these two data sets to calculate both the RMS error in each axial direction along with the RMS error for the
     # total distance between a corner in the two data sets.
@@ -171,6 +194,8 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     for i in range(len(conTest.sim.cantilever_elements)):
         conTest.calculate_new_elements(i)
 
+    conTest.elements = np.array([2, 2, 2])
+
     # Then compile these errors into a 1-by-4 array and append them to the errorArray for printing to a file and
     # visualisation later.
     errorArray = np.append(errorArray, np.array([[conTest.RMSError, conTest.axialError[0], conTest.axialError[1], conTest.axialError[2]]]), axis=0)
@@ -180,3 +205,5 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
 
 # Now that the convergence has finished, print out the array full of errors.
 np.savetxt('convergence_error_output.txt', errorArray, newline="\n")
+np.savetxt('convergence_data_record.txt', conTest.dataRecord[0], newline="\n")
+np.savetxt('convergence_element_record.txt', conTest.elementRecord, newline="\n")

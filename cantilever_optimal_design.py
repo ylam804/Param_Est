@@ -33,16 +33,16 @@ import math
 
 # First set up the variables needed to create the simulation.
 dimensions = np.array([30, 12, 12])
-elements = np.array([3, 2, 2])
-parameter_value = np.array([2.1])
+elements = np.array([2, 2, 2])
+parameter_value = np.array([2.0])
 
 # Next, create the instance of the simulation class and add the initialised variables to it.
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 ps.simulation.set_cantilever_dimensions(dimensions)
 ps.simulation.set_cantilever_elements(elements)
-ps.simulation.set_Xi_points_num(4)
-ps.simulation.set_diagnostic_level(0)
+#ps.simulation.set_Xi_points_num(4)
+ps.simulation.set_diagnostic_level(1)
 ps.simulation.setup_cantilever_simulation()
 ps.simulation.set_Neo_Hookean_single_layer_parameter(parameter_value)
 

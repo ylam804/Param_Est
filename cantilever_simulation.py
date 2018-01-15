@@ -438,9 +438,9 @@ class CantileverSimulation:
             self.nonLinearSolver.outputType = iron.SolverOutputTypes.NONE
 
         self.nonLinearSolver.NewtonJacobianCalculationTypeSet(iron.JacobianCalculationTypes.FD)
-        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-10)
-        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-10)
-        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-9)
         self.nonLinearSolver.NewtonMaximumIterationsSet(int(1e6))
         self.nonLinearSolver.NewtonMaximumFunctionEvaluationsSet(int(1e6))
         self.nonLinearSolver.NewtonLinearSolverGet(self.linearSolver)
@@ -462,20 +462,10 @@ class CantileverSimulation:
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
 
-        #for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
-        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
-        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
-        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
-
         numberOfNodes = (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))\
                         * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalYElements-1))\
                           * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalZElements-1))
 
-        #for nodeNum in range(1, numberOfNodes):
-        #    xValue = np.array([self.materialField.ParameterSetGetNodeDP(
-        #        iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,nodeNum,1)])
-
-            #if #np.isclose(xValue, 0.0):
         for nodeNum in range(1, numberOfNodes+1, (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))):
             self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
             self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
@@ -898,16 +888,16 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
 
-    cantilever_elements = np.array([1, 1, 1])
-    cantilever_true_parameter = np.array([1.2])
-    cantilever_guess_parameter = np.array([1.2])
+    cantilever_elements = np.array([2, 2, 2])
+    cantilever_true_parameter = np.array([7.0])
+    cantilever_guess_parameter = np.array([7.0])
 
     cantilever_sim = CantileverSimulation()
 
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Neo_Hookean_single_layer_parameter(cantilever_true_parameter)
