@@ -372,19 +372,15 @@ class CantileverSimulation:
         self.materialField.VariableLabelSet(iron.FieldVariableTypes.U,"Material")
         self.materialField.VariableLabelSet(iron.FieldVariableTypes.V,"Density")
 
-
-        #loop through component number
-        #    self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,componentNumber,iron.FieldInterpolationTypes.ELEMENT_BASED)
-
+        # If the gel has two layers, use these lines to create the two component sets.
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,1,iron.FieldInterpolationTypes.ELEMENT_BASED)
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,2,iron.FieldInterpolationTypes.ELEMENT_BASED)
 
         self.equationsSet.MaterialsCreateFinish()
 
         # Set Mooney-Rivlin constants c10 and c01 respectively. Done in objective function using function.
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.V,iron.FieldParameterSetTypes.VALUES,1,density)
-
-
-        #self.materialField.ParameterSetUpdateElementDP(variableType, fieldSetType, userElementNumber, componentNumber, value)
 
         # Create the source field with the gravity vector
         self.sourceField = iron.Field()
@@ -474,17 +470,37 @@ class CantileverSimulation:
 
         self.solverEquations.BoundaryConditionsCreateFinish()
 
-    def set_Mooney_Rivlin_parameter_values(self, parameter_values):
+    def set_Neo_Hookean_single_layer_parameter(self, parameter_value):
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
-        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        :param parameter_value: The value of the c01 Neo-Hookean parameter.
         """
 
-        self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
-        self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        numElements = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+
+        for elementNum in range(1, numElements + 1):
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 1, parameter_value[0])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 2, 0.0)
+
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
+
+    def set_Neo_Hookean_two_layer_parameters(self, parameter_values):
+        """
+        Call to set up a two layered cantilever after the rest of the cantilever has been set up.
+
+        :param parameter_values: The value of the c01 Neo-Hookean parameter for each of the layers.
+        """
+
+        numElements = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+
+        for elementNum in range(1, (numElements / 2) + 1):
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 1, parameter_values[0])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 2, 0.0)
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum + (numElements / 2), 1, parameter_values[1])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum + (numElements / 2), 2, 0.0)
+
         iron.Field.ComponentValuesInitialiseDP(
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
@@ -824,7 +840,7 @@ class CantileverSimulation:
         exportDatapointsErrorExdata(self.data, errorVects, 'error', './', 'error')
 
 
-def cantilever_objective_function(material_parameters, simulation):
+def single_layer_objective_function(material_parameter, simulation):
     """
     The objective function is used in the optimal design and consists of setting the material parameters which were
     passed into the function, solving the FE model with those parameters and then projecting the data set onto the
@@ -834,17 +850,32 @@ def cantilever_objective_function(material_parameters, simulation):
     an experiment with an unknown parameter. If the error output from this function is minimised, then the material
     parameter value which is being passed into this function must be close to that of the true parameter.
 
-    :param material_parameters: The value of the material parameters, as a 1D numpy array of floats.
+    :param material_parameter: The value of the material parameter, as a 1D numpy array with a float.
     :param simulation: A tuple containing the set up simulation.
     """
 
-    simulation.set_Mooney_Rivlin_parameter_values(material_parameters)
+    simulation.set_Neo_Hookean_single_layer_parameter(material_parameter)
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()
 
     return simulation.error
 
+def two_layer_objective_function(material_parameters, simulation):
+    """
+    Another objective function used for parameter optimisation.
+
+    :param material_parameters: The values of the material parameters, as a 1D numpy array of two floats.
+    :param simulation: A tuple containing the set up simulation.
+
+    """
+
+    simulation.set_Neo_Hookean_two_layer_parameter(material_parameters)
+    simulation.solve_simulation()
+    simulation.export_results()
+    simulation.point_projection()
+
+    return simulation.error
 
 ###########
 # Testing #
@@ -853,19 +884,19 @@ def cantilever_objective_function(material_parameters, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([4, 2, 2])
-    cantilever_true_parameter = np.array([2.054])
-    cantilever_guess_parameter = np.array([2.054])
+    cantilever_elements = np.array([3, 2, 2])
+    cantilever_true_parameter = np.array([1.2])
+    cantilever_guess_parameter = np.array([1.4])
 
     cantilever_sim = CantileverSimulation()
 
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -9.81]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
     cantilever_sim.set_diagnostic_level(0)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
+    cantilever_sim.set_Neo_Hookean_single_layer_parameter(cantilever_true_parameter[0])
     cantilever_sim.solve_simulation()
 
     #data = cantilever_sim.generate_data(1)
@@ -876,7 +907,7 @@ if __name__ == "__main__":
 
     cantilever_sim.set_projection_data()
 
-    cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
+    single_layer_objective_function(cantilever_guess_parameter, cantilever_sim)
     data2 = cantilever_sim.generate_data(1)[:,0:3]
     print '2nd Data Set'
     print '\n'
