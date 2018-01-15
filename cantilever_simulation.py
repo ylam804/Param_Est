@@ -439,9 +439,9 @@ class CantileverSimulation:
             self.nonLinearSolver.outputType = iron.SolverOutputTypes.NONE
 
         self.nonLinearSolver.NewtonJacobianCalculationTypeSet(iron.JacobianCalculationTypes.FD)
-        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-9)
-        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-9)
-        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-9)
+        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-10)
         self.nonLinearSolver.NewtonMaximumIterationsSet(int(1e6))
         self.nonLinearSolver.NewtonMaximumFunctionEvaluationsSet(int(1e6))
         self.nonLinearSolver.NewtonLinearSolverGet(self.linearSolver)
@@ -870,7 +870,7 @@ def two_layer_objective_function(material_parameters, simulation):
 
     """
 
-    simulation.set_Neo_Hookean_two_layer_parameter(material_parameters)
+    simulation.set_Neo_Hookean_two_layer_parameters(material_parameters)
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()

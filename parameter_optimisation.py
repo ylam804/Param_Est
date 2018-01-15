@@ -1,6 +1,7 @@
 import numpy as np
 from cantilever_simulation import CantileverSimulation
-from cantilever_simulation import cantilever_objective_function
+from cantilever_simulation import single_layer_objective_function
+from cantilever_simulation import two_layer_objective_function
 from scipy.optimize import least_squares
 
 
@@ -144,13 +145,13 @@ if __name__ == "__main__":
     ps.simulation.set_projection_data(data)
     ps.initial_parameters = cantilever_guess_parameter
     simulation_tuple = (ps.simulation,)
-    ps.set_objective_function(cantilever_objective_function, simulation_tuple)
+    ps.set_objective_function(single_layer_objective_function, simulation_tuple)
     ps.optimise()
     print '\n'
     print "Optimisation routine results:"
     print ps.solutions.x
 
-    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1.e-7, ps.simulation)
+    [H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1.e-7)
     print '\n'
     print "Hessian determinant"
     print detH
