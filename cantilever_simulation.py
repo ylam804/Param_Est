@@ -352,7 +352,6 @@ class CantileverSimulation:
             self.dependentField.fieldScalingType = iron.FieldScalingTypes.ARITHMETIC_MEAN
         self.equationsSet.DependentCreateFinish()
 
-
         # Initialise dependent field from undeformed geometry and displacement bcs and set hydrostatic pressure
         iron.Field.ParametersToFieldParametersComponentCopy(
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,
@@ -372,19 +371,15 @@ class CantileverSimulation:
         self.materialField.VariableLabelSet(iron.FieldVariableTypes.U,"Material")
         self.materialField.VariableLabelSet(iron.FieldVariableTypes.V,"Density")
 
-
-        #loop through component number
-        #    self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,componentNumber,iron.FieldInterpolationTypes.ELEMENT_BASED)
-
+        # If the gel has two layers, use these lines to create the two component sets.
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,1,iron.FieldInterpolationTypes.ELEMENT_BASED)
+        self.materialField.ComponentInterpolationSet(iron.FieldVariableTypes.U,2,iron.FieldInterpolationTypes.ELEMENT_BASED)
 
         self.equationsSet.MaterialsCreateFinish()
 
         # Set Mooney-Rivlin constants c10 and c01 respectively. Done in objective function using function.
         self.materialField.ComponentValuesInitialiseDP(
             iron.FieldVariableTypes.V,iron.FieldParameterSetTypes.VALUES,1,density)
-
-
-        #self.materialField.ParameterSetUpdateElementDP(variableType, fieldSetType, userElementNumber, componentNumber, value)
 
         # Create the source field with the gravity vector
         self.sourceField = iron.Field()
@@ -443,6 +438,11 @@ class CantileverSimulation:
             self.nonLinearSolver.outputType = iron.SolverOutputTypes.NONE
 
         self.nonLinearSolver.NewtonJacobianCalculationTypeSet(iron.JacobianCalculationTypes.FD)
+        self.nonLinearSolver.NewtonAbsoluteToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonSolutionToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonRelativeToleranceSet(1e-10)
+        self.nonLinearSolver.NewtonMaximumIterationsSet(int(1e6))
+        self.nonLinearSolver.NewtonMaximumFunctionEvaluationsSet(int(1e6))
         self.nonLinearSolver.NewtonLinearSolverGet(self.linearSolver)
         self.linearSolver.linearType = iron.LinearSolverTypes.DIRECT
         #linearSolver.libraryType = iron.SolverLibraries.LAPACK
@@ -462,24 +462,58 @@ class CantileverSimulation:
         self.boundaryConditions = iron.BoundaryConditions()
         self.solverEquations.BoundaryConditionsCreateStart(self.boundaryConditions)
 
-        for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
-            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #for i in range(1, ((numberGlobalXElements+1)*(numberGlobalYElements+1)*(numberGlobalZElements+1)), (numberGlobalXElements+1)):
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+        #    self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, i, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
+
+        numberOfNodes = (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))\
+                        * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalYElements-1))\
+                          * (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalZElements-1))
+
+        #for nodeNum in range(1, numberOfNodes):
+        #    xValue = np.array([self.materialField.ParameterSetGetNodeDP(
+        #        iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,1,nodeNum,1)])
+
+            #if #np.isclose(xValue, 0.0):
+        for nodeNum in range(1, numberOfNodes+1, (NumberOfGaussXi + (NumberOfGaussXi-1)*(numberGlobalXElements-1))):
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 1, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 2, iron.BoundaryConditionsTypes.FIXED, 0.0)
+            self.boundaryConditions.AddNode(self.dependentField, iron.FieldVariableTypes.U, 1, 1, nodeNum, 3, iron.BoundaryConditionsTypes.FIXED, 0.0)
 
         self.solverEquations.BoundaryConditionsCreateFinish()
 
-    def set_Mooney_Rivlin_parameter_values(self, parameter_values):
+    def set_Neo_Hookean_single_layer_parameter(self, parameter_value):
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
-        :param parameter_values: The values of the c01 and c10 Mooney-Rivlin parameters respectively.
+        :param parameter_value: The value of the c01 Neo-Hookean parameter.
         """
 
-        self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 1, parameter_values[0])
-        self.materialField.ComponentValuesInitialiseDP(
-            iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES, 2, 0.0)
+        numElements = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+
+        for elementNum in range(1, numElements + 1):
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 1, parameter_value[0])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 2, 0.0)
+
+        iron.Field.ComponentValuesInitialiseDP(
+            self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
+
+    def set_Neo_Hookean_two_layer_parameters(self, parameter_values):
+        """
+        Call to set up a two layered cantilever after the rest of the cantilever has been set up.
+
+        :param parameter_values: The value of the c01 Neo-Hookean parameter for each of the layers.
+        """
+
+        numElements = self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]
+
+        for elementNum in range(1, (numElements / 2) + 1):
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 1, parameter_values[0])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum, 2, 0.0)
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum + (numElements / 2), 1, parameter_values[1])
+            self.materialField.ParameterSetUpdateElementDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, elementNum + (numElements / 2), 2, 0.0)
+
         iron.Field.ComponentValuesInitialiseDP(
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
@@ -499,14 +533,25 @@ class CantileverSimulation:
         parameters which generated the data.
 
         :param scale: Sets the number of points which will be generated.
-                scale = 0 => Testing corner location mode           ** Note: model should only contain one element **
+                scale = 0 => Testing corner location mode
                 scale = 1 => Determined by self.numPointsPerFace
 
         :return: Sets the simulation's data to a set of points on the surface of the FE model.
         """
 
         if scale == 0:
-            a = 1
+            dataLocations = np.array([[0, 0, 0]])
+
+            elements = np.array([self.cantilever_elements[0], self.cantilever_elements[0] * self.cantilever_elements[1],
+                                 self.cantilever_elements[0] + (self.cantilever_elements[0] * self.cantilever_elements[1]
+                                 * (self.cantilever_elements[2] - 1)), self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]])
+            Xi = np.array([[1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]])
+
+            for i in range(4):
+                point = iron.Field_ParameterSetInterpolateSingleXiDPNum(1,4,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,elements[i],Xi[i],4)
+                dataLocations = np.append(dataLocations, np.array([point[0:3]]), axis=0)
+
+            dataLocations = dataLocations[1:, :]
 
         elif scale == 1:
             # First, select the relevant elements for each face.
@@ -689,7 +734,7 @@ class CantileverSimulation:
         # the number of elements on that face, multiplied by the number of points per element. Then also select that
         # sequence of data points out of the total data set.
         if faceNum == 2:
-            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + (((pts**2 - pts) + (z - 1) * (pts**2 - 2 * pts + 1)) * (x - 1))
+            numDataPoints = pts**2 + ((pts**2 - pts) * (z - 1)) + (((pts**2 - pts) + (z - 1) * (pts**2 - 2 * pts + 1))* (x - 1))
         elif faceNum == 3:
             numDataPoints = y * ((pts**2 - pts) + (pts**2 - 2 * pts + 1) * (x - 1))
         elif faceNum == 4:
@@ -808,7 +853,7 @@ class CantileverSimulation:
         exportDatapointsErrorExdata(self.data, errorVects, 'error', './', 'error')
 
 
-def cantilever_objective_function(material_parameters, simulation):
+def single_layer_objective_function(material_parameter, simulation):
     """
     The objective function is used in the optimal design and consists of setting the material parameters which were
     passed into the function, solving the FE model with those parameters and then projecting the data set onto the
@@ -818,17 +863,32 @@ def cantilever_objective_function(material_parameters, simulation):
     an experiment with an unknown parameter. If the error output from this function is minimised, then the material
     parameter value which is being passed into this function must be close to that of the true parameter.
 
-    :param material_parameters: The value of the material parameters, as a 1D numpy array of floats.
+    :param material_parameter: The value of the material parameter, as a 1D numpy array with a float.
     :param simulation: A tuple containing the set up simulation.
     """
 
-    simulation.set_Mooney_Rivlin_parameter_values(material_parameters)
+    simulation.set_Neo_Hookean_single_layer_parameter(material_parameter)
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()
 
     return simulation.error
 
+def two_layer_objective_function(material_parameters, simulation):
+    """
+    Another objective function used for parameter optimisation.
+
+    :param material_parameters: The values of the material parameters, as a 1D numpy array of two floats.
+    :param simulation: A tuple containing the set up simulation.
+
+    """
+
+    simulation.set_Neo_Hookean_two_layer_parameters(material_parameters)
+    simulation.solve_simulation()
+    simulation.export_results()
+    simulation.point_projection()
+
+    return simulation.error
 
 ###########
 # Testing #
@@ -837,33 +897,34 @@ def cantilever_objective_function(material_parameters, simulation):
 if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([2, 1, 1])
-    cantilever_true_parameter = np.array([2.054])
-    cantilever_guess_parameter = np.array([2.054])
+    cantilever_elements = np.array([1, 1, 1])
+    cantilever_true_parameter = np.array([1.2])
+    cantilever_guess_parameter = np.array([1.2])
 
     cantilever_sim = CantileverSimulation()
 
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, -0.058]))
-    cantilever_sim.set_diagnostic_level(0)
+    cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
+    cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.set_Mooney_Rivlin_parameter_values(cantilever_true_parameter)
+    cantilever_sim.set_Neo_Hookean_single_layer_parameter(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
+    #data = cantilever_sim.generate_data(1)
+    #print '1st Data Set'
+    #print data
+    #print '\n'
+    #cantilever_sim.set_projection_data(data)
+
     cantilever_sim.set_projection_data()
-    print '1st Data Set'
-    print '\n'
-    print cantilever_sim.data
-    print '\n'
 
-
-    cantilever_objective_function(cantilever_guess_parameter, cantilever_sim)
-    data2 = cantilever_sim.generate_data(1)
+    single_layer_objective_function(cantilever_guess_parameter, cantilever_sim)
+    data2 = cantilever_sim.generate_data(1)[:,0:3]
     print '2nd Data Set'
     print '\n'
     print data2
     print '\n'
-    print 'RMS Error = %f' % cantilever_sim.error
+    print "RMS Error = {0}".format(cantilever_sim.error)
     print '\n'
