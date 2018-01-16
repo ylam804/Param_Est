@@ -36,7 +36,7 @@ class ConvergenceTest:
         self.sim =  None
         self.tolerance = 1e-3
         self.convergenceCriteria = False
-        self.meshIterationCounter = 0
+        self.meshIterationCounter = 1
         self.elements = np.array([1, 1, 1])
         self.currentDataSet = None
         self.previousDataSet = None
@@ -101,12 +101,12 @@ class ConvergenceTest:
         :param direction: The x, y, or z direction denoted by an integer of 0, 1, or 2 respectively.
         """
 
-        newEls = self.elements[direction] * (self.axialError[direction]/self.tolerance) + 1 # Needs refining
+        newEls = self.elements[direction] * (self.axialError[direction]/self.tolerance) # Needs refining
 
         if newEls < self.elements[direction]:
             newEls = self.elements[direction]
-        elif newEls > 1.5 * self.elements[direction]:
-            newEls = 1.5 * self.elements[direction]
+        elif newEls > (self.elements[direction] + 2):
+            newEls = self.elements[direction] + 1
 
         self.elements[direction] = newEls
 
@@ -137,7 +137,7 @@ conTest = ConvergenceTest()
 
 # Define some useful variables.
 dimensions = np.array([30, 12, 12])
-parameterValue = np.array([60.2])
+parameterValue = np.array([50.2])
 conTest.tolerance = 1e-3
 
 # Add a simulation to the convergence
@@ -194,16 +194,20 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     for i in range(len(conTest.sim.cantilever_elements)):
         conTest.calculate_new_elements(i)
 
-    conTest.elements = np.array([2, 2, 2])
-
     # Then compile these errors into a 1-by-4 array and append them to the errorArray for printing to a file and
     # visualisation later.
     errorArray = np.append(errorArray, np.array([[conTest.RMSError, conTest.axialError[0], conTest.axialError[1], conTest.axialError[2]]]), axis=0)
+
+    print "\n\n\n\n"
+    print "Mesh Iteration {0} Complete".format(conTest.meshIterationCounter)
+    print "\n\n\n\n"
+
+    np.savetxt('convergence_data_record.txt', conTest.dataRecord[0], newline="\n")
+    np.savetxt('convergence_element_record.txt', conTest.elementRecord, newline="\n")
 
     # Increase the convergence iteration counter.
     conTest.meshIterationCounter += 1
 
 # Now that the convergence has finished, print out the array full of errors.
 np.savetxt('convergence_error_output.txt', errorArray, newline="\n")
-np.savetxt('convergence_data_record.txt', conTest.dataRecord[0], newline="\n")
-np.savetxt('convergence_element_record.txt', conTest.elementRecord, newline="\n")
+

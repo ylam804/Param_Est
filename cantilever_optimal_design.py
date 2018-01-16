@@ -33,7 +33,7 @@ import math
 
 # First set up the variables needed to create the simulation.
 dimensions = np.array([30, 12, 12])
-elements = np.array([2, 2, 2])
+elements = np.array([2, 1, 2])
 parameter_value = np.array([2.0])
 
 # Next, create the instance of the simulation class and add the initialised variables to it.
