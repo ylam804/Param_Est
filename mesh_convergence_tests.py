@@ -137,7 +137,7 @@ conTest = ConvergenceTest()
 
 # Define some useful variables.
 dimensions = np.array([30, 12, 12])
-parameterValue = np.array([50.2])
+parameterValue = np.array([30.2])
 conTest.tolerance = 1e-3
 
 # Add a simulation to the convergence
