@@ -148,7 +148,7 @@ conTest.sim.set_cantilever_elements(np.array([1, 1, 1]))
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.set_diagnostic_level(1)
 conTest.sim.setup_cantilever_simulation()
-conTest.sim.set_Neo_Hookean_single_layer_parameter(parameterValue)
+conTest.sim.set_Neo_Hookean_single_layer(parameterValue)
 
 # Now solve the simulation and generate a data set
 conTest.sim.solve_simulation()
@@ -174,7 +174,7 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     conTest.sim.set_cantilever_elements(conTest.elements)
     conTest.sim.set_diagnostic_level(1)
     conTest.sim.setup_cantilever_simulation()
-    conTest.sim.set_Neo_Hookean_single_layer_parameter(np.array([1.452]))
+    conTest.sim.set_Neo_Hookean_single_layer(np.array([1.452]))
 
     # Solve the simulation.
     conTest.sim.solve_simulation()

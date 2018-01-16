@@ -473,7 +473,7 @@ class CantileverSimulation:
 
         self.solverEquations.BoundaryConditionsCreateFinish()
 
-    def set_Neo_Hookean_single_layer_parameter(self, parameter_value):
+    def set_Neo_Hookean_single_layer(self, parameter_value):
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
 
@@ -489,7 +489,7 @@ class CantileverSimulation:
         iron.Field.ComponentValuesInitialiseDP(
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
-    def set_Neo_Hookean_two_layer_parameters(self, parameter_values):
+    def set_Neo_Hookean_two_layer(self, parameter_values):
         """
         Call to set up a two layered cantilever after the rest of the cantilever has been set up.
 
@@ -857,7 +857,7 @@ def single_layer_objective_function(material_parameter, simulation):
     :param simulation: A tuple containing the set up simulation.
     """
 
-    simulation.set_Neo_Hookean_single_layer_parameter(material_parameter)
+    simulation.set_Neo_Hookean_single_layer(material_parameter)
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()
@@ -873,7 +873,7 @@ def two_layer_objective_function(material_parameters, simulation):
 
     """
 
-    simulation.set_Neo_Hookean_two_layer_parameters(material_parameters)
+    simulation.set_Neo_Hookean_two_layer(material_parameters)
     simulation.solve_simulation()
     simulation.export_results()
     simulation.point_projection()
@@ -900,7 +900,7 @@ if __name__ == "__main__":
     cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.set_Neo_Hookean_two_layer_parameters(cantilever_true_parameter)
+    cantilever_sim.set_Neo_Hookean_two_layer(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
     #data = cantilever_sim.generate_data(1)

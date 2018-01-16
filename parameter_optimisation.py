@@ -126,9 +126,9 @@ if __name__ == "__main__":
 
     #data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
     cantilever_dimensions = np.array([30, 12, 12])
-    cantilever_elements = np.array([1, 1, 1])
-    cantilever_initial_parameter = np.array([2.05])
-    cantilever_guess_parameter = np.array([0.82])
+    cantilever_elements = np.array([2, 2, 2])
+    cantilever_initial_parameter = np.array([14.05])
+    cantilever_guess_parameter = np.array([10.0])
 
     print "Parameters for data generation: C10 = 2.05, C01 = 0.0"
     print "Initial parameters for optimisation: C10 = 0.82, C01 = 0.0"
@@ -137,8 +137,9 @@ if __name__ == "__main__":
     ps.simulation = CantileverSimulation()
     ps.simulation.set_cantilever_dimensions(cantilever_dimensions)
     ps.simulation.set_cantilever_elements(cantilever_elements)
-    ps.simulation.set_diagnostic_level(0)
+    ps.simulation.set_diagnostic_level(1)
     ps.simulation.setup_cantilever_simulation()
+    ps.simulation.set_Neo_Hookean_single_layer(cantilever_initial_parameter)
     ps.simulation.solve_simulation()
     data = ps.simulation.generate_data(1)
 
@@ -160,4 +161,3 @@ if __name__ == "__main__":
 
     #[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
     #print detH
-
