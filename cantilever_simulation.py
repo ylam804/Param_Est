@@ -510,11 +510,11 @@ class CantileverSimulation:
     def solve_simulation(self):
         self.problem.Solve()
 
-    def export_results(self):
+    def export_results(self, fileName="Cantilever"):
         self.fields = iron.Fields()
         self.fields.CreateRegion(self.region)
-        self.fields.NodesExport("Cantilever","FORTRAN")
-        self.fields.ElementsExport("Cantilever","FORTRAN")
+        self.fields.NodesExport(fileName,"FORTRAN")
+        self.fields.ElementsExport(fileName,"FORTRAN")
         self.fields.Finalise()
 
     def generate_data(self, scale):
@@ -870,7 +870,6 @@ def two_layer_objective_function(material_parameters, simulation):
 
     :param material_parameters: The values of the material parameters, as a 1D numpy array of two floats.
     :param simulation: A tuple containing the set up simulation.
-
     """
 
     simulation.set_Neo_Hookean_two_layer(material_parameters)
@@ -888,19 +887,19 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
 
-    cantilever_elements = np.array([4, 3, 4])
-    cantilever_true_parameter = np.array([1.0, 8.0])
-    cantilever_guess_parameter = np.array([1.0, 8.0])
+    cantilever_elements = np.array([2, 2, 2])
+    cantilever_true_parameter = np.array([8.4378])
+    cantilever_guess_parameter = np.array([8.4378])
 
     cantilever_sim = CantileverSimulation()
 
     cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([0.0, 10, 0.0]))
+    cantilever_sim.set_gravity_vector(np.array([6.0, 5.0, 5.0]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
-    cantilever_sim.set_Neo_Hookean_two_layer(cantilever_true_parameter)
+    cantilever_sim.set_Neo_Hookean_single_layer(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
 
     #data = cantilever_sim.generate_data(1)
@@ -911,7 +910,7 @@ if __name__ == "__main__":
 
     cantilever_sim.set_projection_data()
 
-    two_layer_objective_function(cantilever_guess_parameter, cantilever_sim)
+    single_layer_objective_function(cantilever_guess_parameter, cantilever_sim)
     data2 = cantilever_sim.generate_data(1)[:,0:3]
     print '2nd Data Set'
     print '\n'

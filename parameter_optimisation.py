@@ -124,7 +124,6 @@ class ParameterEstimation:
 
 if __name__ == "__main__":
 
-    #data = np.array(([[54.127, 0.724, -11.211], [54.127, 39.276, -11.211], [64.432, -0.669, 27.737], [64.432, 40.669, 27.737]]))
     cantilever_dimensions = np.array([30, 12, 12])
     cantilever_elements = np.array([2, 2, 2])
     cantilever_initial_parameter = np.array([14.05])
@@ -156,8 +155,3 @@ if __name__ == "__main__":
     print '\n'
     print "Hessian determinant"
     print detH
-
-    #print  ps.objective_function(cantilever_initial_parameter, ps.simulation)
-
-    #[H, detH, condH, detH0] = ps.evaluate_hessian(ps.solutions.x, 1e-7)
-    #print detH

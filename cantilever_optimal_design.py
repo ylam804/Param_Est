@@ -31,58 +31,73 @@ from cantilever_simulation import two_layer_objective_function
 import numpy as np
 import math
 
-# First set up the variables needed to create the simulation.
-dimensions = np.array([30, 12, 12])
-elements = np.array([2, 1, 2])
-parameter_value = np.array([7.0, 1.5])
+def destroy_routine(simulation):
+    """
+    Destroys some parts of the simulation so that they can be re-initialised with new values.
+    """
 
-# Next, create the instance of the simulation class and add the initialised variables to it.
-ps = ParameterEstimation()
-ps.simulation = CantileverSimulation()
-ps.simulation.set_cantilever_dimensions(dimensions)
-ps.simulation.set_cantilever_elements(elements)
-#ps.simulation.set_Xi_points_num(4)
-ps.simulation.set_diagnostic_level(1)
-ps.simulation.setup_cantilever_simulation()
-ps.simulation.set_Neo_Hookean_single_layer(parameter_value)
+    simulation.coordinate_system.Destroy()
+    simulation.region.Destroy()
+    simulation.basis.Destroy()
+    simulation.problem.Destroy()
+
+dimensions = np.array([30, 12, 12])
+elements = np.array([2, 2, 2])
+initial_parameter = np.array([8.4378])
 
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
-thetaStep = 30
+thetaStep = 45
 phiStart = 0
 phiEnd = 180
-phiStep = 30
+phiStep = 45
 
-detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
-condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
-detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+theta = np.array((range(thetaStart, thetaEnd+1, thetaStep))) * math.pi / 180
+phi = np.array((range(phiStart, phiEnd+1, phiStep))) * math.pi / 180
+#detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+#condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+#detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 
-loopCounter = 1
-loopMax = (((thetaEnd - thetaStart) / thetaStep) + 1) * (((phiEnd - phiStart) / phiStep) + 1)
+#loopCounter = 1
+#loopMax = (((thetaEnd - thetaStart) / thetaStep) + 1) * (((phiEnd - phiStart) / phiStep) + 1)
 
 # Now loop through the design variables and solve the simulation under each condition.
-for theta in range(thetaStart, thetaEnd+1, thetaStep):
-    for phi in range(phiStart, phiEnd+1, phiStep):
-        grav_vect = ps.simulation.gravity_vector_calculation((theta * math.pi / 180), (phi * math.pi / 180))
-        ps.simulation.set_gravity_vector(grav_vect)
+for i in range(len(theta)):
+    for j in range(len(phi)):
+
+        ps = ParameterEstimation()
+        ps.simulation = CantileverSimulation()
+        ps.simulation.set_cantilever_dimensions(dimensions)
+        ps.simulation.set_cantilever_elements(elements)
+        ps.simulation.set_gravity_vector(ps.simulation.gravity_vector_calculation(theta[i], phi[j]))
+        ps.simulation.set_diagnostic_level(0)
+        ps.simulation.setup_cantilever_simulation()
+        ps.simulation.set_Neo_Hookean_single_layer(initial_parameter)
         ps.simulation.solve_simulation()
+
+        #ps.simulation.export_results("Cantilever")
         ps.simulation.set_projection_data()
+        ps.set_objective_function(single_layer_objective_function)
+        [H, detH, condH, detH0] = ps.evaluate_hessian(initial_parameter, 1e-7)
 
-        # Next calculate the Hessian matrix for each design variable combination.
-        ps.set_objective_function(two_layer_objective_function)
-        [H, detH, condH, detH0] = ps.evaluate_hessian(parameter_value, 1e-7)
+        #print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
+        print "For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j])
+        print "     Gravity X-Component = {0}".format(ps.simulation.gravity_vector[0])
+        print "     Gravity Y-Component = {0}".format(ps.simulation.gravity_vector[1])
+        print "     Gravity Z-Component = {0}".format(ps.simulation.gravity_vector[2])
+        print "Determinant of Hessian = {0}".format(detH)
+        print "\n"
 
-        print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
-        print 'Determinant of Hessian = {0}'.format(detH)
-        print '\n'
-
-        loopCounter += 1
+        #loopCounter += 1
 
         # Now compile these into a matrix
-        detHMatrix[theta/thetaStep + 1, phi/phiStep] = detH
-        condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
-        detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
+        #detHMatrix[theta/thetaStep + 1, phi/phiStep] = detH
+        #condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
+        #detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
+
+        destroy_routine(ps.simulation)
+        ps = None
 
 
 print 'Optimal Design finished.'

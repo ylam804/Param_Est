@@ -137,14 +137,14 @@ conTest = ConvergenceTest()
 
 # Define some useful variables.
 dimensions = np.array([30, 12, 12])
-parameterValue = np.array([30.2])
+parameterValue = np.array([22.2])
 conTest.tolerance = 1e-3
 
 # Add a simulation to the convergence
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.sim.set_cantilever_elements(np.array([1, 1, 1]))
+conTest.sim.set_cantilever_elements(np.array([1, 1, 1 ]))
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.set_diagnostic_level(1)
 conTest.sim.setup_cantilever_simulation()
