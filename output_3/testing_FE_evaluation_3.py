@@ -14,6 +14,7 @@ def destroy_routine(simulation):
     simulation.region.Destroy()
     simulation.basis.Destroy()
     simulation.problem.Destroy()
+    #simulation.materialField.Destroy()
 
     #simulation.controlLoop.Destroy()
     #simulation.boundaryConditions.Destroy()

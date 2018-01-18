@@ -118,6 +118,104 @@ class ParameterEstimation:
         detH0 = np.linalg.det(H0)
         return H, detH, condH, detH0
 
+    def new_evaluate_hessian_method(self, x, stepsize):
+        """
+
+        :param x:
+        :param stepsize:
+        :return:
+        """
+
+        dimensions = self.simulation.cantilever_dimensions
+        elements = self.simulation.cantilever_elements
+        gravity_vector = self.simulation.gravity_vector
+        diagnostic_level = self.simulation.diagnostics
+        data = self.simulation.data
+
+        ps = ParameterEstimation()
+        ps.simulation = CantileverSimulation()
+        ps.simulation.set_cantilever_dimensions(dimensions)
+        ps.simulation.set_cantilever_elements(elements)
+        ps.simulation.set_gravity_vector(gravity_vector)
+        ps.simulation.set_diagnostic_level(diagnostic_level)
+        ps.simulation.data = data
+
+        destroy_routine(self.simulation)
+        ps.simulation.setup_cantilever_simulation()
+
+
+        objfun = self.objective_function
+        n = len(x)
+        A = np.zeros(n)
+        B = np.zeros(n)
+        ee = stepsize * np.eye(n)
+
+        # First-order derivatives: 2n function calls needed
+        for i in range(n):
+            A[i] = objfun(x + ee[:, i], ps.simulation)
+
+            reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+
+            B[i] = objfun(x - ee[:, i], ps.simulation)
+
+        # Second-order derivatives based on function calls only (Abramowitz and Stegun 1972, p.884): for dense Hessian, 2n+4n^2/2 function calls needed.
+        H = np.zeros((n, n))
+        for i in range(n):
+            C = objfun(x + 2 * ee[:, i], self.simulation)
+            E = objfun(x, self.simulation)
+            F = objfun(x - 2 * ee[:, i], self.simulation)
+            H[i, i] = (- C + 16 * A[i] - 30 * E + 16 * B[i] - F) / (12 * (ee[i, i] ** 2))
+            for j in range(i + 1, n):
+                G = objfun(x + ee[:, i] + ee[:, j], self.simulation)
+                I = objfun(x + ee[:, i] - ee[:, j], self.simulation)
+                J = objfun(x - ee[:, i] + ee[:, j], self.simulation)
+                K = objfun(x - ee[:, i] - ee[:, j], self.simulation)
+                H[i, j] = (G - I - J + K) / (4 * ee[i, i] * ee[j, j])
+                H[j, i] = H[i, j]
+
+        import cmath
+        n = len(H)
+        detH = np.linalg.det(H)
+        condH = 1.0 / np.linalg.cond(H)
+        H0 = np.zeros((n, n))
+        for j in range(n):
+            for k in range(n):
+                H0[j, k] = H[j, k] / np.abs((cmath.sqrt(H[j, j] * H[k, k])))
+        detH0 = np.linalg.det(H0)
+        return H, detH, condH, detH0
+
+
+def reset_simulation(simulation, dimensions, elements, gravity_vector, diagnostic_level, data):
+    """
+
+
+    :param simulation:
+    :param dimensions:
+    :param elements:
+    :param gravity_vector:
+    :param diagnostic_level:
+    :param data:
+    :return:
+    """
+
+    destroy_routine(simulation)
+    ps.simulation.set_cantilever_dimensions(dimensions)
+    ps.simulation.set_cantilever_elements(elements)
+    ps.simulation.set_gravity_vector(gravity_vector)
+    ps.simulation.set_diagnostic_level(diagnostic_level)
+    ps.simulation.setup_cantilever_simulation()
+    ps.simulation.data = data
+
+def destroy_routine(simulation):
+    """
+
+    """
+
+    simulation.coordinate_system.Destroy()
+    simulation.region.Destroy()
+    simulation.basis.Destroy()
+    simulation.problem.Destroy()
+
 ###########
 # Testing #
 ###########
