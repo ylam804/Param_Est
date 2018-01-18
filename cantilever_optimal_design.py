@@ -79,7 +79,7 @@ for i in range(len(theta)):
         #ps.simulation.export_results("Cantilever")
         ps.simulation.set_projection_data()
         ps.set_objective_function(single_layer_objective_function)
-        [H, detH, condH, detH0] = ps.evaluate_hessian(initial_parameter, 1e-7)
+        [H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-7)
 
         #print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
         print "For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j])
@@ -96,7 +96,7 @@ for i in range(len(theta)):
         #condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
         #detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
 
-        destroy_routine(ps.simulation)
+        #destroy_routine(ps.simulation)
         ps = None
 
 

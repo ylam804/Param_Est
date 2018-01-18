@@ -153,25 +153,33 @@ class ParameterEstimation:
         # First-order derivatives: 2n function calls needed
         for i in range(n):
             A[i] = objfun(x + ee[:, i], ps.simulation)
-
             reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
-
             B[i] = objfun(x - ee[:, i], ps.simulation)
+            reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
 
         # Second-order derivatives based on function calls only (Abramowitz and Stegun 1972, p.884): for dense Hessian, 2n+4n^2/2 function calls needed.
         H = np.zeros((n, n))
         for i in range(n):
-            C = objfun(x + 2 * ee[:, i], self.simulation)
-            E = objfun(x, self.simulation)
-            F = objfun(x - 2 * ee[:, i], self.simulation)
+            C = objfun(x + 2 * ee[:, i], ps.simulation)
+            reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+            E = objfun(x, ps.simulation)
+            reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+            F = objfun(x - 2 * ee[:, i], ps.simulation)
+            reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
             H[i, i] = (- C + 16 * A[i] - 30 * E + 16 * B[i] - F) / (12 * (ee[i, i] ** 2))
             for j in range(i + 1, n):
-                G = objfun(x + ee[:, i] + ee[:, j], self.simulation)
-                I = objfun(x + ee[:, i] - ee[:, j], self.simulation)
-                J = objfun(x - ee[:, i] + ee[:, j], self.simulation)
-                K = objfun(x - ee[:, i] - ee[:, j], self.simulation)
+                G = objfun(x + ee[:, i] + ee[:, j], ps.simulation)
+                reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+                I = objfun(x + ee[:, i] - ee[:, j], ps.simulation)
+                reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+                J = objfun(x - ee[:, i] + ee[:, j], ps.simulation)
+                reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
+                K = objfun(x - ee[:, i] - ee[:, j], ps.simulation)
+                reset_simulation(ps.simulation, dimensions, elements, gravity_vector, diagnostic_level, data)
                 H[i, j] = (G - I - J + K) / (4 * ee[i, i] * ee[j, j])
                 H[j, i] = H[i, j]
+
+        destroy_routine(ps.simulation)
 
         import cmath
         n = len(H)
@@ -199,12 +207,12 @@ def reset_simulation(simulation, dimensions, elements, gravity_vector, diagnosti
     """
 
     destroy_routine(simulation)
-    ps.simulation.set_cantilever_dimensions(dimensions)
-    ps.simulation.set_cantilever_elements(elements)
-    ps.simulation.set_gravity_vector(gravity_vector)
-    ps.simulation.set_diagnostic_level(diagnostic_level)
-    ps.simulation.setup_cantilever_simulation()
-    ps.simulation.data = data
+    simulation.set_cantilever_dimensions(dimensions)
+    simulation.set_cantilever_elements(elements)
+    simulation.set_gravity_vector(gravity_vector)
+    simulation.set_diagnostic_level(diagnostic_level)
+    simulation.setup_cantilever_simulation()
+    simulation.data = data
 
 def destroy_routine(simulation):
     """

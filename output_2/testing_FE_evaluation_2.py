@@ -20,14 +20,14 @@ elements = np.array([2, 2, 2])
 initial_parameter = np.array([8.4378])
 
 theta = -90*math.pi/180
-phi = 90*math.pi/180
+phi = 45*math.pi/180
 
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 ps.simulation.set_cantilever_dimensions(dimensions)
 ps.simulation.set_cantilever_elements(elements)
-ps.simulation.set_gravity_vector(np.array([0.0, 10.0, 0.0]))    #ps.simulation.gravity_vector_calculation(theta, phi))
-ps.simulation.set_diagnostic_level(1)
+ps.simulation.set_gravity_vector(np.array(ps.simulation.gravity_vector_calculation(theta, phi)))
+ps.simulation.set_diagnostic_level(0)
 ps.simulation.setup_cantilever_simulation()
 ps.simulation.set_Neo_Hookean_single_layer(initial_parameter)
 ps.simulation.solve_simulation()

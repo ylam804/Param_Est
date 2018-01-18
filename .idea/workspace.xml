@@ -2,14 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3d001257-185a-4e86-8557-915c5d7fbd46" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/new_evaluate_hessian.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output_2/visulise_output_2.com" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output_3/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output_3/visulise_output_3.com" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output_4/testing_FE_evaluation_4.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Cantilever.part0.exelem" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Cantilever.part0.exnode" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/visulise.com" afterPath="$PROJECT_DIR$/output_1/visulise_output_1.com" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" afterPath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
@@ -19,16 +11,10 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Expected_Test_Output/visulise.com" afterPath="$PROJECT_DIR$/Expected_Test_Output/visulise.com" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cantilever_optimal_design.py" afterPath="$PROJECT_DIR$/cantilever_optimal_design.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cantilever_simulation.py" afterPath="$PROJECT_DIR$/cantilever_simulation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/convergence_data_record.txt" afterPath="$PROJECT_DIR$/convergence_data_record.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/convergence_element_record.txt" afterPath="$PROJECT_DIR$/convergence_element_record.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data.exdata" afterPath="$PROJECT_DIR$/data.exdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/error.exdata" afterPath="$PROJECT_DIR$/error.exdata" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mesh_convergence_tests.py" afterPath="$PROJECT_DIR$/mesh_convergence_tests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/np_1_13_unique.py" afterPath="$PROJECT_DIR$/np_1_13_unique.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimal_design_detH.txt" afterPath="$PROJECT_DIR$/optimal_design_detH.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimal_design_variables.txt" afterPath="$PROJECT_DIR$/optimal_design_variables.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" afterPath="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" afterPath="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py" afterPath="$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parameter_optimisation.py" afterPath="$PROJECT_DIR$/parameter_optimisation.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unit_tests.py" afterPath="$PROJECT_DIR$/unit_tests.py" />
@@ -46,11 +32,9 @@
       <file leaf-file-name="testing_FE_evaluation_1.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="34">
+              <caret line="2" column="65" lean-forward="true" selection-start-line="2" selection-start-column="65" selection-end-line="2" selection-end-column="65" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -58,7 +42,7 @@
       <file leaf-file-name="testing_FE_evaluation_2.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="395">
+            <state relative-caret-position="629">
               <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
@@ -67,10 +51,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="testing_FE_evaluation_3.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="testing_FE_evaluation_3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="203">
               <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
@@ -82,7 +66,7 @@
       <file leaf-file-name="cantilever_simulation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
+            <state relative-caret-position="-441">
               <caret line="864" column="0" lean-forward="false" selection-start-line="864" selection-start-column="0" selection-end-line="864" selection-end-column="0" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
@@ -91,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parameter_optimisation.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="parameter_optimisation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/parameter_optimisation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="156" column="0" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
+            <state relative-caret-position="231">
+              <caret line="167" column="57" lean-forward="false" selection-start-line="167" selection-start-column="57" selection-end-line="167" selection-end-column="57" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -187,11 +171,11 @@
         <option value="$PROJECT_DIR$/cantilever_simulation.py" />
         <option value="$PROJECT_DIR$/output_1/new_evaluate_hessian.py" />
         <option value="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" />
-        <option value="$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py" />
         <option value="$PROJECT_DIR$/output_4/testing_FE_evaluation_4.py" />
         <option value="$PROJECT_DIR$/new_evaluate_hessian.py" />
         <option value="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" />
         <option value="$PROJECT_DIR$/parameter_optimisation.py" />
+        <option value="$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py" />
       </list>
     </option>
   </component>
@@ -297,7 +281,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.testing_FE_evaluation">
+  <component name="RunManager" selected="Python.testing_FE_evaluation_2">
     <configuration name="laplace" type="PythonConfigurationType" factoryName="Python">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -410,8 +394,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.testing_FE_evaluation" />
-        <item index="1" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_2" />
+        <item index="0" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_2" />
+        <item index="1" class="java.lang.String" itemvalue="Python.testing_FE_evaluation" />
         <item index="2" class="java.lang.String" itemvalue="Python.parameter_optimisation" />
         <item index="3" class="java.lang.String" itemvalue="Python.new_evaluate_hessian" />
         <item index="4" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_4" />
@@ -425,12 +409,12 @@
     <frame x="0" y="22" width="1920" height="1018" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14483494" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30487806" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40588853" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4216614" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.60883284" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47003156" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24227902" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5044346" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -471,29 +455,9 @@
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cantilever_simulation.py</url>
-          <line>910</line>
-          <option name="timeStamp" value="312" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/parameter_optimisation.py</url>
-          <line>251</line>
+          <line>259</line>
           <option name="timeStamp" value="321" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cantilever_simulation.py</url>
-          <line>912</line>
-          <option name="timeStamp" value="346" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cantilever_simulation.py</url>
-          <line>902</line>
-          <option name="timeStamp" value="348" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py</url>
-          <line>44</line>
-          <option name="timeStamp" value="373" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cantilever_optimal_design.py</url>
@@ -521,11 +485,6 @@
           <option name="timeStamp" value="431" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="433" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/new_evaluate_hessian.py</url>
           <line>93</line>
           <option name="timeStamp" value="439" />
@@ -540,16 +499,6 @@
           <line>91</line>
           <option name="timeStamp" value="443" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/parameter_optimisation.py</url>
-          <line>158</line>
-          <option name="timeStamp" value="448" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/parameter_optimisation.py</url>
-          <line>161</line>
-          <option name="timeStamp" value="450" />
-        </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
@@ -561,7 +510,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="451" />
+      <option name="time" value="456" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -710,7 +659,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="5014" column="0" lean-forward="false" selection-start-line="5014" selection-start-column="0" selection-end-line="5014" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -718,7 +666,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
           <caret line="50" column="18" lean-forward="false" selection-start-line="50" selection-start-column="18" selection-end-line="50" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -736,24 +683,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="395">
+        <state relative-caret-position="629">
           <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
           </folding>
@@ -764,15 +700,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1122">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="65" lean-forward="true" selection-start-line="2" selection-start-column="65" selection-end-line="2" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/parameter_optimisation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="167" column="57" lean-forward="false" selection-start-line="167" selection-start-column="57" selection-end-line="167" selection-end-column="57" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
+        <state relative-caret-position="-441">
           <caret line="864" column="0" lean-forward="false" selection-start-line="864" selection-start-column="0" selection-end-line="864" selection-end-column="0" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
@@ -780,22 +731,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
+    <entry file="file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="203">
+          <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
           <folding>
             <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/parameter_optimisation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="406">
-          <caret line="156" column="0" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
