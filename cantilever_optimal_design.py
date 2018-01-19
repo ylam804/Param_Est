@@ -42,25 +42,25 @@ def destroy_routine(simulation):
     simulation.problem.Destroy()
 
 dimensions = np.array([30, 12, 12])
-elements = np.array([2, 2, 2])
+elements = np.array([3, 3, 3])
 initial_parameter = np.array([8.4378])
 
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
-thetaStep = 45
+thetaStep = 15
 phiStart = 0
 phiEnd = 180
-phiStep = 45
+phiStep = 15
 
 theta = np.array((range(thetaStart, thetaEnd+1, thetaStep))) * math.pi / 180
 phi = np.array((range(phiStart, phiEnd+1, phiStep))) * math.pi / 180
-#detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
-#condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
-#detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+detHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+condHMatrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
+detH0Matrix = np.zeros((((thetaEnd - thetaStart) / thetaStep) + 1, ((phiEnd - phiStart) / phiStep) + 1))
 
-#loopCounter = 1
-#loopMax = (((thetaEnd - thetaStart) / thetaStep) + 1) * (((phiEnd - phiStart) / phiStep) + 1)
+loopCounter = 1
+loopMax = (((thetaEnd - thetaStart) / thetaStep) + 1) * (((phiEnd - phiStart) / phiStep) + 1)
 
 # Now loop through the design variables and solve the simulation under each condition.
 for i in range(len(theta)):
@@ -81,7 +81,7 @@ for i in range(len(theta)):
         ps.set_objective_function(single_layer_objective_function)
         [H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-7)
 
-        #print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
+        print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
         print "For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j])
         print "     Gravity X-Component = {0}".format(ps.simulation.gravity_vector[0])
         print "     Gravity Y-Component = {0}".format(ps.simulation.gravity_vector[1])
@@ -89,12 +89,12 @@ for i in range(len(theta)):
         print "Determinant of Hessian = {0}".format(detH)
         print "\n"
 
-        #loopCounter += 1
+        loopCounter += 1
 
         # Now compile these into a matrix
-        #detHMatrix[theta/thetaStep + 1, phi/phiStep] = detH
-        #condHMatrix[theta/thetaStep + 1, phi/phiStep] = condH
-        #detH0Matrix[theta/thetaStep + 1, phi/phiStep] = detH0
+        detHMatrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = detH
+        condHMatrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = condH
+        detH0Matrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = detH0
 
         #destroy_routine(ps.simulation)
         ps = None
