@@ -62,6 +62,7 @@ class ConvergenceTest:
         self.sim.coordinate_system.Destroy()
         self.sim.region.Destroy()
         self.sim.basis.Destroy()
+        self.sim.pressureBasis.Destroy()
         self.sim.problem.Destroy()
 
     def calculate_axial_error(self):
@@ -124,7 +125,7 @@ class ConvergenceTest:
 
     def store_elements(self):
         """
-
+        Calculate and record the number of elements to be displayed on the plot of mesh convergence.
         """
 
         if len(self.elementRecord) == 0:
@@ -137,14 +138,14 @@ conTest = ConvergenceTest()
 
 # Define some useful variables.
 dimensions = np.array([30, 12, 12])
-parameterValue = np.array([22.2])
+parameterValue = np.array([7.589])
 conTest.tolerance = 1e-3
 
 # Add a simulation to the convergence
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.sim.set_cantilever_elements(np.array([1, 1, 1 ]))
+conTest.sim.set_cantilever_elements(np.array([2, 2, 2]))
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.set_diagnostic_level(1)
 conTest.sim.setup_cantilever_simulation()
@@ -157,13 +158,13 @@ conTest.store_data()
 conTest.store_elements()
 
 # Increase the number of elements before running the next simulation.
-conTest.elements = np.array([2, 2, 2])
+conTest.elements = np.array([3, 3, 3])
 
 # Lastly create an array for storing the errors from each iteration so they can be plotted later.
 errorArray = np.array([[1, 1, 1, 1]])
 
 # Now start the convergence loop.
-while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance:
+while conTest.meshIterationCounter < 6 and conTest.RMSError > conTest.tolerance:
 
     # First, reset the simulation.
     conTest.destroy_routine()
@@ -174,7 +175,7 @@ while conTest.meshIterationCounter < 10 and conTest.RMSError > conTest.tolerance
     conTest.sim.set_cantilever_elements(conTest.elements)
     conTest.sim.set_diagnostic_level(1)
     conTest.sim.setup_cantilever_simulation()
-    conTest.sim.set_Neo_Hookean_single_layer(np.array([1.452]))
+    conTest.sim.set_Neo_Hookean_single_layer(np.array([7.589]))
 
     # Solve the simulation.
     conTest.sim.solve_simulation()

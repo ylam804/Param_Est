@@ -16,17 +16,17 @@ def destroy_routine(simulation):
     simulation.problem.Destroy()
 
 dimensions = np.array([30, 12, 12])
-elements = np.array([2, 2, 2])
+elements = np.array([6, 6, 6])
 initial_parameter = np.array([8.4378])
 
 theta = 0*math.pi/180
-phi = 270*math.pi/180
+phi = 180*math.pi/180
 
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
 ps.simulation.set_cantilever_dimensions(dimensions)
 ps.simulation.set_cantilever_elements(elements)
-ps.simulation.set_gravity_vector(np.array([0.0, -9.81, 0.0]))
+ps.simulation.set_gravity_vector(ps.simulation.gravity_vector_calculation(theta, phi))
 ps.simulation.set_diagnostic_level(1)
 ps.simulation.setup_cantilever_simulation()
 ps.simulation.set_Neo_Hookean_single_layer(initial_parameter)

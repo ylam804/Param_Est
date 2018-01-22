@@ -197,12 +197,12 @@ def reset_simulation(simulation, dimensions, elements, gravity_vector, diagnosti
     """
 
 
-    :param simulation:
-    :param dimensions:
-    :param elements:
-    :param gravity_vector:
-    :param diagnostic_level:
-    :param data:
+    :param simulation: The previous simulation which needs to be reset.
+    :param dimensions: The dimensions of the previous simulation.
+    :param elements: The number of elements in the previous simulation.
+    :param gravity_vector: The gravity vector of the previous simulation.
+    :param diagnostic_level: The diagnostic setting of the previous simulation.
+    :param data: The data from the previous simulation.
     :return:
     """
 
@@ -216,12 +216,14 @@ def reset_simulation(simulation, dimensions, elements, gravity_vector, diagnosti
 
 def destroy_routine(simulation):
     """
-
+    Destroys all the components of the previous simulation so a new one can be created without having to change the
+    simulation's user variable numbers.
     """
 
     simulation.coordinate_system.Destroy()
     simulation.region.Destroy()
     simulation.basis.Destroy()
+    simulation.pressureBasis.Destroy()
     simulation.problem.Destroy()
 
 ###########

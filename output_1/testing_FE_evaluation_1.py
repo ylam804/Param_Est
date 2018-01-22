@@ -19,8 +19,8 @@ dimensions = np.array([30, 12, 12])
 elements = np.array([2, 2, 2])
 initial_parameter = np.array([8.4378])
 
-theta = 0*math.pi/180
-phi = 0*math.pi/180
+theta = 15*math.pi/180
+phi = 90*math.pi/180
 
 ps = ParameterEstimation()
 ps.simulation = CantileverSimulation()
@@ -32,11 +32,11 @@ ps.simulation.setup_cantilever_simulation()
 ps.simulation.set_Neo_Hookean_single_layer(initial_parameter)
 ps.simulation.solve_simulation()
 
-#ps.simulation.export_results("output_1/Cantilever")
-ps.simulation.set_projection_data()
-ps.set_objective_function(single_layer_objective_function)
-[H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-7)
+ps.simulation.export_results("output_1/Cantilever")
+#ps.simulation.set_projection_data()
+#ps.set_objective_function(single_layer_objective_function)
+#[H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-7)
 
-print "For angles Theta = {0}, Phi = {1}".format(theta, phi)
-print "Gravity Vector = {0}".format(ps.simulation.gravity_vector)
-print "Determinant = {0}".format(detH)
+#print "For angles Theta = {0}, Phi = {1}".format(theta, phi)
+#print "Gravity Vector = {0}".format(ps.simulation.gravity_vector)
+#print "Determinant = {0}".format(detH)

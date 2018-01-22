@@ -48,10 +48,10 @@ initial_parameter = np.array([8.4378])
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
-thetaStep = 15
+thetaStep = 45
 phiStart = 0
-phiEnd = 180
-phiStep = 15
+phiEnd = -179
+phiStep = -45
 
 theta = np.array((range(thetaStart, thetaEnd+1, thetaStep))) * math.pi / 180
 phi = np.array((range(phiStart, phiEnd+1, phiStep))) * math.pi / 180
@@ -92,9 +92,9 @@ for i in range(len(theta)):
         loopCounter += 1
 
         # Now compile these into a matrix
-        detHMatrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = detH
-        condHMatrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = condH
-        detH0Matrix[theta[i]/thetaStep + 1, phi[j]/phiStep] = detH0
+        detHMatrix[i, j] = detH
+        condHMatrix[i, j] = condH
+        detH0Matrix[i, j] = detH0
 
         #destroy_routine(ps.simulation)
         ps = None

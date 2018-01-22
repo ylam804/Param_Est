@@ -196,7 +196,7 @@ class CantileverSimulation:
         density = self.density
         gravity = self.gravity_vector
 
-        UsePressureBasis = False
+        UsePressureBasis = True
         NumberOfGaussXi = 4
 
         coordinateSystemUserNumber = 1
@@ -267,7 +267,7 @@ class CantileverSimulation:
             elif InterpolationType in (7,8,9):
                 self.pressureBasis.type = iron.BasisTypes.SIMPLEX
             self.pressureBasis.numberOfXi = numberOfXi
-            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
+            self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
                 self.pressureBasis.quadratureNumberOfGaussXi = [NumberOfGaussXi]*numberOfXi
             self.pressureBasis.CreateFinish()
@@ -343,9 +343,8 @@ class CantileverSimulation:
         self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.DELUDELN,4,iron.FieldInterpolationTypes.ELEMENT_BASED)
         if UsePressureBasis:
             # Set the pressure to be nodally based and use the second mesh component
-            if InterpolationType == 4:
-                self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.U,4,iron.FieldInterpolationTypes.NODE_BASED)
-                self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.DELUDELN,4,iron.FieldInterpolationTypes.NODE_BASED)
+            self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.U,4,iron.FieldInterpolationTypes.NODE_BASED)
+            self.dependentField.ComponentInterpolationSet(iron.FieldVariableTypes.DELUDELN,4,iron.FieldInterpolationTypes.NODE_BASED)
             self.dependentField.ComponentMeshComponentSet(iron.FieldVariableTypes.U,4,2)
             self.dependentField.ComponentMeshComponentSet(iron.FieldVariableTypes.DELUDELN,4,2)
         if InterpolationType == 4:
@@ -901,6 +900,7 @@ if __name__ == "__main__":
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Neo_Hookean_single_layer(cantilever_true_parameter)
     cantilever_sim.solve_simulation()
+    cantilever_sim.export_results("Cantilever")
 
     #data = cantilever_sim.generate_data(1)
     #print '1st Data Set'
