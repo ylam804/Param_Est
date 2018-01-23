@@ -472,6 +472,10 @@ class CantileverSimulation:
 
         self.solverEquations.BoundaryConditionsCreateFinish()
 
+        # Lastly move the nodes of each element so there are more of them closer to the fixed end. This will help the
+        # simulations to converge quicker as there is more detail around the area of the highest deformation.
+        
+
     def set_Neo_Hookean_single_layer(self, parameter_value):
         """
         Call to change the material parameter values without executing all of the other calls in the setup function.
@@ -507,9 +511,18 @@ class CantileverSimulation:
             self.dependentField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,4,0.0)
 
     def solve_simulation(self):
+        """
+        Solve the simulation which has been set up.
+        """
+
         self.problem.Solve()
 
     def export_results(self, fileName="Cantilever"):
+        """
+        Export the resultant nodes of the simulation to a file under the given directory and filename.
+
+        :param fileName:
+        """
         self.fields = iron.Fields()
         self.fields.CreateRegion(self.region)
         self.fields.NodesExport(fileName,"FORTRAN")

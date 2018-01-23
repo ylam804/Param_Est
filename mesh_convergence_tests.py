@@ -145,7 +145,8 @@ conTest.tolerance = 1e-3
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.sim.set_cantilever_elements(np.array([2, 2, 2]))
+conTest.elements = np.array([3, 3, 3])
+conTest.sim.set_cantilever_elements(conTest.elements)
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.set_diagnostic_level(1)
 conTest.sim.setup_cantilever_simulation()
@@ -158,13 +159,13 @@ conTest.store_data()
 conTest.store_elements()
 
 # Increase the number of elements before running the next simulation.
-conTest.elements = np.array([3, 3, 3])
+conTest.elements = np.array([4, 4, 4])
 
 # Lastly create an array for storing the errors from each iteration so they can be plotted later.
 errorArray = np.array([[1, 1, 1, 1]])
 
 # Now start the convergence loop.
-while conTest.meshIterationCounter < 6 and conTest.RMSError > conTest.tolerance:
+while conTest.meshIterationCounter < 8 and conTest.RMSError > conTest.tolerance:
 
     # First, reset the simulation.
     conTest.destroy_routine()
