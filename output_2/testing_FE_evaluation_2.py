@@ -16,7 +16,7 @@ def destroy_routine(simulation):
     simulation.problem.Destroy()
 
 dimensions = np.array([30, 12, 12])
-elements = np.array([8, 8, 8])
+elements = np.array([4, 4, 4])
 initial_parameter = np.array([8.4378])
 
 theta = 0*math.pi/180

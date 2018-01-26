@@ -2,6 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3d001257-185a-4e86-8557-915c5d7fbd46" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Testing/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Testing/generate_expected_output.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/output_1/visulise_multiple_outputs.com" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/output_1/visulise_output_1.com" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/unit_test_calls.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/unit_tests.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/visualisation.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" afterPath="$PROJECT_DIR$/.idea/CantileverParameterOptimisation.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
@@ -9,22 +16,18 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Expected_Test_Output/Cantilever.part0.exelem" afterPath="$PROJECT_DIR$/Expected_Test_Output/Cantilever.part0.exelem" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Expected_Test_Output/Cantilever.part0.exnode" afterPath="$PROJECT_DIR$/Expected_Test_Output/Cantilever.part0.exnode" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Expected_Test_Output/visulise.com" afterPath="$PROJECT_DIR$/Expected_Test_Output/visulise.com" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Testing/tests.py" afterPath="$PROJECT_DIR$/Testing/tests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cantilever_optimal_design.py" afterPath="$PROJECT_DIR$/cantilever_optimal_design.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cantilever_simulation.py" afterPath="$PROJECT_DIR$/cantilever_simulation.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/convergence_data_record.txt" afterPath="$PROJECT_DIR$/convergence_data_record.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/convergence_element_record.txt" afterPath="$PROJECT_DIR$/convergence_element_record.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/convergence_error_output.txt" afterPath="$PROJECT_DIR$/convergence_error_output.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data.exdata" afterPath="$PROJECT_DIR$/data.exdata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/error.exdata" afterPath="$PROJECT_DIR$/error.exdata" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mesh_convergence_tests.py" afterPath="$PROJECT_DIR$/mesh_convergence_tests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/np_1_13_unique.py" afterPath="$PROJECT_DIR$/np_1_13_unique.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimal_design_detH.txt" afterPath="$PROJECT_DIR$/optimal_design_detH.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimal_design_variables.txt" afterPath="$PROJECT_DIR$/optimal_design_variables.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" afterPath="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" afterPath="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/parameter_optimisation.py" afterPath="$PROJECT_DIR$/parameter_optimisation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/unit_tests.py" afterPath="$PROJECT_DIR$/unit_tests.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/visualisation.py" afterPath="$PROJECT_DIR$/visualisation.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,11 +38,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="testing_FE_evaluation_1.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="testing_FE_evaluation_1.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="419">
-              <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="51" />
+            <state relative-caret-position="119">
+              <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding>
                 <element signature="e#0#54#0" expanded="true" />
               </folding>
@@ -47,50 +50,12 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cantilever_simulation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
+      <file leaf-file-name="visulise_multiple_outputs.com" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/output_1/visulise_multiple_outputs.com">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1622">
-              <caret line="349" column="33" lean-forward="true" selection-start-line="349" selection-start-column="33" selection-end-line="349" selection-end-column="33" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="testing_FE_evaluation_2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="29" column="34" lean-forward="false" selection-start-line="29" selection-start-column="34" selection-end-line="29" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mesh_convergence_tests.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mesh_convergence_tests.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="657">
-              <caret line="214" column="0" lean-forward="true" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
-              <folding>
-                <element signature="e#1018#1029#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="testing_FE_evaluation_3.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#54#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="289">
+              <caret line="17" column="42" lean-forward="false" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -98,23 +63,43 @@
       <file leaf-file-name="cantilever_optimal_design.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cantilever_optimal_design.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="80" column="66" lean-forward="true" selection-start-line="80" selection-start-column="66" selection-end-line="80" selection-end-column="66" />
+            <state relative-caret-position="299">
+              <caret line="38" column="4" lean-forward="true" selection-start-line="38" selection-start-column="4" selection-end-line="42" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cantilever_simulation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="540">
+              <caret line="936" column="5" lean-forward="false" selection-start-line="936" selection-start-column="5" selection-end-line="936" selection-end-column="5" />
               <folding>
-                <element signature="e#1268#1322#0" expanded="true" />
+                <element signature="e#0#31#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="parameter_optimisation.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/parameter_optimisation.py">
+      <file leaf-file-name="tests.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Testing/tests.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3944">
-              <caret line="232" column="50" lean-forward="false" selection-start-line="232" selection-start-column="50" selection-end-line="232" selection-end-column="50" />
+            <state relative-caret-position="715">
+              <caret line="132" column="27" lean-forward="true" selection-start-line="132" selection-start-column="27" selection-end-line="132" selection-end-column="27" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#0#15#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="generate_expected_output.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Testing/generate_expected_output.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -130,12 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>material</find>
-      <find>decomp</find>
-      <find>data</find>
-      <find>set_dia</find>
-      <find>basisI</find>
-      <find>destr</find>
       <find>des</find>
       <find>destroy</find>
       <find>cubic</find>
@@ -160,6 +139,12 @@
       <find>equations</find>
       <find>decomposition</find>
       <find>interpolationType</find>
+      <find>MeshD</find>
+      <find>deformedFieldU</find>
+      <find>pres</find>
+      <find>region 1</find>
+      <find>copy_deformed_field</find>
+      <find>depe</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -201,13 +186,23 @@
         <option value="$PROJECT_DIR$/output_1/new_evaluate_hessian.py" />
         <option value="$PROJECT_DIR$/output_4/testing_FE_evaluation_4.py" />
         <option value="$PROJECT_DIR$/new_evaluate_hessian.py" />
-        <option value="$PROJECT_DIR$/parameter_optimisation.py" />
         <option value="$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py" />
+        <option value="$PROJECT_DIR$/parameter_optimisation.py" />
+        <option value="$PROJECT_DIR$/Unit Testing/generate_expected_output.py" />
+        <option value="$PROJECT_DIR$/Unit Testing/unit_tests.py" />
+        <option value="$PROJECT_DIR$/convergence_data_record.txt" />
         <option value="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" />
-        <option value="$PROJECT_DIR$/cantilever_optimal_design.py" />
-        <option value="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" />
-        <option value="$PROJECT_DIR$/cantilever_simulation.py" />
+        <option value="$PROJECT_DIR$/Cantilever.part0.exnode" />
+        <option value="$PROJECT_DIR$/Cantilever.part0.exelem" />
+        <option value="$PROJECT_DIR$/output_1/visulise_output_1.com" />
         <option value="$PROJECT_DIR$/mesh_convergence_tests.py" />
+        <option value="$PROJECT_DIR$/output_1/Cantilever.part0.exnode" />
+        <option value="$PROJECT_DIR$/output_1/Cantilever1.part0.exnode" />
+        <option value="$PROJECT_DIR$/cantilever_optimal_design.py" />
+        <option value="$PROJECT_DIR$/Testing/tests.py" />
+        <option value="$PROJECT_DIR$/cantilever_simulation.py" />
+        <option value="$PROJECT_DIR$/output_1/visulise_multiple_outputs.com" />
+        <option value="$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py" />
       </list>
     </option>
   </component>
@@ -277,6 +272,11 @@
               <item name="CantileverParameterOptimisation" type="462c0819:PsiDirectoryNode" />
               <item name="output_4" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="CantileverParameterOptimisation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CantileverParameterOptimisation" type="462c0819:PsiDirectoryNode" />
+              <item name="Testing" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -286,18 +286,19 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="reference.idesettings.quicklists" />
     <property name="full.screen.before.presentation.mode" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/output_4" />
+      <recent name="$PROJECT_DIR$/output_2" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Unit Testing" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/output_3" />
       <recent name="$PROJECT_DIR$/output_1" />
-      <recent name="$PROJECT_DIR$/output_2" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/output_4" />
       <recent name="$PROJECT_DIR$/output_2" />
     </key>
   </component>
@@ -313,7 +314,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.mesh_convergence_tests">
+  <component name="RunManager" selected="Python.testing_FE_evaluation_1">
     <configuration name="cantilever_optimal_design" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -382,14 +383,14 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <configuration name="testing_FE_evaluation" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="testing_FE_evaluation_1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/output_1" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -399,54 +400,76 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <configuration name="testing_FE_evaluation_2 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="tests" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/output_2" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Testing" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="CantileverParameterOptimisation" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Testing/tests.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Python.laplace" />
-      <item index="1" class="java.lang.String" itemvalue="Python.testing_FE_evaluation" />
-      <item index="2" class="java.lang.String" itemvalue="Python.cantilever_optimal_design" />
-      <item index="3" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_2 (1)" />
-      <item index="4" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
+      <item index="1" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
+      <item index="2" class="java.lang.String" itemvalue="Python.tests" />
+      <item index="3" class="java.lang.String" itemvalue="Python.cantilever_optimal_design" />
+      <item index="4" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_1" />
       <item index="5" class="java.lang.String" itemvalue="Python.cantilever_simulation" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
-        <item index="1" class="java.lang.String" itemvalue="Python.cantilever_simulation" />
-        <item index="2" class="java.lang.String" itemvalue="Python.testing_FE_evaluation" />
+        <item index="0" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_1" />
+        <item index="1" class="java.lang.String" itemvalue="Python.tests" />
+        <item index="2" class="java.lang.String" itemvalue="Python.cantilever_simulation" />
         <item index="3" class="java.lang.String" itemvalue="Python.cantilever_optimal_design" />
-        <item index="4" class="java.lang.String" itemvalue="Python.testing_FE_evaluation_2 (1)" />
+        <item index="4" class="java.lang.String" itemvalue="Python.mesh_convergence_tests" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="TestHistory">
+    <history-entry file="Unittests_in_tests_py - 2018.01.23 at 14h 01m 21s.xml">
+      <configuration name="Unittests in tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_tests_py - 2018.01.23 at 14h 04m 55s.xml">
+      <configuration name="Unittests in tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_tests_py - 2018.01.23 at 14h 05m 04s.xml">
+      <configuration name="Unittests in tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_tests_py - 2018.01.23 at 14h 15m 09s.xml">
+      <configuration name="Unittests in tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_tests_py - 2018.01.23 at 14h 29m 26s.xml">
+      <configuration name="Unittests in tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_unit_tests_py - 2018.01.23 at 13h 06m 19s.xml">
+      <configuration name="Unittests in unit_tests.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Unittests_in_unit_tests_py - 2018.01.23 at 13h 56m 39s.xml">
+      <configuration name="Unittests in unit_tests.py" configurationId="tests" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1920" height="1018" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21299255" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18530351" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32912722" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40588853" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36382756" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49421662" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33333334" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3024236" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.544784" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16666667" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -487,11 +510,6 @@
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/parameter_optimisation.py</url>
-          <line>259</line>
-          <option name="timeStamp" value="321" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/new_evaluate_hessian.py</url>
           <line>173</line>
           <option name="timeStamp" value="429" />
@@ -512,29 +530,14 @@
           <option name="timeStamp" value="443" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py</url>
-          <line>32</line>
-          <option name="timeStamp" value="460" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py</url>
-          <line>36</line>
-          <option name="timeStamp" value="461" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cantilever_optimal_design.py</url>
-          <line>94</line>
-          <option name="timeStamp" value="465" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/cantilever_simulation.py</url>
-          <line>902</line>
+          <line>983</line>
           <option name="timeStamp" value="466" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/cantilever_simulation.py</url>
-          <line>343</line>
-          <option name="timeStamp" value="467" />
+          <url>file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="470" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -547,21 +550,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="468" />
+      <option name="time" value="486" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://Z:/../cmiss/usr/local/lib/python2.7/lib-tk/Tkinter.py" />
-    <entry file="file://$PROJECT_DIR$/laplace_equation.part0.exelem" />
-    <entry file="file://$PROJECT_DIR$/laplace_equation.part0.exnode" />
-    <entry file="file://$PROJECT_DIR$/laplace.py" />
-    <entry file="file://$PROJECT_DIR$/project_surface_data.py" />
-    <entry file="file://$PROJECT_DIR$/cantilever.py" />
-    <entry file="file://$PROJECT_DIR$/surface_LS_objective_function.py" />
-    <entry file="file:///hpc_htom/jada201/opt/CantileverParameterOptimisation/CantileverSimulation.py" />
-    <entry file="file://$PROJECT_DIR$/unit_testing.py" />
-    <entry file="file://Z:/../psam012/opt/summer-projects/2017/python-modules/lib/python/scipy-1.0.0-py2.7-linux-x86_64.egg/scipy/optimize/optimize.py" />
     <entry file="file://Z:/../psam012/opt/summer-projects/2017/python-modules/lib/python/scipy-1.0.0-py2.7-linux-x86_64.egg/scipy/optimize/_numdiff.py" />
     <entry file="file://Z:/../psam012/opt/summer-projects/2017/python-modules/lib/python/scipy-1.0.0-py2.7-linux-x86_64.egg/scipy/optimize/_lsq/trf.py" />
     <entry file="file:///hpc_atog/cmiss/usr/local/lib/python2.7/site-packages/numpy/lib/type_check.py" />
@@ -573,7 +566,6 @@
     <entry file="file:///hpc_atog/cmiss/usr/local/lib/python2.7/site-packages/numpy/core/numeric.py" />
     <entry file="file://$PROJECT_DIR$/CantileverSimulation.pyc" />
     <entry file="file://$PROJECT_DIR$/Expected_Test_Output/io.py" />
-    <entry file="file://$PROJECT_DIR$/visualisation.py" />
     <entry file="file://$USER_HOME$/.PyCharmEdu4.0/system/python_stubs/-829596263/opencmiss/iron/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -593,13 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
           <caret line="36" column="34" lean-forward="false" selection-start-line="36" selection-start-column="34" selection-end-line="36" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/input_output.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -661,41 +646,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/output_1/visulise_output_1.com">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="30" lean-forward="true" selection-start-line="7" selection-start-column="30" selection-end-line="7" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/output_2/visulise_output_2.com">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/iron.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="5014" column="0" lean-forward="false" selection-start-line="5014" selection-start-column="0" selection-end-line="5014" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
           <caret line="50" column="18" lean-forward="false" selection-start-line="50" selection-start-column="18" selection-end-line="50" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/new_evaluate_hessian.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-223">
-          <caret line="167" column="0" lean-forward="true" selection-start-line="167" selection-start-column="0" selection-end-line="167" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -715,73 +669,216 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/parameter_optimisation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3944">
-          <caret line="232" column="50" lean-forward="false" selection-start-line="232" selection-start-column="50" selection-end-line="232" selection-end-column="50" />
+        <state relative-caret-position="-509">
+          <caret line="204" column="30" lean-forward="false" selection-start-line="204" selection-start-column="30" selection-end-line="204" selection-end-column="30" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/output_3/testing_FE_evaluation_3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
+        <state relative-caret-position="442">
           <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding>
-            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#0#54#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py">
+    <entry file="file://$PROJECT_DIR$/new_evaluate_hessian.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="29" column="34" lean-forward="false" selection-start-line="29" selection-start-column="34" selection-end-line="29" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="419">
-          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1622">
-          <caret line="349" column="33" lean-forward="true" selection-start-line="349" selection-start-column="33" selection-end-line="349" selection-end-column="33" />
+        <state relative-caret-position="-33">
+          <caret line="167" column="0" lean-forward="true" selection-start-line="167" selection-start-column="0" selection-end-line="167" selection-end-column="0" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cantilever_optimal_design.py">
+    <entry file="file://$PROJECT_DIR$/input_output.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="80" column="66" lean-forward="true" selection-start-line="80" selection-start-column="66" selection-end-line="80" selection-end-column="66" />
+        <state relative-caret-position="289">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/visualisation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/unit_test_calls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/convergence_data_record.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/_jb_unittest_runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_2/testing_FE_evaluation_2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="18" column="30" lean-forward="true" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
           <folding>
-            <element signature="e#1268#1322#0" expanded="true" />
+            <element signature="e#0#54#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mesh_convergence_tests.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="657">
-          <caret line="214" column="0" lean-forward="true" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
+        <state relative-caret-position="697">
+          <caret line="186" column="0" lean-forward="true" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1/Cantilever.part0.exnode">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cantilever.part0.exelem">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Cantilever.part0.exnode">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1/Cantilever1.part0.exnode">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-105141">
+          <caret line="10" column="27" lean-forward="false" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_2/visulise_output_2.com">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cantilever_optimal_design.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="38" column="4" lean-forward="true" selection-start-line="38" selection-start-column="4" selection-end-line="42" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///hpc_ntot/psam012/opt/summer-projects/2017/OpenCMISS/deploy/opencmiss/install/virtual_environments/oclibs_venv_py27_release/lib/python2.7/site-packages/opencmiss/iron/iron.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="4612" column="0" lean-forward="false" selection-start-line="4612" selection-start-column="0" selection-end-line="4612" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Testing/generate_expected_output.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="14" column="32" lean-forward="true" selection-start-line="14" selection-start-column="32" selection-end-line="14" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Testing/tests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="715">
+          <caret line="132" column="27" lean-forward="true" selection-start-line="132" selection-start-column="27" selection-end-line="132" selection-end-column="27" />
           <folding>
-            <element signature="e#1018#1029#0" expanded="true" />
+            <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cantilever_simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="936" column="5" lean-forward="false" selection-start-line="936" selection-start-column="5" selection-end-line="936" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1/visulise_multiple_outputs.com">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="42" lean-forward="false" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output_1/testing_FE_evaluation_1.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="20" column="0" lean-forward="true" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

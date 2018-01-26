@@ -42,16 +42,16 @@ def destroy_routine(simulation):
     simulation.problem.Destroy()
 
 dimensions = np.array([30, 12, 12])
-elements = np.array([3, 3, 3])
-initial_parameter = np.array([8.4378])
+elements = np.array([2, 2, 2])
+initial_parameter = np.array([2.345, 8.4378])
 
 # Now define the design variables.
 thetaStart = -90
 thetaEnd = 90
 thetaStep = 45
 phiStart = 0
-phiEnd = -179
-phiStep = -45
+phiEnd = 360
+phiStep = 30
 
 theta = np.array((range(thetaStart, thetaEnd+1, thetaStep))) * math.pi / 180
 phi = np.array((range(phiStart, phiEnd+1, phiStep))) * math.pi / 180
@@ -78,8 +78,8 @@ for i in range(len(theta)):
 
         #ps.simulation.export_results("Cantilever")
         ps.simulation.set_projection_data()
-        ps.set_objective_function(single_layer_objective_function)
-        [H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-7)
+        ps.set_objective_function(two_layer_objective_function)
+        [H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-6)
 
         print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
         print "For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j])

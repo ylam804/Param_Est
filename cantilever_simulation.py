@@ -214,6 +214,7 @@ class CantileverSimulation:
         equationsSetFieldUserNumber = 6
         equationsSetUserNumber = 1
         problemUserNumber = 1
+        deformedFieldUserNumber = 7
 
         # Set all diagnostic levels on for testing
         # iron.DiagnosticsSetOn(iron.DiagnosticTypes.All,[1,2,3,4,5],"Diagnostics",["BOUNDARY_CONDITIONS_CREATE_FINISH"])
@@ -351,6 +352,21 @@ class CantileverSimulation:
             self.dependentField.fieldScalingType = iron.FieldScalingTypes.ARITHMETIC_MEAN
         self.equationsSet.DependentCreateFinish()
 
+        # Create deformed field for visualising data in CMGui.
+        self.deformedField = iron.Field()
+        self.deformedField.CreateStart(deformedFieldUserNumber, self.region)
+        self.deformedField.MeshDecompositionSet(self.decomposition)
+        self.deformedField.TypeSet(iron.FieldTypes.GEOMETRIC)
+        self.deformedField.VariableLabelSet(iron.FieldVariableTypes.U, "DeformedGeometry")
+
+        for component in [1, 2, 3]:
+            self.deformedField.ComponentMeshComponentSet(iron.FieldVariableTypes.U, component, 1)
+
+        if InterpolationType == 4:
+            self.deformedField.ScalingTypeSet(iron.FieldScalingTypes.ARITHMETIC_MEAN)
+
+        self.deformedField.CreateFinish()
+
         # Initialise dependent field from undeformed geometry and displacement bcs and set hydrostatic pressure
         iron.Field.ParametersToFieldParametersComponentCopy(
             self.geometricField,iron.FieldVariableTypes.U,iron.FieldParameterSetTypes.VALUES,1,
@@ -474,7 +490,45 @@ class CantileverSimulation:
 
         # Lastly move the nodes of each element so there are more of them closer to the fixed end. This will help the
         # simulations to converge quicker as there is more detail around the area of the highest deformation.
-        
+
+    def move_one_layer_nodes(self):
+        """
+        Move the nodes of the cantilever in the x-direction so that there are more nodes closer to the fixed end of the
+        beam to capture the deformation more clearly.
+        """
+
+        for nodeNum in range(1, (self.cantilever_elements[0]*3 + 1) * (self.cantilever_elements[1]*3 + 1)
+                              * (self.cantilever_elements[2]*3 + 1)):
+            xValue = self.dependentField.ParameterSetGetNodeDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES,
+                                                               1, 1, nodeNum, 1)
+
+
+            newXValue = self.calculate_new_x_value(xValue)
+
+            self.dependentField.ParameterSetUpdateNodeDP(iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES,
+                                                               1, 1, nodeNum, 1, newXValue)
+
+    def move_two_layer_nodes(self):
+        """
+        Move the nodes of the cantilever in the x-direction so that there are more nodes closer to the fixed end of the
+        beam to capture the deformation more clearly.
+        """
+
+
+    def calculate_new_x_value(self, previousValue):
+        """
+        This function will move a node closer to the origin. It is normalised for the length of the FE model, and the
+        closer a node starts to the origin, the larger its fractional shift. This should prevent nodes clustering up
+        around the middle of the model, while still causing those closer to the free end to move more, since the
+        movement will also be weighted by how far the node can possibly travel.
+
+        :param previousValue: The node's prior x position.
+        :return: newValue: The node's new x position.
+        """
+
+        newValue = (previousValue/self.cantilever_dimensions[0])**2 * self.cantilever_dimensions[0]
+
+        return newValue
 
     def set_Neo_Hookean_single_layer(self, parameter_value):
         """
@@ -516,6 +570,16 @@ class CantileverSimulation:
         """
 
         self.problem.Solve()
+
+    def copy_deformed_field(self):
+        """
+        Copies the deformed geometry into the deformed field to make visualisation in CMGui easier.
+        """
+
+        for component in [1, 2, 3]:
+            self.dependentField.ParametersToFieldParametersComponentCopy(
+                iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, component, self.deformedField,
+                iron.FieldVariableTypes.U, iron.FieldParameterSetTypes.VALUES, component)
 
     def export_results(self, fileName="Cantilever"):
         """
@@ -870,7 +934,9 @@ def single_layer_objective_function(material_parameter, simulation):
     """
 
     simulation.set_Neo_Hookean_single_layer(material_parameter)
+    #simulation.move_one_layer_nodes()
     simulation.solve_simulation()
+    simulation.copy_deformed_field()
     simulation.export_results()
     simulation.point_projection()
 
@@ -885,7 +951,9 @@ def two_layer_objective_function(material_parameters, simulation):
     """
 
     simulation.set_Neo_Hookean_two_layer(material_parameters)
+    simulation.move_two_layer_nodes()
     simulation.solve_simulation()
+    simulation.copy_deformed_field()
     simulation.export_results()
     simulation.point_projection()
 
@@ -899,19 +967,19 @@ if __name__ == "__main__":
     # Testing the use of the objective function.
     cantilever_dimensions = np.array([30, 12, 12])
 
-    cantilever_elements = np.array([2, 2, 2])
+    cantilever_elements = np.array([3, 2, 2])
     cantilever_true_parameter = np.array([8.4378])
     cantilever_guess_parameter = np.array([8.4378])
 
     cantilever_sim = CantileverSimulation()
 
-    cantilever_sim.set_Xi_points_num(3)
     cantilever_sim.set_cantilever_dimensions(cantilever_dimensions)
     cantilever_sim.set_cantilever_elements(cantilever_elements)
-    cantilever_sim.set_gravity_vector(np.array([6.0, 5.0, 5.0]))
+    cantilever_sim.set_gravity_vector(np.array([0.0, 0.0, 0.0]))
     cantilever_sim.set_diagnostic_level(1)
     cantilever_sim.setup_cantilever_simulation()
     cantilever_sim.set_Neo_Hookean_single_layer(cantilever_true_parameter)
+    cantilever_sim.move_one_layer_nodes()
     cantilever_sim.solve_simulation()
     cantilever_sim.export_results("Cantilever")
 

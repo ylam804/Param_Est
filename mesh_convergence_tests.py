@@ -102,14 +102,7 @@ class ConvergenceTest:
         :param direction: The x, y, or z direction denoted by an integer of 0, 1, or 2 respectively.
         """
 
-        newEls = self.elements[direction] * (self.axialError[direction]/self.tolerance) # Needs refining
-
-        if newEls < self.elements[direction]:
-            newEls = self.elements[direction]
-        elif newEls > (self.elements[direction] + 2):
-            newEls = self.elements[direction] + 1
-
-        self.elements[direction] = newEls
+        self.elements[direction] = self.elements[direction] + 1
 
     def store_data(self):
         """
@@ -145,7 +138,7 @@ conTest.tolerance = 1e-3
 conTest.sim = CantileverSimulation()
 
 # Set up the chosen simulation.
-conTest.elements = np.array([3, 3, 3])
+conTest.elements = np.array([2, 2, 2])
 conTest.sim.set_cantilever_elements(conTest.elements)
 conTest.sim.set_cantilever_dimensions(dimensions)
 conTest.sim.set_diagnostic_level(1)
@@ -159,13 +152,13 @@ conTest.store_data()
 conTest.store_elements()
 
 # Increase the number of elements before running the next simulation.
-conTest.elements = np.array([4, 4, 4])
+conTest.elements = np.array([3, 3, 3])
 
 # Lastly create an array for storing the errors from each iteration so they can be plotted later.
 errorArray = np.array([[1, 1, 1, 1]])
 
 # Now start the convergence loop.
-while conTest.meshIterationCounter < 8 and conTest.RMSError > conTest.tolerance:
+while conTest.meshIterationCounter < 11:
 
     # First, reset the simulation.
     conTest.destroy_routine()
