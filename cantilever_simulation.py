@@ -250,9 +250,9 @@ class CantileverSimulation:
         self.basis = iron.Basis()
         self.basis.CreateStart(basisUserNumber)
         if InterpolationType in (1,2,3,4):
-            self.basis.type = iron.BasisTypes.LAGRANGE_HERMITE_TP
+            self.basis.TypeSet(iron.BasisTypes.LAGRANGE_HERMITE_TP)
         elif InterpolationType in (7,8,9):
-            self.basis.type = iron.BasisTypes.SIMPLEX
+            self.basis.TypeSet(iron.BasisTypes.SIMPLEX)
         self.basis.numberOfXi = numberOfXi
         self.basis.interpolationXi = [iron.BasisInterpolationSpecifications.CUBIC_LAGRANGE]*numberOfXi
         if NumberOfGaussXi>0:
@@ -264,9 +264,9 @@ class CantileverSimulation:
             self.pressureBasis = iron.Basis()
             self.pressureBasis.CreateStart(pressureBasisUserNumber)
             if InterpolationType in (1,2,3,4):
-                self.pressureBasis.type = iron.BasisTypes.LAGRANGE_HERMITE_TP
+                self.pressureBasis.TypeSet(iron.BasisTypes.LAGRANGE_HERMITE_TP)
             elif InterpolationType in (7,8,9):
-                self.pressureBasis.type = iron.BasisTypes.SIMPLEX
+                self.pressureBasis.TypeSet(iron.BasisTypes.SIMPLEX)
             self.pressureBasis.numberOfXi = numberOfXi
             self.pressureBasis.interpolationXi = [iron.BasisInterpolationSpecifications.LINEAR_LAGRANGE]*numberOfXi
             if NumberOfGaussXi>0:
@@ -276,7 +276,7 @@ class CantileverSimulation:
         # Start the creation of a generated mesh in the region
         self.generatedMesh = iron.GeneratedMesh()
         self.generatedMesh.CreateStart(generatedMeshUserNumber,self.region)
-        self.generatedMesh.type = iron.GeneratedMeshTypes.REGULAR
+        self.generatedMesh.TypeSet(iron.GeneratedMeshTypes.REGULAR)
         if UsePressureBasis:
             self.generatedMesh.basis = [self.basis,self.pressureBasis]
         else:
@@ -294,7 +294,7 @@ class CantileverSimulation:
         # Create a decomposition for the mesh
         self.decomposition = iron.Decomposition()
         self.decomposition.CreateStart(decompositionUserNumber,self.mesh)
-        self.decomposition.type = iron.DecompositionTypes.CALCULATED
+        self.decomposition.TypeSet(iron.DecompositionTypes.CALCULATED)
         self.decomposition.CalculateFacesSet(True)
         self.decomposition.numberOfDomains = numberOfComputationalNodes
         self.decomposition.CreateFinish()
@@ -609,7 +609,7 @@ class CantileverSimulation:
             dataLocations = np.array([[0, 0, 0]])
 
             elements = np.array([self.cantilever_elements[0], self.cantilever_elements[0] * self.cantilever_elements[1],
-                                 self.cantilever_elements[0] + (self.cantilever_elements[0] * self.cantilever_elements[1]
+                                 self.cantilever_elements[0] + (self.cantilever_elements[0] * self.cantilever_elements[1] #Can you do cantilever[1] * cantilever[2]?
                                  * (self.cantilever_elements[2] - 1)), self.cantilever_elements[0] * self.cantilever_elements[1] * self.cantilever_elements[2]])
             Xi = np.array([[1, 0, 0], [1, 1, 0], [1, 0, 1], [1, 1, 1]])
 

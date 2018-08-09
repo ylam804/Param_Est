@@ -1,0 +1,45 @@
+import numpy as np
+import math
+
+
+def gravity_vector_calculation(self, theta, phi):
+    """
+    Given spherical coordinates, calculates the apparent direction of gravity experienced by the cantilever.
+
+    :param theta: Elevation of the beam from the horizontal.
+    :param phi: Twist of the beam about its longitudinal axis.
+    """
+    # To find the 3D rotation of the gravity vector, start by calculating the x and z components of the vector which
+    # are due to the lift away from the x-axis denoted by theta.
+    value = (-9.81) ** 2 * math.sin(theta) ** 2
+    if theta > 0:
+        v = np.array([-math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
+    else:
+        v = np.array([math.sqrt(value), 0, -(math.sqrt((-9.81) ** 2 - value))])
+    # Now, to find how this is influenced by the rotation of the beam about its longitudinal axis, use Rodrigues'
+    # rotation formula to decompose that vector into its parts parallel and perpendicular to the beam and then only
+    # rotate those parts which are perpendicular.
+
+    # The formula is:
+    # Vrotated = V cos(theta) + (k x V) * sin(theta) + k (k . V)(1 - cos(theta)
+
+    # Where V is the unrotated vector.
+    #       Vrotated is the resultant vector.
+    #       k is a unit vector along the axis being rotated about.
+    #       theta is the angle of rotation.
+
+    # Since we know that the x-axis will be the one rotated about, we can set k
+    k = np.array([1, 0, 0])
+
+    # Calculate the cross of k and v
+    kcrossV = np.array([(k[1] * v[2] - k[2] * v[1]), (k[2] * v[0] - k[0] * v[2]), (k[0] * v[1] - k[1] * v[0])])
+
+    # Now calculate the dot of k and v
+    kdotV = k[0] * v[0] + k[1] * v[1] + k[2] * v[2]
+
+    # Now in the final calculation we replace the angel theta in the formula with phi because that is the angle
+    # which denotes the rotation of the beam about its longitudinal axis.
+    v = v * math.cos(phi) + (kcrossV * math.sin(phi)) + (k * kdotV * (1 - math.cos(phi)))
+    print(v)
+
+
