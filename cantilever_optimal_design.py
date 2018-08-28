@@ -81,13 +81,13 @@ for i in range(len(theta)):
         ps.set_objective_function(two_layer_objective_function)
         [H, detH, condH, detH0] = ps.new_evaluate_hessian_method(initial_parameter, 1e-6)
 
-        print "Simulation {0} of {1}: Complete.".format(loopCounter, loopMax)
-        print "For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j])
-        print "     Gravity X-Component = {0}".format(ps.simulation.gravity_vector[0])
-        print "     Gravity Y-Component = {0}".format(ps.simulation.gravity_vector[1])
-        print "     Gravity Z-Component = {0}".format(ps.simulation.gravity_vector[2])
-        print "Determinant of Hessian = {0}".format(detH)
-        print "\n"
+        print ("Simulation {0} of {1}: Complete.".format(loopCounter, loopMax))
+        print ("For angles Theta = {0}, Phi = {1}".format(theta[i], phi[j]))
+        print ("     Gravity X-Component = {0}".format(ps.simulation.gravity_vector[0]))
+        print ("     Gravity Y-Component = {0}".format(ps.simulation.gravity_vector[1]))
+        print ("     Gravity Z-Component = {0}".format(ps.simulation.gravity_vector[2]))
+        print ("Determinant of Hessian = {0}".format(detH))
+        print ("\n")
 
         loopCounter += 1
 
@@ -100,13 +100,13 @@ for i in range(len(theta)):
         ps = None
 
 
-print 'Optimal Design finished.'
-print '\n'
-print 'Printing results to file for visualisation:'
+print ('Optimal Design finished.')
+print ('\n')
+print ('Printing results to file for visualisation:')
 
 # Export the matrix results for visualisation.
 np.savetxt('optimal_design_detH.txt', detHMatrix, delimiter=' ', newline='\n')
 designVariables = np.array([thetaStart, thetaEnd, thetaStep, phiStart, phiEnd, phiStep])
 np.savetxt('optimal_design_variables.txt', designVariables, delimiter=" ", newline="\n")
 
-print 'Files generated'
+print ('Files generated')

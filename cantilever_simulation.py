@@ -993,9 +993,9 @@ if __name__ == "__main__":
 
     single_layer_objective_function(cantilever_guess_parameter, cantilever_sim)
     data2 = cantilever_sim.generate_data(1)[:,0:3]
-    print '2nd Data Set'
-    print '\n'
-    print data2
-    print '\n'
-    print "RMS Error = {0}".format(cantilever_sim.error)
-    print '\n'
+    print ('2nd Data Set')
+    print ('\n')
+    print (data2)
+    print ('\n')
+    print ("RMS Error = {0}".format(cantilever_sim.error))
+    print ('\n')
